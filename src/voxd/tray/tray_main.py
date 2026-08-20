@@ -23,7 +23,6 @@ class VoxdTrayApp(QObject):
         self.cfg = get_config()
         self.status = "Ready"
         self.thread: CoreProcessThread | None = None
-        self.last_transcript = ""
 
         self.idle_icon = QIcon(str(ASSETS_DIR / "voxd-0.png"))
         self.recording_icons = [QIcon(str(ASSETS_DIR / name)) for name in _RECORDING_ICONS]
@@ -83,9 +82,7 @@ class VoxdTrayApp(QObject):
         self.record_action.setEnabled(idle_or_recording)
         self.quit_action.setEnabled(status == "Ready")
 
-    def _on_finished(self, transcript: str) -> None:
-        if transcript:
-            self.last_transcript = transcript
+    def _on_finished(self, _transcript: str) -> None:
         if self.thread is not None:
             self.thread.deleteLater()
             self.thread = None

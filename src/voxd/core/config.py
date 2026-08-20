@@ -52,8 +52,8 @@ class AppConfig:
             except (OSError, yaml.YAMLError) as exc:
                 print(f"[config] Could not read config; using defaults: {exc}")
 
-        # Filtering here is the migration: legacy Whisper/AIPP/Flux keys are
-        # intentionally dropped when the simplified config is next saved.
+        # Keep the saved config aligned with the intentionally small public
+        # surface by dropping unknown keys on the next save.
         for key in DEFAULT_CONFIG:
             if key in user_config:
                 self.data[key] = user_config[key]

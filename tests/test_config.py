@@ -15,7 +15,7 @@ def test_gemma_transcription_defaults():
     assert "gemma_transcription_prompt" not in cfg.data
 
 
-def test_load_migrates_legacy_keys_out_of_config():
+def test_load_drops_unknown_keys_from_saved_config():
     from voxd.core.config import AppConfig, CONFIG_PATH
 
     CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -23,9 +23,8 @@ def test_load_migrates_legacy_keys_out_of_config():
         yaml.safe_dump(
             {
                 "typing_delay": 3,
-                "whisper_model_path": "/old/model.bin",
-                "aipp_enabled": True,
-                "flux_min_speech_ms": 200,
+                "removed_option": "/old/value",
+                "old_feature_enabled": True,
             }
         ),
         encoding="utf-8",
@@ -34,8 +33,8 @@ def test_load_migrates_legacy_keys_out_of_config():
     cfg = AppConfig()
 
     assert cfg.typing_delay == 3
-    assert "whisper_model_path" not in cfg.data
-    assert "aipp_enabled" not in cfg.data
+    assert "removed_option" not in cfg.data
+    assert "old_feature_enabled" not in cfg.data
     saved = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
     assert set(saved) == set(cfg.data)
 

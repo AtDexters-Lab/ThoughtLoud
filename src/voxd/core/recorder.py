@@ -420,7 +420,3 @@ class AudioRecorder:
         else:
             output_path.chmod(0o600)
             self._discard_chunks()
-
-    def cleanup_temp(self) -> None:
-        if self.last_temp_file and self.last_temp_file.exists():
-            self.last_temp_file.unlink()

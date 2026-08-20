@@ -1,0 +1,16 @@
+healthCheckTimeout: 120
+logLevel: info
+
+models:
+  "gemma-e4b":
+    ttl: 300
+    cmd: |
+      /opt/voxd/llama/llama-server
+      -m /hf/hub/models--unsloth--gemma-4-E4B-it-GGUF/snapshots/653803f092503c04a65164346f3208a36e707693/gemma-4-E4B-it-Q8_0.gguf
+      --mmproj /hf/hub/models--unsloth--gemma-4-E4B-it-GGUF/snapshots/653803f092503c04a65164346f3208a36e707693/mmproj-F16.gguf
+      --alias gemma-e4b
+      --device Vulkan0
+      -ngl 99 -fa on -ctk f16 -ctv f16
+      -c 8192 -b 2048 -ub 2048 -np 1
+      --cache-ram 0 --fit off
+      --host 127.0.0.1 --port ${PORT}

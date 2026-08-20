@@ -5,7 +5,7 @@ from threading import Thread
 
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+from voxd.core.gemma_transcriber import GemmaAudioTranscriber, TranscriptionResult
 
 
 class CoreProcessThread(QThread):
@@ -32,7 +32,10 @@ class CoreProcessThread(QThread):
         raw_transcript = ""
         recording_path = None
         dictation_error = None
+        transcription_result: TranscriptionResult | None = None
         recorder = None
+        live_thread = None
+        live_state = {}
         try:
             transcriber = GemmaAudioTranscriber(
                 server_url=self.cfg.gemma_server_url,
@@ -47,15 +50,17 @@ class CoreProcessThread(QThread):
                 chunk_seconds=self.cfg.record_chunk_seconds,
                 input_device=self.cfg.audio_input_device,
                 prefer_pulse=self.cfg.audio_prefer_pulse,
+                segment_seconds=self.cfg.gemma_segment_seconds,
+                segment_overlap_seconds=self.cfg.gemma_segment_overlap_seconds,
             )
             recorder.start_recording()
-            warmup_thread = Thread(
-                target=self._warmup_model,
-                args=(transcriber,),
-                name="voxd-gemma-warmup",
+            live_thread = Thread(
+                target=self._transcribe_live,
+                args=(transcriber, recorder, live_state),
+                name="voxd-gemma-live-transcription",
                 daemon=True,
             )
-            warmup_thread.start()
+            live_thread.start()
             while not self.should_stop:
                 self.msleep(100)
 
@@ -65,8 +70,19 @@ class CoreProcessThread(QThread):
             )
             if recording_path is None:
                 raise RuntimeError("recorder produced no audio file")
-            warmup_thread.join()
-            transcript, raw_transcript = transcriber.transcribe(recording_path)
+            live_thread.join()
+            if "result" in live_state:
+                transcription_result = live_state["result"]
+                transcriber.cleanup_input(recording_path)
+            else:
+                live_error = live_state.get("error", "live transcription ended unexpectedly")
+                print(
+                    f"[core] Live transcription unavailable; replaying after Stop: {live_error}",
+                    flush=True,
+                )
+                transcription_result = transcriber.transcribe(recording_path)
+            transcript = transcription_result.text
+            raw_transcript = transcription_result.raw_transcript
             if not transcript:
                 raise RuntimeError("E4B returned an empty transcript")
 
@@ -106,6 +122,8 @@ class CoreProcessThread(QThread):
                 # stop_recording can preserve a partial WAV and then raise for
                 # a capture/stream error before its return value is assigned.
                 recording_path = recorder.last_temp_file
+            if live_thread is not None:
+                live_thread.join()
             transcript = ""
         finally:
             if (
@@ -122,7 +140,11 @@ class CoreProcessThread(QThread):
                             "transcription": {
                                 "configured_model": self.cfg.gemma_model,
                                 "error": dictation_error,
-                                "model": getattr(transcriber, "resolved_model", None),
+                                "model": (
+                                    transcription_result.resolved_model
+                                    if transcription_result is not None
+                                    else None
+                                ),
                                 "overlap_seconds": self.cfg.gemma_segment_overlap_seconds,
                                 "prompt": transcriber.prompt,
                                 "prompt_sha256": hashlib.sha256(
@@ -132,8 +154,10 @@ class CoreProcessThread(QThread):
                                 "segment_seconds": self.cfg.gemma_segment_seconds,
                                 "server_url": self.cfg.gemma_server_url,
                                 "status": "complete" if transcript else "failed",
-                                "system_fingerprint": getattr(
-                                    transcriber, "system_fingerprint", None
+                                "system_fingerprint": (
+                                    transcription_result.system_fingerprint
+                                    if transcription_result is not None
+                                    else None
                                 ),
                                 "text": transcript,
                             }
@@ -155,3 +179,11 @@ class CoreProcessThread(QThread):
                 f"[core] Model warmup failed; continuing with normal transcription: {exc}",
                 flush=True,
             )
+
+    @classmethod
+    def _transcribe_live(cls, transcriber, recorder, state) -> None:
+        cls._warmup_model(transcriber)
+        try:
+            state["result"] = transcriber.transcribe_segments(recorder.iter_segments())
+        except Exception as exc:
+            state["error"] = exc

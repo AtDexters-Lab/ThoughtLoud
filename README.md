@@ -21,7 +21,14 @@ paste-based insertion, or continuous VAD mode.
   to copy the final transcript before typing
 
 Recording is streamed to bounded on-disk chunks, so speech duration is not capped
-by memory. Transcription begins after Stop and processes each E4B segment in order.
+by memory. A single background worker transcribes each completed E4B segment in
+order while recording continues. Stop closes and transcribes the final partial
+segment, merges the overlap, and only then types the complete result.
+
+Live segments use a bounded in-memory queue. If the endpoint fails or falls too
+far behind, microphone capture and the full recording continue unaffected; after
+Stop, VOXD replays the stitched WAV through the same sequential transcription
+path. Archived FLAC audio therefore remains complete regardless of live decode.
 
 ## Requirements
 
@@ -33,6 +40,10 @@ by memory. Transcription begins after Stop and processes each E4B segment in ord
 
 The endpoint must accept audio content at `/v1/chat/completions` using the
 OpenAI-style `input_audio` message shape.
+
+For the validated Radeon 780M Q8 setup, see [`runtime/igpu`](runtime/igpu). It
+runs a separate local llama-swap endpoint with an 8K context and five-minute
+idle unload; VOXD remains an ordinary OpenAI-compatible client.
 
 ## Source install
 

@@ -1,4 +1,5 @@
 import hashlib
+from threading import Event, Thread
 from types import SimpleNamespace
 
 
@@ -29,12 +30,16 @@ def _install_fakes(
     warmup_error=None,
     recording_stop_error=None,
     archive_error=None,
+    live_error=None,
+    replay_error=None,
+    segment_before_stop=False,
 ):
     import voxd.core.archive as archive_module
     import voxd.core.clipboard as clipboard_module
     import voxd.core.recorder as recorder_module
     import voxd.core.typer as typer_module
     import voxd.core.voxd_core as core_module
+    from voxd.core.gemma_transcriber import TranscriptionResult
 
     events = {
         "transcriber_kwargs": None,
@@ -43,14 +48,19 @@ def _install_fakes(
         "order": [],
         "preserve": [],
         "archives": [],
+        "cleaned": [],
+        "live_segment_seen": Event(),
     }
     recording_path = tmp_path / "recording.wav"
 
     class FakeRecorder:
         def __init__(self, **kwargs):
             assert kwargs["chunk_seconds"] == 300
+            assert kwargs["segment_seconds"] == 25
+            assert kwargs["segment_overlap_seconds"] == 1
             self.is_recording = False
             self.last_temp_file = None
+            self.stopped = Event()
 
         def start_recording(self):
             self.is_recording = True
@@ -59,12 +69,20 @@ def _install_fakes(
         def stop_recording(self, preserve=False):
             events["preserve"].append(preserve)
             self.is_recording = False
+            self.stopped.set()
             if preserve:
                 recording_path.write_bytes(b"recording")
             if recording_stop_error:
                 self.last_temp_file = recording_path
                 raise recording_stop_error
             return recording_path
+
+        def iter_segments(self):
+            if not segment_before_stop:
+                assert self.stopped.wait(timeout=1)
+            yield 0, b"recording segment"
+            if segment_before_stop:
+                assert self.stopped.wait(timeout=1)
 
     class FakeTranscriber:
         def __init__(self, **kwargs):
@@ -78,10 +96,39 @@ def _install_fakes(
             if warmup_error:
                 raise warmup_error
 
+        def transcribe_segments(self, segments):
+            received = []
+            for segment in segments:
+                received.append(segment)
+                events["live_segment_seen"].set()
+            assert received == [(0, b"recording segment")]
+            events["order"].append("transcribe-live")
+            if live_error:
+                # Simulate identity observed by a discarded partial live pass.
+                self.resolved_model = "discarded-live-model"
+                self.system_fingerprint = "discarded-live-fingerprint"
+                raise live_error
+            return TranscriptionResult(
+                text="namaste doston",
+                segments=("namaste", "doston"),
+                resolved_model="resolved-e4b",
+                system_fingerprint="test-fingerprint",
+            )
+
         def transcribe(self, path):
             assert path == recording_path
-            events["order"].append("transcribe")
-            return "namaste doston", "namaste\ndoston"
+            events["order"].append("transcribe-replay")
+            if replay_error:
+                raise replay_error
+            return TranscriptionResult(
+                text="namaste doston",
+                segments=("namaste", "doston"),
+                resolved_model=None,
+                system_fingerprint=None,
+            )
+
+        def cleanup_input(self, path):
+            events["cleaned"].append(path)
 
     class FakeArchive:
         def __init__(self, **kwargs):
@@ -131,7 +178,9 @@ def test_core_process_uses_gemma_and_types_final_text(monkeypatch, tmp_path):
     assert events["archives"] == []
     assert events["typed"] == ["namaste doston"]
     assert events["copied"] == ["namaste doston"]
-    assert events["order"] == ["recording-started", "warmup", "transcribe"]
+    assert events["order"] == ["recording-started", "warmup", "transcribe-live"]
+    assert len(events["cleaned"]) == 1
+    assert events["cleaned"][0].name == "recording.wav"
     assert finished == ["namaste doston"]
 
 
@@ -162,6 +211,23 @@ def test_archive_enabled_preserves_audio_and_records_replay_metadata(monkeypatch
     assert transcription["prompt_sha256"] == hashlib.sha256(b"test prompt").hexdigest()
     assert events["typed"] == ["namaste doston"]
     assert finished == ["namaste doston"]
+
+
+def test_core_decodes_completed_segment_before_recording_stops(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(monkeypatch, tmp_path, segment_before_stop=True)
+    thread = CoreProcessThread(_config())
+    runner = Thread(target=thread.run)
+    runner.start()
+
+    assert events["live_segment_seen"].wait(timeout=1)
+    assert runner.is_alive()
+    thread.stop_recording()
+    runner.join(timeout=1)
+
+    assert not runner.is_alive()
+    assert events["typed"] == ["namaste doston"]
 
 
 def test_archive_recovers_partial_wav_when_recorder_stop_raises(monkeypatch, tmp_path):
@@ -233,6 +299,76 @@ def test_warmup_failure_does_not_block_transcription(monkeypatch, tmp_path):
     thread.finished.connect(finished.append)
     thread.run()
 
-    assert events["order"] == ["recording-started", "warmup", "transcribe"]
+    assert events["order"] == ["recording-started", "warmup", "transcribe-live"]
     assert events["typed"] == ["namaste doston"]
     assert finished == ["namaste doston"]
+
+
+def test_live_transcription_failure_replays_complete_recording(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(
+        monkeypatch,
+        tmp_path,
+        live_error=RuntimeError("server restarted"),
+    )
+    finished = []
+    thread = CoreProcessThread(_config())
+    thread.should_stop = True
+    thread.finished.connect(finished.append)
+    thread.run()
+
+    assert events["order"] == [
+        "recording-started",
+        "warmup",
+        "transcribe-live",
+        "transcribe-replay",
+    ]
+    assert events["typed"] == ["namaste doston"]
+    assert events["cleaned"] == []
+    assert finished == ["namaste doston"]
+
+
+def test_fallback_archive_uses_only_replay_model_identity(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(
+        monkeypatch,
+        tmp_path,
+        live_error=RuntimeError("endpoint restarted"),
+    )
+    thread = CoreProcessThread(_config(recording_archive_enabled=True))
+    thread.should_stop = True
+    thread.run()
+
+    assert len(events["archives"]) == 1
+    transcription = events["archives"][0][2]["transcription"]
+    assert transcription["status"] == "complete"
+    assert transcription["text"] == "namaste doston"
+    assert transcription["model"] is None
+    assert transcription["system_fingerprint"] is None
+
+
+def test_live_and_replay_failure_still_archives_full_audio(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(
+        monkeypatch,
+        tmp_path,
+        live_error=RuntimeError("live server restarted"),
+        replay_error=RuntimeError("server offline"),
+    )
+    finished = []
+    thread = CoreProcessThread(_config(recording_archive_enabled=True))
+    thread.should_stop = True
+    thread.finished.connect(finished.append)
+    thread.run()
+
+    assert len(events["archives"]) == 1
+    _, recording_path, metadata = events["archives"][0]
+    assert recording_path.exists()
+    assert metadata["transcription"]["status"] == "failed"
+    assert metadata["transcription"]["error"] == "server offline"
+    assert metadata["transcription"]["segments"] == []
+    assert events["typed"] == []
+    assert finished == [""]

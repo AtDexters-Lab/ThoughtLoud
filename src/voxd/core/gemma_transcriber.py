@@ -5,8 +5,9 @@ import io
 import re
 import time
 import wave
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator
+from typing import Iterable, Iterator
 
 import requests
 
@@ -36,6 +37,27 @@ DEFAULT_PROMPT = (
 
 class GemmaTranscriptionError(RuntimeError):
     """Raised when a complete, reliable Gemma transcript cannot be produced."""
+
+
+@dataclass(frozen=True)
+class TranscriptionResult:
+    """Complete output and identity observed during one transcription attempt."""
+
+    text: str
+    segments: tuple[str, ...]
+    resolved_model: str | None
+    system_fingerprint: str | None
+
+    @property
+    def raw_transcript(self) -> str:
+        return "\n".join(self.segments)
+
+
+@dataclass(frozen=True)
+class _SegmentTranscription:
+    text: str
+    resolved_model: str | None
+    system_fingerprint: str | None
 
 
 class GemmaAudioTranscriber:
@@ -73,8 +95,6 @@ class GemmaAudioTranscriber:
         self.max_tokens = int(max_tokens)
         self.attempts = int(attempts)
         self.delete_input = delete_input
-        self.resolved_model: str | None = None
-        self.system_fingerprint: str | None = None
         if session is None:
             self.session = requests.Session()
             # Recorded audio targets a local service by default. Do not inherit
@@ -90,27 +110,49 @@ class GemmaAudioTranscriber:
             raise FileNotFoundError(f"[gemma] Audio file not found: {audio_file}")
 
         verbo(f"[gemma] Transcribing with {self.model} via {self.server_url}")
+        result = self.transcribe_segments(self._iter_wav_segments(audio_file))
+        self.cleanup_input(audio_file)
+        return result
+
+    def transcribe_segments(
+        self, segments: Iterable[tuple[int, bytes]]
+    ) -> TranscriptionResult:
+        """Transcribe ordered WAV windows, including windows produced live."""
         transcripts: list[str] = []
-        for index, wav_bytes in self._iter_wav_segments(audio_file):
+        resolved_model = None
+        system_fingerprint = None
+        for index, wav_bytes in segments:
             context = self._context_tail(transcripts[-1]) if transcripts else ""
-            transcript = self._transcribe_segment(index, wav_bytes, context)
-            transcripts.append(transcript)
+            segment = self._transcribe_segment(index, wav_bytes, context)
+            transcripts.append(segment.text)
+            if segment.resolved_model is not None:
+                resolved_model = segment.resolved_model
+            if segment.system_fingerprint is not None:
+                system_fingerprint = segment.system_fingerprint
 
         if not transcripts:
-            raise GemmaTranscriptionError("[gemma] Audio file contains no frames")
+            raise GemmaTranscriptionError("[gemma] Audio input contains no frames")
 
         merged = self._merge_transcripts(transcripts)
         if not merged:
             raise GemmaTranscriptionError("[gemma] Model returned an empty transcript")
 
+        return TranscriptionResult(
+            text=merged,
+            segments=tuple(transcripts),
+            resolved_model=resolved_model,
+            system_fingerprint=system_fingerprint,
+        )
+
+    def cleanup_input(self, audio_path) -> None:
+        """Delete a completed temporary input while retaining failed audio."""
+        audio_file = Path(audio_path)
         if self.delete_input:
             try:
                 audio_file.unlink()
                 verbo(f"[gemma] Deleted input file: {audio_file}")
             except OSError as exc:
                 verbo(f"[gemma] Could not delete input file: {exc}")
-
-        return merged, "\n".join(transcripts)
 
     def warmup(self) -> None:
         """Force the configured model to load without consuming recorded audio."""
@@ -169,7 +211,9 @@ class GemmaAudioTranscriber:
                     break
                 start_frame += step_frames
 
-    def _transcribe_segment(self, index: int, wav_bytes: bytes, context: str) -> str:
+    def _transcribe_segment(
+        self, index: int, wav_bytes: bytes, context: str
+    ) -> _SegmentTranscription:
         prompt = self.prompt
         if context:
             prompt += (
@@ -212,11 +256,17 @@ class GemmaAudioTranscriber:
                 content = body["choices"][0]["message"]["content"]
                 if not isinstance(content, str) or not content.strip():
                     raise ValueError("response contained no transcript text")
-                if isinstance(body.get("model"), str):
-                    self.resolved_model = body["model"]
-                if isinstance(body.get("system_fingerprint"), str):
-                    self.system_fingerprint = body["system_fingerprint"]
-                return self._clean_response(content)
+                return _SegmentTranscription(
+                    text=self._clean_response(content),
+                    resolved_model=(
+                        body["model"] if isinstance(body.get("model"), str) else None
+                    ),
+                    system_fingerprint=(
+                        body["system_fingerprint"]
+                        if isinstance(body.get("system_fingerprint"), str)
+                        else None
+                    ),
+                )
             except (requests.RequestException, KeyError, IndexError, TypeError, ValueError) as exc:
                 last_error = exc
                 if attempt < self.attempts:

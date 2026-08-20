@@ -15,6 +15,17 @@ def _write_silence(path, *, duration_seconds: float, frame_rate: int = 100):
         output.writeframes(b"\x00\x00" * frames)
 
 
+def _silence_wav_bytes(*, duration_seconds: float, frame_rate: int = 100):
+    output = io.BytesIO()
+    frames = int(duration_seconds * frame_rate)
+    with wave.open(output, "wb") as audio:
+        audio.setnchannels(1)
+        audio.setsampwidth(2)
+        audio.setframerate(frame_rate)
+        audio.writeframes(b"\x00\x00" * frames)
+    return output.getvalue()
+
+
 class _Response:
     def __init__(self, content, *, model=None, system_fingerprint=None):
         self._content = content
@@ -64,10 +75,10 @@ def test_gemma_segments_long_wav_and_merges_overlap(tmp_path):
         session=session,
     )
 
-    text, raw = transcriber.transcribe(audio)
+    result = transcriber.transcribe(audio)
 
-    assert text == "hello duniya kaise ho main theek hoon dhanyavaad"
-    assert raw.splitlines() == [
+    assert result.text == "hello duniya kaise ho main theek hoon dhanyavaad"
+    assert list(result.segments) == [
         "hello duniya kaise ho",
         "kaise ho main theek hoon",
         "theek hoon dhanyavaad",
@@ -93,6 +104,32 @@ def test_gemma_segments_long_wav_and_merges_overlap(tmp_path):
     assert "previous segment ended with" in second_prompt
 
 
+def test_gemma_transcribes_live_segments_sequentially():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    session = _Session([
+        "hello duniya kaise ho",
+        "kaise ho main theek hoon",
+    ])
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
+
+    result = transcriber.transcribe_segments(
+        [
+            (0, _silence_wav_bytes(duration_seconds=25)),
+            (1, _silence_wav_bytes(duration_seconds=5)),
+        ]
+    )
+
+    assert result.text == "hello duniya kaise ho main theek hoon"
+    assert list(result.segments) == [
+        "hello duniya kaise ho",
+        "kaise ho main theek hoon",
+    ]
+    assert len(session.calls) == 2
+    second_prompt = session.calls[1][1]["messages"][0]["content"][0]["text"]
+    assert "previous segment ended with" in second_prompt
+
+
 def test_gemma_deletes_input_only_after_complete_success(tmp_path):
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
@@ -103,7 +140,7 @@ def test_gemma_deletes_input_only_after_complete_success(tmp_path):
         session=_Session(["namaste duniya"]),
     )
 
-    assert transcriber.transcribe(audio)[0] == "namaste duniya"
+    assert transcriber.transcribe(audio).text == "namaste duniya"
     assert not audio.exists()
 
 
@@ -123,10 +160,10 @@ def test_gemma_captures_resolved_model_identity(tmp_path):
     )
     transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
 
-    transcriber.transcribe(audio)
+    result = transcriber.transcribe(audio)
 
-    assert transcriber.resolved_model == "gemma-e4b-q8"
-    assert transcriber.system_fingerprint == "server-build-1"
+    assert result.resolved_model == "gemma-e4b-q8"
+    assert result.system_fingerprint == "server-build-1"
 
 
 def test_gemma_default_session_does_not_inherit_environment_proxies():

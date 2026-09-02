@@ -8,8 +8,10 @@ def test_gemma_transcription_defaults():
     assert cfg.gemma_server_url == "http://localhost:9292"
     assert cfg.gemma_model == "gemma-e4b"
     assert cfg.gemma_timeout == 300
-    assert 0 < cfg.gemma_segment_seconds < 30
-    assert cfg.gemma_segment_overlap_seconds < cfg.gemma_segment_seconds
+    assert cfg.gemma_segment_seconds == 15
+    assert cfg.gemma_segment_overlap_seconds == 1
+    assert cfg.typing_delay == 0
+    assert cfg.typing_word_delay == 10
     assert cfg.recording_archive_enabled is False
     assert cfg.recording_archive_max_mb == 5120
     assert "gemma_transcription_prompt" not in cfg.data
@@ -47,6 +49,7 @@ def test_invalid_values_fall_back_to_safe_defaults():
         yaml.safe_dump(
             {
                 "typing_delay": "fast",
+                "typing_word_delay": -1,
                 "gemma_segment_seconds": 30,
                 "gemma_segment_overlap_seconds": 28,
                 "append_trailing_space": "yes",
@@ -60,6 +63,7 @@ def test_invalid_values_fall_back_to_safe_defaults():
     cfg = AppConfig()
 
     assert cfg.typing_delay == DEFAULT_CONFIG["typing_delay"]
+    assert cfg.typing_word_delay == DEFAULT_CONFIG["typing_word_delay"]
     assert cfg.gemma_segment_seconds == DEFAULT_CONFIG["gemma_segment_seconds"]
     assert cfg.gemma_segment_overlap_seconds < cfg.gemma_segment_seconds
     assert cfg.append_trailing_space is DEFAULT_CONFIG["append_trailing_space"]

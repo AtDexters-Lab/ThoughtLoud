@@ -11,6 +11,12 @@ from typing import Iterable, Iterator
 
 import requests
 
+from voxd.core.streaming_assembler import (
+    StreamingTranscriptAssembler,
+    merge_transcripts,
+    normalize_word,
+    overlap_word_count,
+)
 from voxd.utils.libw import verbo
 
 
@@ -47,6 +53,7 @@ class TranscriptionResult:
     segments: tuple[str, ...]
     resolved_model: str | None
     system_fingerprint: str | None
+    streaming_shadow: StreamingShadow | None = None
 
     @property
     def raw_transcript(self) -> str:
@@ -60,6 +67,48 @@ class _SegmentTranscription:
     system_fingerprint: str | None
 
 
+@dataclass(frozen=True)
+class StreamingShadowEvent:
+    segment_index: int
+    elapsed_seconds: float
+    committed_delta_characters: int
+    committed_characters: int
+    provisional_characters: int
+    overlap_words: int
+    boundary_matched: bool
+    commits_blocked: bool
+
+
+@dataclass(frozen=True)
+class StreamingShadow:
+    events: tuple[StreamingShadowEvent, ...]
+    committed_characters: int
+    provisional_characters: int
+    stalled_boundaries: int
+    final_matches: bool
+
+    def as_dict(self) -> dict:
+        return {
+            "committed_characters": self.committed_characters,
+            "provisional_characters": self.provisional_characters,
+            "stalled_boundaries": self.stalled_boundaries,
+            "final_matches": self.final_matches,
+            "events": [
+                {
+                    "segment_index": event.segment_index,
+                    "elapsed_seconds": round(event.elapsed_seconds, 3),
+                    "committed_delta_characters": event.committed_delta_characters,
+                    "committed_characters": event.committed_characters,
+                    "provisional_characters": event.provisional_characters,
+                    "overlap_words": event.overlap_words,
+                    "boundary_matched": event.boundary_matched,
+                    "commits_blocked": event.commits_blocked,
+                }
+                for event in self.events
+            ],
+        }
+
+
 class GemmaAudioTranscriber:
     """Transcribe arbitrarily long PCM WAV files through bounded Gemma requests."""
 
@@ -69,7 +118,7 @@ class GemmaAudioTranscriber:
         server_url: str = "http://localhost:9292",
         model: str = "gemma-e4b",
         prompt: str = DEFAULT_PROMPT,
-        segment_seconds: float = 25.0,
+        segment_seconds: float = 15.0,
         overlap_seconds: float = 1.0,
         timeout: float = 300.0,
         max_tokens: int = 1024,
@@ -119,12 +168,28 @@ class GemmaAudioTranscriber:
     ) -> TranscriptionResult:
         """Transcribe ordered WAV windows, including windows produced live."""
         transcripts: list[str] = []
+        streaming_assembler = StreamingTranscriptAssembler()
+        streaming_events: list[StreamingShadowEvent] = []
+        streaming_started = time.monotonic()
         resolved_model = None
         system_fingerprint = None
         for index, wav_bytes in segments:
             context = self._context_tail(transcripts[-1]) if transcripts else ""
             segment = self._transcribe_segment(index, wav_bytes, context)
             transcripts.append(segment.text)
+            shadow_event = streaming_assembler.observe(segment.text)
+            streaming_events.append(
+                StreamingShadowEvent(
+                    segment_index=index,
+                    elapsed_seconds=time.monotonic() - streaming_started,
+                    committed_delta_characters=len(shadow_event.committed_delta),
+                    committed_characters=len(shadow_event.committed_text),
+                    provisional_characters=len(shadow_event.provisional_tail),
+                    overlap_words=shadow_event.overlap_words,
+                    boundary_matched=shadow_event.boundary_matched,
+                    commits_blocked=shadow_event.commits_blocked,
+                )
+            )
             if segment.resolved_model is not None:
                 resolved_model = segment.resolved_model
             if segment.system_fingerprint is not None:
@@ -136,12 +201,20 @@ class GemmaAudioTranscriber:
         merged = self._merge_transcripts(transcripts)
         if not merged:
             raise GemmaTranscriptionError("[gemma] Model returned an empty transcript")
+        streaming_assembly = streaming_assembler.finish()
 
         return TranscriptionResult(
             text=merged,
             segments=tuple(transcripts),
             resolved_model=resolved_model,
             system_fingerprint=system_fingerprint,
+            streaming_shadow=StreamingShadow(
+                events=tuple(streaming_events),
+                committed_characters=len(streaming_assembly.committed_text),
+                provisional_characters=len(streaming_assembly.provisional_tail),
+                stalled_boundaries=streaming_assembly.stalled_boundaries,
+                final_matches=streaming_assembly.text == merged,
+            ),
         )
 
     def cleanup_input(self, audio_path) -> None:
@@ -298,27 +371,12 @@ class GemmaAudioTranscriber:
 
     @classmethod
     def _merge_transcripts(cls, transcripts: list[str]) -> str:
-        if not transcripts:
-            return ""
-
-        merged = transcripts[0].split()
-        for transcript in transcripts[1:]:
-            incoming = transcript.split()
-            duplicate_words = cls._overlap_word_count(merged, incoming)
-            merged.extend(incoming[duplicate_words:])
-        return " ".join(merged).strip()
+        return merge_transcripts(transcripts)
 
     @classmethod
     def _overlap_word_count(cls, previous: list[str], incoming: list[str]) -> int:
-        maximum = min(50, len(previous), len(incoming))
-        for size in range(maximum, 1, -1):
-            left = [cls._normalize_word(word) for word in previous[-size:]]
-            right = [cls._normalize_word(word) for word in incoming[:size]]
-            if left == right:
-                return size
-        return 0
+        return overlap_word_count(previous, incoming)
 
     @staticmethod
     def _normalize_word(word: str) -> str:
-        normalized = re.sub(r"[^\w]+", "", word, flags=re.UNICODE).casefold()
-        return normalized or word.casefold()
+        return normalize_word(word)

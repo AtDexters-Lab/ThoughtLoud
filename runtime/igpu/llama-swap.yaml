@@ -13,4 +13,7 @@ models:
       -ngl 99 -fa on -ctk f16 -ctv f16
       -c 8192 -b 2048 -ub 2048 -np 1
       --cache-ram 0 --fit off
+      --mtp-head /opt/voxd/llama/gemma-4-E4B-it-assistant.Q8_0.gguf
+      --spec-type mtp
+      --draft-block-size 3
       --host 127.0.0.1 --port ${PORT}

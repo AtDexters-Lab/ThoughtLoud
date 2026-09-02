@@ -1,0 +1,95 @@
+diff --git a/common/speculative.cpp b/common/speculative.cpp
+index e786cd63..505213e5 100644
+--- a/common/speculative.cpp
++++ b/common/speculative.cpp
+@@ -705,9 +705,13 @@ struct common_speculative_state_mtp : public common_speculative_state {
+     void begin(const llama_tokens & prompt) override {
+         GGML_UNUSED(prompt);
+         llama_set_embeddings(ctx_tgt, true);
+-        skip_streak_last_draft = false;
+         // New request / prompt: do not leak in-flight MTP from the previous generation.
+         mtp_drain_pending_discard();
++        // The first draft of a new request must read the final output from the
++        // newly completed prompt, not an accepted-output index retained from
++        // the previous request's verification batch.
++        h_idx = -1;
++        skip_streak_last_draft = false;
+     }
+ 
+     void draft(
+@@ -1723,6 +1727,18 @@ bool common_speculative_all_impls_mtmd_safe(const common_speculative * spec) {
+     return true;
+ }
+ 
++bool common_speculative_all_impls_are_mtp(const common_speculative * spec) {
++    if (!spec || spec->impls.empty()) {
++        return false;
++    }
++    for (const auto & impl : spec->impls) {
++        if (impl->type != COMMON_SPECULATIVE_TYPE_MTP) {
++            return false;
++        }
++    }
++    return true;
++}
++
+ bool common_speculative_is_compat(llama_context * ctx_tgt) {
+     auto * mem = llama_get_memory(ctx_tgt);
+     if (mem == nullptr) {
+diff --git a/common/speculative.h b/common/speculative.h
+index 02fba887..58856eae 100644
+--- a/common/speculative.h
++++ b/common/speculative.h
+@@ -25,6 +25,10 @@ bool common_speculative_is_mtmd_safe(enum common_speculative_type type);
+ // True iff every registered impl is mtmd-safe (rejects mixed chains e.g. ngram + draft model).
+ bool common_speculative_all_impls_mtmd_safe(const common_speculative * spec);
+ 
++// True iff every registered implementation is MTP. Unlike other mtmd-safe
++// implementations, MTP begin() does not consume or prime from prompt tokens.
++bool common_speculative_all_impls_are_mtp(const common_speculative * spec);
++
+ common_speculative * common_speculative_init(
+         common_params_speculative & params,
+         llama_context             * ctx_tgt);
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index 65703c05..88f68132 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -2241,10 +2241,11 @@ private:
+                 GGML_ABORT("not supported by multimodal");
+             }
+ 
+-            // NextN/MTP prime requires per-token target hidden states which the mtmd image-decode
+-            // path does not produce. Until that is wired in, skip drafting for slots whose prompt
+-            // contains image chunks - the slot still works as a normal (non-speculative) decode.
+-            const bool skip_draft_mtmd = mctx && slot.prompt.tokens.has_mtmd;
++            // MTP begin()/draft() consume the target's final hidden state rather than prompt
++            // tokens, so it can start after an mtmd prefill. Other implementations retain the
++            // conservative multimodal bypass until their prompt initialization is proven safe.
++            const bool mtmd_mtp_spec = slot.spec && common_speculative_all_impls_are_mtp(slot.spec);
++            const bool skip_draft_mtmd = mctx && slot.prompt.tokens.has_mtmd && !mtmd_mtp_spec;
+             const int  n_draft_max     = skip_draft_mtmd ? 0 : n_draft_max_raw;
+ 
+             if (n_draft_max > 0) {
+@@ -3047,11 +3048,16 @@ private:
+ 
+                     if (slot.can_speculate()) {
+                         if (slot.prompt.tokens.has_mtmd) {
+-                            // Skip spec begin/prime for mtmd prompts: the per-token target hidden
+-                            // states for image positions are not currently produced, which makes
+-                            // NextN prime partial and could desync RoPE positions on later drafts.
+-                            // The slot will still generate correctly via the non-speculative path.
+-                            SLT_INF(slot, "%s", "skipping speculative prime for multimodal prompt\n");
++                            if (common_speculative_all_impls_are_mtp(slot.spec)) {
++                                // MTP begin() ignores prompt tokens and initializes from the
++                                // target hidden state left by the completed multimodal prefill.
++                                static const llama_tokens k_empty_prompt_tgt;
++                                common_speculative_begin(slot.spec, k_empty_prompt_tgt);
++                            } else {
++                                // Other speculative modes may require per-token text prompt state,
++                                // which mtmd media decoding does not currently expose safely.
++                                SLT_INF(slot, "%s", "skipping speculative prime for multimodal prompt\n");
++                            }
+                         } else {
+                             common_speculative_begin(slot.spec, slot.prompt.tokens.get_text_tokens());
+                         }

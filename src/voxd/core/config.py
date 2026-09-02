@@ -10,7 +10,8 @@ from platformdirs import user_config_dir
 DEFAULT_CONFIG = {
     "verbosity": False,
     "autostart": False,
-    "typing_delay": 1,
+    "typing_delay": 0,
+    "typing_word_delay": 10,
     "typing_start_delay": 0.15,
     "append_trailing_space": True,
     "record_chunk_seconds": 300,
@@ -23,7 +24,7 @@ DEFAULT_CONFIG = {
     "gemma_server_url": "http://localhost:9292",
     "gemma_model": "gemma-e4b",
     "gemma_timeout": 300,
-    "gemma_segment_seconds": 25,
+    "gemma_segment_seconds": 15,
     "gemma_segment_overlap_seconds": 1,
     "gemma_max_tokens": 1024,
 }
@@ -66,6 +67,9 @@ class AppConfig:
 
     def _normalize(self) -> None:
         self.data["typing_delay"] = self._number("typing_delay", minimum=0, maximum=1000)
+        self.data["typing_word_delay"] = self._number(
+            "typing_word_delay", minimum=0, maximum=1000
+        )
         self.data["typing_start_delay"] = self._number(
             "typing_start_delay", minimum=0, maximum=10
         )

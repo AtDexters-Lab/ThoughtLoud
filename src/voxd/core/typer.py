@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -11,7 +12,8 @@ from voxd.utils.libw import verbo
 
 
 _TEXT_CHUNK_CHARS = 400
-_KEY_HOLD_MS = 5
+_WORD_KEY_HOLD_MS = 1
+_LEGACY_KEY_HOLD_MS = 5
 _DRAIN_DELAY = 0.05
 _RELEASE_ARGS = [
     f"{keycode}:0"
@@ -29,21 +31,29 @@ _RELEASE_ARGS = [
 class YdotoolTyper:
     """Emit real Linux input events through ydotool; never paste text."""
 
-    def __init__(self, *, delay=1, start_delay=0.15, cfg=None):
+    def __init__(self, *, delay=0, word_delay=10, start_delay=0.15, cfg=None):
         try:
-            self.delay_ms = max(1.0, float(delay))
+            self.delay_ms = max(0.0, float(delay))
         except (TypeError, ValueError):
-            self.delay_ms = 1.0
+            self.delay_ms = 0.0
+        try:
+            self.word_delay_ms = max(0.0, float(word_delay))
+        except (TypeError, ValueError):
+            self.word_delay_ms = 10.0
         try:
             self.start_delay = max(0.0, float(start_delay))
         except (TypeError, ValueError):
             self.start_delay = 0.15
         self.delay_str = str(int(self.delay_ms))
+        self.legacy_delay_ms = max(1.0, self.delay_ms)
+        self.legacy_delay_str = str(int(self.legacy_delay_ms))
+        self.word_delay_str = str(int(self.word_delay_ms))
         self.cfg = cfg
         default_socket = str(Path.home() / ".ydotool_socket")
         self.socket_path = Path(os.environ.setdefault("YDOTOOL_SOCKET", default_socket))
         self.tool = self._find_tool()
         self.supports_key_hold = self._supports_key_hold(self.tool)
+        self.supports_word_pacing = self._supports_word_pacing(self.tool)
 
     @staticmethod
     def _find_tool() -> str | None:
@@ -68,6 +78,25 @@ class YdotoolTyper:
                 return b"key-hold" in executable.read()
         except OSError:
             return False
+
+    @staticmethod
+    def _supports_word_pacing(tool: str | None) -> bool:
+        """Detect the complete modern `type` CLI used by the fast path."""
+        if not tool:
+            return False
+        required_markers = (
+            b"Usage: type [OPTION]... [STRINGS]...",
+            b"key-hold=N",
+            b"Delay N milliseconds between command line strings",
+            b"escape=BOOL",
+            b"hd:D:H:f:e:",
+        )
+        try:
+            with open(tool, "rb") as executable:
+                contents = executable.read()
+        except OSError:
+            return False
+        return all(marker in contents for marker in required_markers)
 
     def _ensure_daemon(self) -> bool:
         if self._daemon_socket_ready():
@@ -122,34 +151,68 @@ class YdotoolTyper:
             self._type_chunk(chunk)
 
     def _type_chunk(self, text: str) -> None:
-        hold_ms = _KEY_HOLD_MS if self.supports_key_hold else 0
-        expected_seconds = len(text) * (self.delay_ms + hold_ms) / 1000.0
+        word_runs = self._word_runs(text) if self.supports_word_pacing else []
+        hold_ms = (
+            _WORD_KEY_HOLD_MS
+            if self.supports_word_pacing
+            else _LEGACY_KEY_HOLD_MS if self.supports_key_hold else 0
+        )
+        character_delay_ms = (
+            self.delay_ms if self.supports_word_pacing else self.legacy_delay_ms
+        )
+        word_pause_ms = max(0, len(word_runs) - 1) * self.word_delay_ms
+        expected_seconds = (
+            len(text) * (character_delay_ms + hold_ms) + word_pause_ms
+        ) / 1000.0
         timeout = max(5.0, expected_seconds * 2.0 + 3.0)
-        if self.supports_key_hold:
+        if self.supports_word_pacing:
             command = [
                 self.tool,
                 "type",
                 "-d",
                 self.delay_str,
                 "-H",
-                str(_KEY_HOLD_MS),
+                str(_WORD_KEY_HOLD_MS),
+                "-D",
+                self.word_delay_str,
+                "-e",
+                "0",
+                "--",
+                *word_runs,
+            ]
+            input_text = None
+        elif self.supports_key_hold:
+            command = [
+                self.tool,
+                "type",
+                "-d",
+                self.legacy_delay_str,
+                "-H",
+                str(_LEGACY_KEY_HOLD_MS),
                 "-f",
                 "-",
             ]
+            input_text = text
         else:
             command = [
                 self.tool,
                 "type",
                 "--key-delay",
-                self.delay_str,
+                self.legacy_delay_str,
                 "--file",
                 "-",
             ]
-        succeeded = self._run_tool(command, timeout=timeout, input_text=text)
+            input_text = text
+        succeeded = self._run_tool(command, timeout=timeout, input_text=input_text)
         time.sleep(_DRAIN_DELAY)
         self._release_keys()
         if not succeeded:
             raise RuntimeError("ydotool failed before the complete transcript was typed")
+
+    @staticmethod
+    def _word_runs(text: str) -> list[str]:
+        """Split at word boundaries while preserving every input character."""
+        return re.findall(r"\s+|\S+\s*", text)
 
     @staticmethod
     def _split_chunks(text: str, max_chars: int = _TEXT_CHUNK_CHARS):

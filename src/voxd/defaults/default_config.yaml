@@ -1,7 +1,8 @@
 verbosity: false
 autostart: false
 
-typing_delay: 1
+typing_delay: 0
+typing_word_delay: 10
 typing_start_delay: 0.15
 append_trailing_space: true
 
@@ -16,6 +17,6 @@ mic_autoset_level: 0.45
 gemma_server_url: http://localhost:9292
 gemma_model: gemma-e4b
 gemma_timeout: 300
-gemma_segment_seconds: 25
+gemma_segment_seconds: 15
 gemma_segment_overlap_seconds: 1
 gemma_max_tokens: 1024

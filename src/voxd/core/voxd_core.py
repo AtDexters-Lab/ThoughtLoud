@@ -33,6 +33,7 @@ class CoreProcessThread(QThread):
         recording_path = None
         dictation_error = None
         transcription_result: TranscriptionResult | None = None
+        transcription_source = None
         recorder = None
         live_thread = None
         live_state = {}
@@ -73,6 +74,7 @@ class CoreProcessThread(QThread):
             live_thread.join()
             if "result" in live_state:
                 transcription_result = live_state["result"]
+                transcription_source = "live"
                 transcriber.cleanup_input(recording_path)
             else:
                 live_error = live_state.get("error", "live transcription ended unexpectedly")
@@ -81,6 +83,7 @@ class CoreProcessThread(QThread):
                     flush=True,
                 )
                 transcription_result = transcriber.transcribe(recording_path)
+                transcription_source = "replay"
             transcript = transcription_result.text
             raw_transcript = transcription_result.raw_transcript
             if not transcript:
@@ -100,6 +103,7 @@ class CoreProcessThread(QThread):
             try:
                 YdotoolTyper(
                     delay=self.cfg.typing_delay,
+                    word_delay=self.cfg.typing_word_delay,
                     start_delay=self.cfg.typing_start_delay,
                     cfg=self.cfg,
                 ).type(transcript)
@@ -154,6 +158,15 @@ class CoreProcessThread(QThread):
                                 "segment_seconds": self.cfg.gemma_segment_seconds,
                                 "server_url": self.cfg.gemma_server_url,
                                 "status": "complete" if transcript else "failed",
+                                "streaming_shadow": (
+                                    {
+                                        **transcription_result.streaming_shadow.as_dict(),
+                                        "source": transcription_source,
+                                    }
+                                    if transcription_result is not None
+                                    and transcription_result.streaming_shadow is not None
+                                    else None
+                                ),
                                 "system_fingerprint": (
                                     transcription_result.system_fingerprint
                                     if transcription_result is not None

@@ -1,3 +1,5 @@
+import hashlib
+import json
 import os
 import shutil
 import subprocess
@@ -13,12 +15,15 @@ def _write_executable(path: Path, content: str) -> None:
 
 
 def _installer_fixture(tmp_path):
-    repo = Path(__file__).parents[1]
+    source_repo = Path(__file__).parents[1]
+    repo = tmp_path / "repo"
+    shutil.copytree(source_repo / "runtime/igpu", repo / "runtime/igpu")
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
     docker_log = tmp_path / "docker.log"
     systemctl_log = tmp_path / "systemctl.log"
     curl_log = tmp_path / "curl.log"
+    text_count = tmp_path / "text-count"
 
     _write_executable(
         fake_bin / "docker",
@@ -52,9 +57,26 @@ def _installer_fixture(tmp_path):
         "    [ \"${FAKE_AUDIO_FAIL:-0}\" = 1 ] && exit 22\n"
         "    if [ \"${FAKE_BAD_AUDIO_JSON:-0}\" = 1 ]; then\n"
         "      printf '%s\\n' '{\"unexpected\":true}'\n"
+        "    elif [ \"${FAKE_MALFORMED_TIMINGS:-0}\" = 1 ]; then\n"
+        "      printf '%s\\n' '{\"choices\":[{\"message\":{\"content\":\"no speech detected\"}}]}'\n"
         "    else\n"
-        "      printf '%s\\n' '{\"choices\":[{\"message\":{\"content\":\"\"}}]}'\n"
+        "      draft_n=4\n"
+        "      [ \"${FAKE_MTP_INACTIVE:-0}\" = 1 ] && draft_n=0\n"
+        "      printf '{\"choices\":[{\"message\":{\"content\":\"no speech detected\"}}],\"timings\":{\"draft_n\":%s}}\\n' \"$draft_n\"\n"
         "    fi\n"
+        "    ;;\n"
+        "  *mixed\\ mode\\ is\\ stable*)\n"
+        "    count=0\n"
+        "    [ -f \"$FAKE_TEXT_COUNT_FILE\" ] && count=$(sed -n '1p' \"$FAKE_TEXT_COUNT_FILE\")\n"
+        "    count=$((count + 1))\n"
+        "    printf '%s\\n' \"$count\" > \"$FAKE_TEXT_COUNT_FILE\"\n"
+        "    content='mixed mode is stable'\n"
+        "    if [ \"${FAKE_SECOND_TEXT_MISMATCH:-0}\" = 1 ] && [ \"$count\" = 2 ]; then\n"
+        "      content='wrong response'\n"
+        "    fi\n"
+        "    draft_n=4\n"
+        "    [ \"${FAKE_MTP_INACTIVE:-0}\" = 1 ] && draft_n=0\n"
+        "    printf '{\"choices\":[{\"message\":{\"content\":\"%s\"}}],\"timings\":{\"draft_n\":%s}}\\n' \"$content\" \"$draft_n\"\n"
         "    ;;\n"
         "esac\n"
         "exit 0\n",
@@ -89,6 +111,29 @@ def _installer_fixture(tmp_path):
     (build_bin / "libllama.so").write_bytes(b"new runtime")
     llama_swap = tmp_path / "llama-swap"
     _write_executable(llama_swap, "#!/bin/sh\nexit 0\n")
+    mtp_head = tmp_path / "gemma-4-E4B-it-assistant.Q8_0.gguf"
+    mtp_head.write_bytes(b"test MTP assistant")
+    helper = repo / "runtime/igpu/mtp_build_manifest.py"
+    helper_text = helper.read_text(encoding="utf-8")
+    helper_text = helper_text.replace(
+        "eb576734fe210b551d091761fe83ab701c8e01ff708015a51172a4c0b04459e3",
+        hashlib.sha256(mtp_head.read_bytes()).hexdigest(),
+    )
+    helper.write_text(helper_text, encoding="utf-8")
+    subprocess.run(
+        [
+            sys.executable,
+            str(helper),
+            "create",
+            "--runtime-dir",
+            str(build_bin),
+            "--patch",
+            str(repo / "runtime/igpu/atomic-mtp-audio.patch"),
+            "--manifest",
+            str(build_bin / "voxd-mtp-build-manifest.json"),
+        ],
+        check=True,
+    )
 
     device_root = tmp_path / "dev/dri"
     device_root.mkdir(parents=True)
@@ -114,6 +159,7 @@ def _installer_fixture(tmp_path):
             "FAKE_DOCKER_LOG": str(docker_log),
             "FAKE_SYSTEMCTL_LOG": str(systemctl_log),
             "FAKE_CURL_LOG": str(curl_log),
+            "FAKE_TEXT_COUNT_FILE": str(text_count),
             "VOXD_PYTHON": sys.executable,
         }
     )
@@ -123,6 +169,7 @@ def _installer_fixture(tmp_path):
             str(repo / "runtime/igpu/install.sh"),
             str(build_bin),
             str(llama_swap),
+            str(mtp_head),
         ],
         "env": env,
         "voxd_config": voxd_config,
@@ -131,6 +178,7 @@ def _installer_fixture(tmp_path):
         "curl_log": curl_log,
         "runtime_dir": data_home / "voxd/llama-vulkan",
         "runtime_config_dir": config_home / "voxd/igpu-runtime",
+        "mtp_head": mtp_head,
     }
 
 
@@ -154,13 +202,25 @@ def test_fresh_install_validates_audio_and_configures_voxd(tmp_path):
     assert configured["gemma_model"] == "gemma-e4b"
     assert fixture["runtime_dir"].is_dir()
     assert fixture["runtime_config_dir"].is_dir()
+    assert (
+        fixture["runtime_dir"] / "gemma-4-E4B-it-assistant.Q8_0.gguf"
+    ).read_bytes() == fixture["mtp_head"].read_bytes()
+    assert (fixture["runtime_dir"] / "voxd-mtp-build-manifest.json").is_file()
+    runtime_config = (
+        fixture["runtime_config_dir"] / "llama-swap.yaml"
+    ).read_text(encoding="utf-8")
+    assert "--mtp-head /opt/voxd/llama/gemma-4-E4B-it-assistant.Q8_0.gguf" in runtime_config
+    assert "--spec-type mtp" in runtime_config
+    assert "--draft-block-size 3" in runtime_config
     docker_calls = fixture["docker_log"].read_text(encoding="utf-8")
     assert "create --name voxd-gemma-igpu" in docker_calls
+    assert "LLAMA_MTP_SKIP_STREAK_THRESHOLD=0" in docker_calls
     assert "start candidate-container-id" in docker_calls
     assert "rename" not in docker_calls
     curl_calls = fixture["curl_log"].read_text(encoding="utf-8")
     assert "/v1/chat/completions" in curl_calls
     assert "input_audio" in curl_calls
+    assert curl_calls.count("/v1/chat/completions") == 3
     assert "--user restart voxd-tray.service" in fixture[
         "systemctl_log"
     ].read_text(encoding="utf-8")
@@ -189,6 +249,62 @@ def test_missing_selected_voxd_python_is_refused_before_staging(tmp_path):
 
     assert result.returncode == 2
     assert "missing VOXD Python environment" in result.stderr
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+    assert not fixture["docker_log"].exists()
+
+
+def test_missing_mtp_head_is_refused_before_staging(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    fixture["mtp_head"].unlink()
+
+    result = _run(fixture)
+
+    assert result.returncode == 2
+    assert "missing or empty E4B MTP assistant GGUF" in result.stderr
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+    assert not fixture["docker_log"].exists()
+
+
+def test_mismatched_mtp_head_is_refused_before_staging(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    fixture["mtp_head"].write_bytes(b"different assistant")
+
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "MTP assistant GGUF does not match the validated artifact" in result.stderr
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+    assert not fixture["docker_log"].exists()
+
+
+def test_mismatched_build_manifest_is_refused_before_staging(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    manifest = tmp_path / "build/bin/voxd-mtp-build-manifest.json"
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["source_commit"] = "wrong"
+    manifest.write_text(json.dumps(payload), encoding="utf-8")
+
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "manifest does not match" in result.stderr
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+    assert not fixture["docker_log"].exists()
+
+
+def test_missing_build_manifest_is_refused_before_staging(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    manifest = tmp_path / "build/bin/voxd-mtp-build-manifest.json"
+    manifest.unlink()
+
+    result = _run(fixture)
+
+    assert result.returncode == 2
+    assert "missing VOXD MTP build manifest" in result.stderr
     assert not fixture["runtime_dir"].exists()
     assert not fixture["runtime_config_dir"].exists()
     assert not fixture["docker_log"].exists()
@@ -225,7 +341,7 @@ def test_invalid_voxd_config_is_refused_before_staging(tmp_path):
     assert "create --name" not in fixture["docker_log"].read_text(encoding="utf-8")
 
 
-def test_staging_failure_removes_only_new_install_paths(tmp_path):
+def test_runtime_library_removed_after_manifest_is_refused_before_staging(tmp_path):
     fixture = _installer_fixture(tmp_path)
     (tmp_path / "build/bin/libllama.so").unlink()
 
@@ -234,14 +350,14 @@ def test_staging_failure_removes_only_new_install_paths(tmp_path):
     assert result.returncode != 0
     assert not fixture["runtime_dir"].exists()
     assert not fixture["runtime_config_dir"].exists()
-    assert "create --name" not in fixture["docker_log"].read_text(encoding="utf-8")
+    assert not fixture["docker_log"].exists()
 
 
 def test_failure_never_removes_shared_parent_directories(tmp_path):
     fixture = _installer_fixture(tmp_path)
     fixture["voxd_config"].unlink()
     fixture["voxd_config"].parent.rmdir()
-    (tmp_path / "build/bin/libllama.so").unlink()
+    fixture["env"]["FAKE_AUDIO_FAIL"] = "1"
 
     result = _run(fixture)
 
@@ -262,6 +378,49 @@ def test_audio_failure_removes_owned_container_and_files(tmp_path):
     assert result.returncode != 0
     docker_calls = fixture["docker_log"].read_text(encoding="utf-8")
     assert "rm -f candidate-container-id" in docker_calls
+    assert fixture["voxd_config"].read_bytes() == original_config
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+
+
+def test_inactive_mtp_removes_owned_container_and_files(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    original_config = fixture["voxd_config"].read_bytes()
+    fixture["env"]["FAKE_MTP_INACTIVE"] = "1"
+
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "audio smoke did not prove active MTP drafting" in result.stderr
+    assert "rm -f candidate-container-id" in fixture["docker_log"].read_text(
+        encoding="utf-8"
+    )
+    assert fixture["voxd_config"].read_bytes() == original_config
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+
+
+def test_missing_mtp_timings_removes_owned_container_and_files(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    fixture["env"]["FAKE_MALFORMED_TIMINGS"] = "1"
+
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "audio smoke did not prove active MTP drafting" in result.stderr
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+
+
+def test_second_text_mtp_mismatch_rolls_back_install(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    original_config = fixture["voxd_config"].read_bytes()
+    fixture["env"]["FAKE_SECOND_TEXT_MISMATCH"] = "1"
+
+    result = _run(fixture)
+
+    assert result.returncode != 0
+    assert "same-server text smoke did not prove stable MTP drafting" in result.stderr
     assert fixture["voxd_config"].read_bytes() == original_config
     assert not fixture["runtime_dir"].exists()
     assert not fixture["runtime_config_dir"].exists()
@@ -326,3 +485,10 @@ def test_container_removal_failure_retains_its_bind_sources(tmp_path):
     assert "retaining runtime files" in result.stderr
     assert fixture["runtime_dir"].is_dir()
     assert fixture["runtime_config_dir"].is_dir()
+    assert (
+        fixture["runtime_dir"] / "gemma-4-E4B-it-assistant.Q8_0.gguf"
+    ).is_file()
+    assert (
+        fixture["runtime_dir"] / "voxd-mtp-build-manifest.json"
+    ).is_file()
+    assert (fixture["runtime_config_dir"] / "llama-swap.yaml").is_file()

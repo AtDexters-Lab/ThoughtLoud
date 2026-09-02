@@ -9,9 +9,14 @@ def _make_ydotool_typer():
     typer = object.__new__(YdotoolTyper)
     typer.tool = "/usr/bin/ydotool"
     typer.supports_key_hold = True
+    typer.supports_word_pacing = True
     typer.socket_path = Path("/unused/in-tests")
-    typer.delay_ms = 2.0
-    typer.delay_str = "2"
+    typer.delay_ms = 0.0
+    typer.delay_str = "0"
+    typer.legacy_delay_ms = 1.0
+    typer.legacy_delay_str = "1"
+    typer.word_delay_ms = 10.0
+    typer.word_delay_str = "10"
     typer.start_delay = 0.0
     typer.cfg = type("Cfg", (), {"data": {"append_trailing_space": True}})()
     return typer
@@ -80,14 +85,54 @@ def test_ydotool_types_long_text_as_real_keystroke_chunks(monkeypatch):
     text = ("namaste duniya this is a long Hinglish transcript " * 30).strip()
     typer.type(text)
 
-    type_calls = [(cmd, timeout, kwargs_input) for cmd, timeout, kwargs_input in calls if cmd[1] == "type"]
+    type_calls = [
+        (cmd, timeout, kwargs_input)
+        for cmd, timeout, kwargs_input in calls
+        if cmd[1] == "type"
+    ]
     assert len(type_calls) > 1
-    assert "".join(input_text for _, _, input_text in type_calls) == text + " "
-    assert all(len(input_text) <= 400 for _, _, input_text in type_calls)
-    assert all("-H" in cmd and cmd[cmd.index("-H") + 1] == "5" for cmd, _, _ in type_calls)
-    assert all(cmd[-2:] == ["-f", "-"] for cmd, _, _ in type_calls)
+    rendered_chunks = ["".join(cmd[cmd.index("--") + 1 :]) for cmd, _, _ in type_calls]
+    assert "".join(rendered_chunks) == text + " "
+    assert all(len(chunk) <= 400 for chunk in rendered_chunks)
+    assert all(
+        cmd[2:11] == ["-d", "0", "-H", "1", "-D", "10", "-e", "0", "--"]
+        for cmd, _, _ in type_calls
+    )
+    assert all(input_text is None for _, _, input_text in type_calls)
     assert all(timeout >= 5 for _, timeout, _ in type_calls)
-    assert max(timeout for _, timeout, _ in type_calls) > 8
+    assert max(timeout for _, timeout, _ in type_calls) > 5
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "  hello  world",
+        "\t\nhello \nworld\t",
+        "   \t\n",
+        "-leading --option-like text",
+    ],
+)
+def test_word_runs_preserve_every_character(text):
+    from voxd.core.typer import YdotoolTyper
+
+    assert "".join(YdotoolTyper._word_runs(text)) == text
+
+
+def test_word_pacing_requires_complete_type_cli_capabilities(tmp_path):
+    from voxd.core.typer import YdotoolTyper
+
+    tool = tmp_path / "ydotool"
+    tool.write_bytes(
+        b"Usage: type [OPTION]... [STRINGS]...\0"
+        b"key-hold=N\0"
+        b"Delay N milliseconds between command line strings\0"
+        b"escape=BOOL\0"
+        b"hd:D:H:f:e:\0"
+    )
+    assert YdotoolTyper._supports_word_pacing(str(tool)) is True
+
+    tool.write_bytes(b"next-delay\0key-hold\0")
+    assert YdotoolTyper._supports_word_pacing(str(tool)) is False
 
 
 def test_ydotool_chunk_limit_includes_boundary_whitespace():
@@ -105,7 +150,7 @@ def test_ydotool_stops_after_failed_chunk(monkeypatch):
     attempts = []
 
     def fake_run_tool(cmd, *, timeout, input_text):
-        attempts.append(input_text)
+        attempts.append(cmd)
         return len(attempts) == 1
 
     monkeypatch.setattr(typer, "_ensure_daemon", lambda: True)
@@ -122,6 +167,11 @@ def test_ydotool_stops_after_failed_chunk(monkeypatch):
 def test_ubuntu_legacy_ydotool_cli_uses_key_delay_and_stdin(monkeypatch):
     typer = _make_ydotool_typer()
     typer.supports_key_hold = False
+    typer.supports_word_pacing = False
+    typer.delay_ms = 2.0
+    typer.delay_str = "2"
+    typer.legacy_delay_ms = 2.0
+    typer.legacy_delay_str = "2"
     calls = []
 
     def fake_run_tool(command, *, timeout, input_text):
@@ -138,3 +188,24 @@ def test_ubuntu_legacy_ydotool_cli_uses_key_delay_and_stdin(monkeypatch):
     command, _, input_text = calls[0]
     assert command[2:] == ["--key-delay", "2", "--file", "-"]
     assert input_text == "-leading option-like text "
+
+
+def test_partial_modern_ydotool_keeps_legacy_stdin_timing(monkeypatch):
+    typer = _make_ydotool_typer()
+    typer.supports_word_pacing = False
+    calls = []
+
+    def fake_run_tool(command, *, timeout, input_text):
+        calls.append((command, timeout, input_text))
+        return True
+
+    monkeypatch.setattr(typer, "_ensure_daemon", lambda: True)
+    monkeypatch.setattr(typer, "_run_tool", fake_run_tool)
+    monkeypatch.setattr(typer, "_release_keys", lambda: None)
+    monkeypatch.setattr("voxd.core.typer.time.sleep", lambda *_: None)
+
+    typer.type("hello world")
+
+    command, _, input_text = calls[0]
+    assert command[2:] == ["-d", "1", "-H", "5", "-f", "-"]
+    assert input_text == "hello world "

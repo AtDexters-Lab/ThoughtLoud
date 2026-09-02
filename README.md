@@ -13,7 +13,7 @@ paste-based insertion, or continuous VAD mode.
 - Hindi in Latin/Roman script (Hinglish), English, and mixed speech
 - punctuation inferred from pauses and intonation
 - recordings of arbitrary practical length
-- E4B's sub-30-second input limit through sequential 25-second segments with a
+- E4B's sub-30-second input limit through sequential 15-second segments with a
   1-second overlap
 - complete text insertion into terminals and coding tools through real key events
 - optional private FLAC recording history with transcript and model metadata
@@ -42,8 +42,8 @@ The endpoint must accept audio content at `/v1/chat/completions` using the
 OpenAI-style `input_audio` message shape.
 
 For the validated Radeon 780M Q8 setup, see [`runtime/igpu`](runtime/igpu). It
-runs a separate local llama-swap endpoint with an 8K context and five-minute
-idle unload; VOXD remains an ordinary OpenAI-compatible client.
+runs a separate MTP-enabled llama-swap endpoint with an 8K context and
+five-minute idle unload; VOXD remains an ordinary OpenAI-compatible client.
 
 ## Source install
 
@@ -73,15 +73,22 @@ The user config is `~/.config/voxd/config.yaml`. Important defaults:
 ```yaml
 gemma_server_url: http://localhost:9292
 gemma_model: gemma-e4b
-gemma_segment_seconds: 25
+gemma_segment_seconds: 15
 gemma_segment_overlap_seconds: 1
 gemma_timeout: 300
 record_chunk_seconds: 300
 recording_archive_enabled: false
 recording_archive_max_mb: 5120
-typing_delay: 1
+typing_delay: 0
+typing_word_delay: 10
 typing_start_delay: 0.15
 ```
+
+On current ydotool builds, `typing_delay` controls the delay between characters
+inside a word, while `typing_word_delay` adds a short pause between word runs.
+VOXD sends each bounded text chunk in one process, so word pacing does not add a
+process launch per word. Older ydotool builds retain the compatible stdin typing
+path and ignore `typing_word_delay`.
 
 `record_chunk_seconds` controls on-disk chunk rotation, not maximum speech length.
 The E4B service should stay warm for low latency; VOXD does not own or restart it.

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -ne 2 ]]; then
-  echo "usage: $0 LLAMA_BUILD_BIN_DIR LLAMA_SWAP_BINARY" >&2
+if [[ $# -ne 3 ]]; then
+  echo "usage: $0 LLAMA_BUILD_BIN_DIR LLAMA_SWAP_BINARY MTP_HEAD_GGUF" >&2
   exit 2
 fi
 
@@ -10,6 +10,7 @@ script_dir=$(cd -- "$(dirname -- "$0")" && pwd)
 repo_dir=$(cd -- "${script_dir}/../.." && pwd)
 build_bin_dir=$(realpath "$1")
 llama_swap_binary=$(realpath "$2")
+mtp_head_source=$(realpath "$3")
 voxd_python="${VOXD_PYTHON:-${repo_dir}/.venv/bin/python}"
 runtime_parent="${XDG_DATA_HOME:-$HOME/.local/share}/voxd"
 runtime_dir="${runtime_parent}/llama-vulkan"
@@ -24,6 +25,8 @@ device_root="${DEVICE_ROOT:-/dev/dri}"
 hf_volume="${HF_VOLUME:-lemonade-docker_hf-cache}"
 runtime_image="${RUNTIME_IMAGE:-gemma-mtp-serve}"
 runtime_model="gemma-e4b"
+build_manifest_name="voxd-mtp-build-manifest.json"
+build_manifest="${build_bin_dir}/${build_manifest_name}"
 
 [[ -x "${build_bin_dir}/llama-server" ]] || {
   echo "missing llama-server in ${build_bin_dir}" >&2
@@ -33,10 +36,23 @@ runtime_model="gemma-e4b"
   echo "missing llama-swap binary: ${llama_swap_binary}" >&2
   exit 2
 }
+[[ -f "${mtp_head_source}" && -s "${mtp_head_source}" ]] || {
+  echo "missing or empty E4B MTP assistant GGUF: ${mtp_head_source}" >&2
+  exit 2
+}
 [[ -x "${voxd_python}" ]] || {
   echo "missing VOXD Python environment: ${voxd_python}; run ./setup.sh first" >&2
   exit 2
 }
+[[ -f "${build_manifest}" ]] || {
+  echo "missing VOXD MTP build manifest: ${build_manifest}" >&2
+  exit 2
+}
+"${voxd_python}" "${script_dir}/mtp_build_manifest.py" verify \
+  --runtime-dir "${build_bin_dir}" \
+  --patch "${script_dir}/atomic-mtp-audio.patch" \
+  --manifest "${build_manifest}" \
+  --mtp-head "${mtp_head_source}"
 [[ -e "${device_root}/${render_node}" ]] || {
   echo "missing iGPU render node: ${device_root}/${render_node}" >&2
   exit 2
@@ -126,8 +142,12 @@ runtime_dir_created=true
 mkdir -m 0700 "${runtime_config_dir}"
 runtime_config_dir_created=true
 
-cp -a "${build_bin_dir}"/lib*.so* "${runtime_dir}/"
-install -m 0755 "${build_bin_dir}/llama-server" "${runtime_dir}/llama-server"
+"${voxd_python}" "${script_dir}/mtp_build_manifest.py" stage \
+  --runtime-dir "${build_bin_dir}" \
+  --destination-dir "${runtime_dir}" \
+  --patch "${script_dir}/atomic-mtp-audio.patch" \
+  --manifest "${build_manifest}" \
+  --mtp-head "${mtp_head_source}"
 install -m 0755 "${llama_swap_binary}" "${runtime_dir}/llama-swap"
 install -m 0600 "${script_dir}/llama-swap.yaml" "${runtime_config}"
 
@@ -144,6 +164,7 @@ container_id=$(docker create \
   -v /usr/share/vulkan/icd.d:/usr/share/vulkan/icd.d:ro \
   -e LD_LIBRARY_PATH=/opt/voxd/llama \
   -e VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/radeon_icd.json \
+  -e LLAMA_MTP_SKIP_STREAK_THRESHOLD=0 \
   -p "127.0.0.1:${host_port}:8080" \
   --entrypoint /opt/voxd/llama/llama-swap \
   "${runtime_image}" \
@@ -180,7 +201,7 @@ print(json.dumps({
     "messages": [{
         "role": "user",
         "content": [
-            {"type": "text", "text": "Transcribe this audio. Output only the transcript."},
+            {"type": "text", "text": "Transcribe this audio. If there is no intelligible speech, output exactly: no speech detected. Output only the transcript."},
             {"type": "input_audio", "input_audio": {
                 "data": base64.b64encode(output.getvalue()).decode("ascii"),
                 "format": "wav",
@@ -189,7 +210,7 @@ print(json.dumps({
     }],
     "stream": False,
     "temperature": 0,
-    "max_tokens": 8,
+    "max_tokens": 16,
     "chat_template_kwargs": {"enable_thinking": False},
 }))
 ' "${runtime_model}"
@@ -204,11 +225,48 @@ if [[ "${front_door_ready}" != true ]] || ! audio_smoke_response=$(curl \
   exit 1
 fi
 if ! "${voxd_python}" -c \
-  'import json, sys; body = json.load(sys.stdin); content = body["choices"][0]["message"]["content"]; sys.exit(0 if isinstance(content, str) else 1)' \
+  'import json, sys; body = json.load(sys.stdin); content = body["choices"][0]["message"]["content"]; draft_n = body.get("timings", {}).get("draft_n"); sys.exit(0 if isinstance(content, str) and content.strip() and isinstance(draft_n, int) and not isinstance(draft_n, bool) and draft_n > 0 else 1)' \
   <<<"${audio_smoke_response}"; then
+  echo "audio smoke did not prove active MTP drafting" >&2
   docker logs "${container_id}" >&2 || true
   exit 1
 fi
+
+mtp_text_payload=$(
+  "${voxd_python}" -c '
+import json
+
+print(json.dumps({
+    "model": "gemma-e4b",
+    "messages": [{
+        "role": "user",
+        "content": "Reply with exactly: mixed mode is stable",
+    }],
+    "stream": False,
+    "temperature": 0,
+    "max_tokens": 32,
+    "chat_template_kwargs": {"enable_thinking": False},
+}))
+'
+)
+for _ in 1 2; do
+  mtp_text_response=""
+  if ! mtp_text_response=$(curl \
+    --silent --show-error --fail --max-time 120 \
+    "http://127.0.0.1:${host_port}/v1/chat/completions" \
+    -H 'Content-Type: application/json' \
+    -d "${mtp_text_payload}"); then
+    docker logs "${container_id}" >&2 || true
+    exit 1
+  fi
+  if ! "${voxd_python}" -c \
+    'import json, sys; body = json.load(sys.stdin); content = body["choices"][0]["message"]["content"]; draft_n = body.get("timings", {}).get("draft_n"); sys.exit(0 if content == "mixed mode is stable" and isinstance(draft_n, int) and not isinstance(draft_n, bool) and draft_n > 0 else 1)' \
+    <<<"${mtp_text_response}"; then
+    echo "same-server text smoke did not prove stable MTP drafting" >&2
+    docker logs "${container_id}" >&2 || true
+    exit 1
+  fi
+done
 
 if [[ -f "${voxd_config}" ]]; then
   voxd_config_backup=$(mktemp "${config_dir}/.config.yaml.backup.XXXXXXXX")

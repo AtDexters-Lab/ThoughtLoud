@@ -83,6 +83,14 @@ def test_gemma_segments_long_wav_and_merges_overlap(tmp_path):
         "kaise ho main theek hoon",
         "theek hoon dhanyavaad",
     ]
+    assert result.streaming_shadow is not None
+    assert result.streaming_shadow.final_matches is True
+    assert result.streaming_shadow.stalled_boundaries == 0
+    assert result.streaming_shadow.committed_characters == len(
+        "hello duniya kaise ho main theek hoon"
+    )
+    assert result.streaming_shadow.provisional_characters == len("dhanyavaad")
+    assert [event.overlap_words for event in result.streaming_shadow.events] == [0, 2, 2]
     assert audio.exists()
     assert len(session.calls) == 3
 

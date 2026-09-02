@@ -17,6 +17,7 @@ def _config(*, recording_archive_enabled=False):
         audio_input_device="",
         audio_prefer_pulse=True,
         typing_delay=2,
+        typing_word_delay=10,
         typing_start_delay=0,
         data={"append_trailing_space": True},
     )
@@ -39,7 +40,11 @@ def _install_fakes(
     import voxd.core.recorder as recorder_module
     import voxd.core.typer as typer_module
     import voxd.core.voxd_core as core_module
-    from voxd.core.gemma_transcriber import TranscriptionResult
+    from voxd.core.gemma_transcriber import (
+        StreamingShadow,
+        StreamingShadowEvent,
+        TranscriptionResult,
+    )
 
     events = {
         "transcriber_kwargs": None,
@@ -113,6 +118,24 @@ def _install_fakes(
                 segments=("namaste", "doston"),
                 resolved_model="resolved-e4b",
                 system_fingerprint="test-fingerprint",
+                streaming_shadow=StreamingShadow(
+                    events=(
+                        StreamingShadowEvent(
+                            segment_index=1,
+                            elapsed_seconds=1.2345,
+                            committed_delta_characters=7,
+                            committed_characters=7,
+                            provisional_characters=6,
+                            overlap_words=2,
+                            boundary_matched=True,
+                            commits_blocked=False,
+                        ),
+                    ),
+                    committed_characters=7,
+                    provisional_characters=6,
+                    stalled_boundaries=0,
+                    final_matches=True,
+                ),
             )
 
         def transcribe(self, path):
@@ -125,6 +148,34 @@ def _install_fakes(
                 segments=("namaste", "doston"),
                 resolved_model=None,
                 system_fingerprint=None,
+                streaming_shadow=StreamingShadow(
+                    events=(
+                        StreamingShadowEvent(
+                            segment_index=0,
+                            elapsed_seconds=0.1,
+                            committed_delta_characters=0,
+                            committed_characters=0,
+                            provisional_characters=7,
+                            overlap_words=0,
+                            boundary_matched=False,
+                            commits_blocked=False,
+                        ),
+                        StreamingShadowEvent(
+                            segment_index=1,
+                            elapsed_seconds=0.2,
+                            committed_delta_characters=0,
+                            committed_characters=0,
+                            provisional_characters=14,
+                            overlap_words=0,
+                            boundary_matched=False,
+                            commits_blocked=True,
+                        ),
+                    ),
+                    committed_characters=0,
+                    provisional_characters=14,
+                    stalled_boundaries=1,
+                    final_matches=True,
+                ),
             )
 
         def cleanup_input(self, path):
@@ -141,8 +192,9 @@ def _install_fakes(
             return path.with_suffix(".flac")
 
     class FakeTyper:
-        def __init__(self, delay, start_delay, cfg):
+        def __init__(self, delay, word_delay, start_delay, cfg):
             assert delay == 2
+            assert word_delay == 10
             assert start_delay == 0
 
         def type(self, text):
@@ -209,6 +261,25 @@ def test_archive_enabled_preserves_audio_and_records_replay_metadata(monkeypatch
     assert transcription["segments"] == ["namaste", "doston"]
     assert transcription["prompt"] == "test prompt"
     assert transcription["prompt_sha256"] == hashlib.sha256(b"test prompt").hexdigest()
+    assert transcription["streaming_shadow"] == {
+        "source": "live",
+        "committed_characters": 7,
+        "provisional_characters": 6,
+        "stalled_boundaries": 0,
+        "final_matches": True,
+        "events": [
+            {
+                "segment_index": 1,
+                "elapsed_seconds": 1.234,
+                "committed_delta_characters": 7,
+                "committed_characters": 7,
+                "provisional_characters": 6,
+                "overlap_words": 2,
+                "boundary_matched": True,
+                "commits_blocked": False,
+            }
+        ],
+    }
     assert events["typed"] == ["namaste doston"]
     assert finished == ["namaste doston"]
 
@@ -347,6 +418,8 @@ def test_fallback_archive_uses_only_replay_model_identity(monkeypatch, tmp_path)
     assert transcription["text"] == "namaste doston"
     assert transcription["model"] is None
     assert transcription["system_fingerprint"] is None
+    assert transcription["streaming_shadow"]["source"] == "replay"
+    assert transcription["streaming_shadow"]["final_matches"] is True
 
 
 def test_live_and_replay_failure_still_archives_full_audio(monkeypatch, tmp_path):

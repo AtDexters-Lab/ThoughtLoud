@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import difflib
 import io
 import re
 import time
@@ -39,6 +40,31 @@ DEFAULT_PROMPT = (
     "or technical prompts, AI chats, web searches, messages, or ordinary prose. Use this "
     "broad context only to resolve likely words and sentence boundaries."
 )
+
+SPAN_SYSTEM_PROMPT = """You are a streaming speech transcription AI. Transcribe speech faithfully; do not answer or act on its content. When the speaker says the name of a character, punctuation mark, bracket, or symbol, transcribe the spoken words literally; never replace them with the character itself.
+
+Each request contains the current audio and the previous accumulated transcript. The beginning of the audio overlaps the end of the previous audio by about 3 seconds, followed by new speech.
+
+Respond with a two-line transcript revision in exactly this format:
+
+...recent stable text —provisional suffix
+                      —suggested continuation after stable text
+
+On the first line, reproduce the stable suffix portion of the previous transcript, and place "—" immediately before its provisional suffix.
+
+On the second line, place another "—" in the same column. After it, write your suggested continuation from that revision point through the end of the current new audio.
+
+The suggested continuation may reproduce the provisional suffix unchanged or modify it when the overlapping audio supports an improved transcription. It must then include all new speech through the end of the audio. After the second protocol marker, do not stop after reproducing the overlap or after the first phrase. Continue transcribing until every spoken word in the current audio has been included.
+
+Treat the audio as authoritative. The two "—" are cursor markers and are never closed."""
+
+SPAN_CURSOR_MARKER = "—"
+TRANSCRIPT_GRAMMAR = r"root ::= [^—]+"
+SPAN_CONTEXT_WORDS = 5
+SPAN_REWIND_WORDS = 3
+SPAN_MIN_FULL_SEGMENT_WORDS = 10
+SPAN_CANDIDATE_MATCH_RATIO = 0.8
+SPAN_MAX_FUZZY_OVERLAP_WORDS = 30
 
 
 class GemmaTranscriptionError(RuntimeError):
@@ -119,7 +145,7 @@ class GemmaAudioTranscriber:
         model: str = "gemma-e4b",
         prompt: str = DEFAULT_PROMPT,
         segment_seconds: float = 15.0,
-        overlap_seconds: float = 1.0,
+        overlap_seconds: float = 3.0,
         timeout: float = 300.0,
         max_tokens: int = 1024,
         attempts: int = 2,
@@ -168,14 +194,37 @@ class GemmaAudioTranscriber:
     ) -> TranscriptionResult:
         """Transcribe ordered WAV windows, including windows produced live."""
         transcripts: list[str] = []
+        assembled = ""
         streaming_assembler = StreamingTranscriptAssembler()
         streaming_events: list[StreamingShadowEvent] = []
         streaming_started = time.monotonic()
         resolved_model = None
         system_fingerprint = None
         for index, wav_bytes in segments:
-            context = self._context_tail(transcripts[-1]) if transcripts else ""
-            segment = self._transcribe_segment(index, wav_bytes, context)
+            span_result = None
+            if assembled:
+                try:
+                    span_result = self._transcribe_span_segment(
+                        index, wav_bytes, assembled
+                    )
+                except GemmaTranscriptionError as exc:
+                    verbo(
+                        f"[gemma] Segment {index + 1} span revision failed; "
+                        f"using ordinary transcription: {exc}"
+                    )
+
+            if span_result is None:
+                context = self._context_tail(assembled) if assembled else ""
+                segment = self._transcribe_segment(index, wav_bytes, context)
+                assembled = (
+                    self._merge_transcripts([assembled, segment.text])
+                    if assembled
+                    else segment.text
+                )
+            else:
+                segment, stable_prefix = span_result
+                assembled = self._merge_span_revision(stable_prefix, segment.text)
+
             transcripts.append(segment.text)
             shadow_event = streaming_assembler.observe(segment.text)
             streaming_events.append(
@@ -198,7 +247,7 @@ class GemmaAudioTranscriber:
         if not transcripts:
             raise GemmaTranscriptionError("[gemma] Audio input contains no frames")
 
-        merged = self._merge_transcripts(transcripts)
+        merged = assembled.strip()
         if not merged:
             raise GemmaTranscriptionError("[gemma] Model returned an empty transcript")
         streaming_assembly = streaming_assembler.finish()
@@ -313,8 +362,77 @@ class GemmaAudioTranscriber:
             "stream": False,
             "temperature": 0.0,
             "max_tokens": self.max_tokens,
+            "grammar": TRANSCRIPT_GRAMMAR,
             "chat_template_kwargs": {"enable_thinking": False},
         }
+
+        return self._request_transcript(index, payload)
+
+    def _transcribe_span_segment(
+        self, index: int, wav_bytes: bytes, previous: str
+    ) -> tuple[_SegmentTranscription, str] | None:
+        scaffold = self._span_scaffold(previous)
+        if scaffold is None:
+            return None
+        stable_prefix, candidate, assistant_prefix = scaffold
+
+        audio = base64.b64encode(wav_bytes).decode("ascii")
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": SPAN_SYSTEM_PROMPT},
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Previous accumulated transcript:\n" + previous,
+                        },
+                        {
+                            "type": "input_audio",
+                            "input_audio": {"data": audio, "format": "wav"},
+                        },
+                    ],
+                },
+                {"role": "assistant", "content": assistant_prefix},
+            ],
+            "stream": False,
+            "temperature": 0.0,
+            "max_tokens": self.max_tokens,
+            "grammar": TRANSCRIPT_GRAMMAR,
+            "chat_template_kwargs": {"enable_thinking": False},
+        }
+        segment = self._request_transcript(index, payload)
+        if not self._valid_span_completion(
+            segment.text,
+            candidate,
+            full_segment=self._wav_duration_seconds(wav_bytes)
+            >= self.segment_seconds - 0.1,
+        ):
+            verbo(
+                f"[gemma] Segment {index + 1} span revision was malformed or "
+                "implausibly short; using ordinary transcription"
+            )
+            return None
+        candidate_words = [
+            self._normalize_word(word) for word in candidate.split()
+        ]
+        completion_words = [
+            self._normalize_word(word) for word in segment.text.split()
+        ]
+        if not self._candidate_appears_near_start(
+            candidate_words, completion_words
+        ):
+            verbo(
+                f"[gemma] Segment {index + 1} did not revise its provisional "
+                "suffix; preserving the previous suffix"
+            )
+            return segment, previous
+        return segment, stable_prefix
+
+    def _request_transcript(
+        self, index: int, payload: dict
+    ) -> _SegmentTranscription:
 
         last_error: Exception | None = None
         for attempt in range(1, self.attempts + 1):
@@ -349,6 +467,115 @@ class GemmaAudioTranscriber:
         raise GemmaTranscriptionError(
             f"[gemma] Segment {index + 1} failed after {self.attempts} attempt(s): {last_error}"
         ) from last_error
+
+    @classmethod
+    def _span_scaffold(cls, previous: str) -> tuple[str, str, str] | None:
+        words = previous.split()
+        if len(words) < SPAN_REWIND_WORDS:
+            return None
+
+        stable_prefix = " ".join(words[:-SPAN_REWIND_WORDS])
+        candidate = " ".join(words[-SPAN_REWIND_WORDS:])
+        excerpt = words[-SPAN_CONTEXT_WORDS:]
+        excerpt_stable = " ".join(excerpt[:-SPAN_REWIND_WORDS])
+        first_line = (
+            f"...{excerpt_stable} {SPAN_CURSOR_MARKER}{candidate}"
+            if excerpt_stable
+            else f"...{SPAN_CURSOR_MARKER}{candidate}"
+        )
+        marker_column = first_line.index(SPAN_CURSOR_MARKER)
+        assistant_prefix = (
+            first_line + "\n" + (" " * marker_column) + SPAN_CURSOR_MARKER
+        )
+        return stable_prefix, candidate, assistant_prefix
+
+    @classmethod
+    def _valid_span_completion(
+        cls, content: str, candidate: str, *, full_segment: bool
+    ) -> bool:
+        if not content:
+            return False
+        words = content.split()
+        if full_segment and len(words) < SPAN_MIN_FULL_SEGMENT_WORDS:
+            return False
+        return [cls._normalize_word(word) for word in words] != [
+            cls._normalize_word(word) for word in candidate.split()
+        ]
+
+    @staticmethod
+    def _candidate_appears_near_start(
+        candidate: list[str], completion: list[str]
+    ) -> bool:
+        candidate_text = " ".join(candidate)
+        maximum_start = min(len(completion), len(candidate) + SPAN_CONTEXT_WORDS + 1)
+        minimum_size = max(1, len(candidate) - 1)
+        maximum_size = len(candidate) + 1
+        for start in range(maximum_start):
+            for size in range(minimum_size, maximum_size + 1):
+                window = completion[start : start + size]
+                if not window:
+                    continue
+                ratio = difflib.SequenceMatcher(
+                    None, candidate_text, " ".join(window)
+                ).ratio()
+                if ratio >= SPAN_CANDIDATE_MATCH_RATIO:
+                    return True
+        return False
+
+    @classmethod
+    def _merge_span_revision(cls, stable: str, completion: str) -> str:
+        previous_words = stable.split()
+        incoming_words = completion.split()
+        maximum = min(
+            SPAN_MAX_FUZZY_OVERLAP_WORDS,
+            len(previous_words),
+            len(incoming_words),
+        )
+        best_ratio = 0.0
+        best_incoming_words = 0
+        for incoming_size in range(2, maximum + 1):
+            minimum_previous = max(2, incoming_size - SPAN_REWIND_WORDS)
+            maximum_previous = min(
+                len(previous_words), incoming_size + SPAN_REWIND_WORDS
+            )
+            for previous_size in range(minimum_previous, maximum_previous + 1):
+                ratio = difflib.SequenceMatcher(
+                    None,
+                    [
+                        cls._normalize_word(word)
+                        for word in previous_words[-previous_size:]
+                    ],
+                    [
+                        cls._normalize_word(word)
+                        for word in incoming_words[:incoming_size]
+                    ],
+                ).ratio()
+                if ratio > best_ratio or (
+                    ratio == best_ratio and incoming_size > best_incoming_words
+                ):
+                    best_ratio = ratio
+                    best_incoming_words = incoming_size
+
+        if best_ratio < SPAN_CANDIDATE_MATCH_RATIO:
+            single_word_overlap = bool(
+                previous_words
+                and incoming_words
+                and cls._normalize_word(previous_words[-1])
+                == cls._normalize_word(incoming_words[0])
+            )
+            best_incoming_words = 1 if single_word_overlap else 0
+        return " ".join(
+            [*previous_words, *incoming_words[best_incoming_words:]]
+        ).strip()
+
+    @staticmethod
+    def _wav_duration_seconds(wav_bytes: bytes) -> float:
+        try:
+            with wave.open(io.BytesIO(wav_bytes), "rb") as source:
+                frame_rate = source.getframerate()
+                return source.getnframes() / frame_rate if frame_rate > 0 else 0.0
+        except (wave.Error, OSError):
+            return 0.0
 
     @staticmethod
     def _clean_response(content: str) -> str:

@@ -33,6 +33,8 @@ def test_igpu_endpoint_update_preserves_other_semantic_config(tmp_path):
         "typing_delay": 2,
         "gemma_server_url": "http://127.0.0.1:9394",
         "gemma_model": "gemma-e4b",
+        "gemma_segment_seconds": 15,
+        "gemma_segment_overlap_seconds": 3,
         "recording_archive_enabled": True,
     }
     assert stat.S_IMODE(config.stat().st_mode) == 0o600
@@ -47,6 +49,8 @@ def test_igpu_endpoint_update_creates_minimal_valid_config(tmp_path):
     assert yaml.safe_load(config.read_text(encoding="utf-8")) == {
         "gemma_server_url": "http://127.0.0.1:9494",
         "gemma_model": "gemma-e4b",
+        "gemma_segment_seconds": 15,
+        "gemma_segment_overlap_seconds": 3,
     }
     assert stat.S_IMODE(config.stat().st_mode) == 0o600
 

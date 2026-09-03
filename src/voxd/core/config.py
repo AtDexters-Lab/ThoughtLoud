@@ -25,7 +25,7 @@ DEFAULT_CONFIG = {
     "gemma_model": "gemma-e4b",
     "gemma_timeout": 300,
     "gemma_segment_seconds": 15,
-    "gemma_segment_overlap_seconds": 1,
+    "gemma_segment_overlap_seconds": 3,
     "gemma_max_tokens": 1024,
 }
 

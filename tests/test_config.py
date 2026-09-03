@@ -9,7 +9,7 @@ def test_gemma_transcription_defaults():
     assert cfg.gemma_model == "gemma-e4b"
     assert cfg.gemma_timeout == 300
     assert cfg.gemma_segment_seconds == 15
-    assert cfg.gemma_segment_overlap_seconds == 1
+    assert cfg.gemma_segment_overlap_seconds == 3
     assert cfg.typing_delay == 0
     assert cfg.typing_word_delay == 10
     assert cfg.recording_archive_enabled is False

@@ -14,7 +14,7 @@ paste-based insertion, or continuous VAD mode.
 - punctuation inferred from pauses and intonation
 - recordings of arbitrary practical length
 - E4B's sub-30-second input limit through sequential 15-second segments with a
-  1-second overlap
+  3-second overlap
 - complete text insertion into terminals and coding tools through real key events
 - optional private FLAC recording history with transcript and model metadata
 - failure recovery: source audio is kept if transcription fails, and VOXD tries
@@ -74,7 +74,7 @@ The user config is `~/.config/voxd/config.yaml`. Important defaults:
 gemma_server_url: http://localhost:9292
 gemma_model: gemma-e4b
 gemma_segment_seconds: 15
-gemma_segment_overlap_seconds: 1
+gemma_segment_overlap_seconds: 3
 gemma_timeout: 300
 record_chunk_seconds: 300
 recording_archive_enabled: false

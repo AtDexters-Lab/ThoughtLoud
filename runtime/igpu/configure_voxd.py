@@ -34,6 +34,8 @@ def configure(config_path: Path, endpoint: str, model: str) -> None:
     configured = dict(_load_mapping(config_path))
     configured["gemma_server_url"] = endpoint
     configured["gemma_model"] = model
+    configured["gemma_segment_seconds"] = 15
+    configured["gemma_segment_overlap_seconds"] = 3
 
     serialized = yaml.safe_dump(configured, default_flow_style=False, sort_keys=False)
     verified = yaml.safe_load(serialized)
@@ -43,6 +45,10 @@ def configure(config_path: Path, endpoint: str, model: str) -> None:
         raise ValueError("rewritten VOXD config has the wrong Gemma endpoint")
     if verified.get("gemma_model") != model:
         raise ValueError("rewritten VOXD config has the wrong Gemma model")
+    if verified.get("gemma_segment_seconds") != 15:
+        raise ValueError("rewritten VOXD config has the wrong segment duration")
+    if verified.get("gemma_segment_overlap_seconds") != 3:
+        raise ValueError("rewritten VOXD config has the wrong segment overlap")
 
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=f".{config_path.name}.",

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from threading import Thread
 
 from PyQt6.QtCore import QThread, pyqtSignal
@@ -42,7 +43,6 @@ class CoreProcessThread(QThread):
                 server_url=self.cfg.gemma_server_url,
                 model=self.cfg.gemma_model,
                 segment_seconds=self.cfg.gemma_segment_seconds,
-                overlap_seconds=self.cfg.gemma_segment_overlap_seconds,
                 timeout=self.cfg.gemma_timeout,
                 max_tokens=self.cfg.gemma_max_tokens,
                 delete_input=not self.cfg.recording_archive_enabled,
@@ -52,7 +52,7 @@ class CoreProcessThread(QThread):
                 input_device=self.cfg.audio_input_device,
                 prefer_pulse=self.cfg.audio_prefer_pulse,
                 segment_seconds=self.cfg.gemma_segment_seconds,
-                segment_overlap_seconds=self.cfg.gemma_segment_overlap_seconds,
+                segmenter_factory=transcriber.new_segmenter,
             )
             recorder.start_recording()
             live_thread = Thread(
@@ -86,34 +86,34 @@ class CoreProcessThread(QThread):
                 transcription_source = "replay"
             transcript = transcription_result.text
             raw_transcript = transcription_result.raw_transcript
-            if not transcript:
-                raise RuntimeError("E4B returned an empty transcript")
+            if transcript:
+                # Clipboard is recovery state only; the normal insertion path is
+                # always genuine ydotool input events.
+                clipboard_ready = False
+                try:
+                    ClipboardManager().copy(transcript)
+                    clipboard_ready = True
+                except Exception as exc:
+                    # Clipboard is a fallback, not a prerequisite for real typing.
+                    print(f"[core] Could not copy recovery text: {exc}", flush=True)
 
-            # Clipboard is recovery state only; the normal insertion path is
-            # always genuine ydotool input events.
-            clipboard_ready = False
-            try:
-                ClipboardManager().copy(transcript)
-                clipboard_ready = True
-            except Exception as exc:
-                # Clipboard is a fallback, not a prerequisite for real typing.
-                print(f"[core] Could not copy recovery text: {exc}", flush=True)
-
-            self.status_changed.emit("Typing")
-            try:
-                YdotoolTyper(
-                    delay=self.cfg.typing_delay,
-                    word_delay=self.cfg.typing_word_delay,
-                    start_delay=self.cfg.typing_start_delay,
-                    cfg=self.cfg,
-                ).type(transcript)
-            except Exception as exc:
-                recovery = (
-                    "full transcript remains on clipboard"
-                    if clipboard_ready
-                    else "clipboard recovery was also unavailable"
-                )
-                print(f"[core] Typing failed; {recovery}: {exc}", flush=True)
+                self.status_changed.emit("Typing")
+                try:
+                    YdotoolTyper(
+                        delay=self.cfg.typing_delay,
+                        word_delay=self.cfg.typing_word_delay,
+                        start_delay=self.cfg.typing_start_delay,
+                        cfg=self.cfg,
+                    ).type(transcript)
+                except Exception as exc:
+                    recovery = (
+                        "full transcript remains on clipboard"
+                        if clipboard_ready
+                        else "clipboard recovery was also unavailable"
+                    )
+                    print(f"[core] Typing failed; {recovery}: {exc}", flush=True)
+            else:
+                print("[core] No intelligible speech detected", flush=True)
         except Exception as exc:
             dictation_error = str(exc)
             print(f"[core] Dictation failed: {exc}", flush=True)
@@ -136,6 +136,15 @@ class CoreProcessThread(QThread):
                 and recording_path.exists()
             ):
                 try:
+                    protocol = transcriber.protocol_metadata()
+                    protocol_sha256 = hashlib.sha256(
+                        json.dumps(
+                            protocol,
+                            ensure_ascii=False,
+                            separators=(",", ":"),
+                            sort_keys=True,
+                        ).encode("utf-8")
+                    ).hexdigest()
                     RecordingArchive(
                         max_bytes=self.cfg.recording_archive_max_mb * 1024 * 1024
                     ).store(
@@ -149,24 +158,28 @@ class CoreProcessThread(QThread):
                                     if transcription_result is not None
                                     else None
                                 ),
-                                "overlap_seconds": self.cfg.gemma_segment_overlap_seconds,
                                 "prompt": transcriber.prompt,
                                 "prompt_sha256": hashlib.sha256(
                                     transcriber.prompt.encode("utf-8")
                                 ).hexdigest(),
+                                "protocol": protocol,
+                                "protocol_sha256": protocol_sha256,
                                 "segments": raw_transcript.splitlines(),
+                                "segment_modes": (
+                                    list(transcription_result.segment_modes)
+                                    if transcription_result is not None
+                                    else []
+                                ),
                                 "segment_seconds": self.cfg.gemma_segment_seconds,
                                 "server_url": self.cfg.gemma_server_url,
-                                "status": "complete" if transcript else "failed",
-                                "streaming_shadow": (
-                                    {
-                                        **transcription_result.streaming_shadow.as_dict(),
-                                        "source": transcription_source,
-                                    }
-                                    if transcription_result is not None
-                                    and transcription_result.streaming_shadow is not None
-                                    else None
+                                "status": (
+                                    "failed"
+                                    if dictation_error
+                                    else "complete"
+                                    if transcript
+                                    else "no_speech"
                                 ),
+                                "source": transcription_source,
                                 "system_fingerprint": (
                                     transcription_result.system_fingerprint
                                     if transcription_result is not None

@@ -7,6 +7,28 @@ import numpy as np
 import pytest
 
 
+class _FixedSegmenter:
+    def __init__(self, frames):
+        self.frames = frames
+        self.buffer = bytearray()
+
+    def feed(self, pcm_bytes, _sample_rate):
+        self.buffer.extend(pcm_bytes)
+        byte_count = self.frames * 2
+        emitted = []
+        while len(self.buffer) >= byte_count:
+            emitted.append((bytes(self.buffer[:byte_count]), True))
+            del self.buffer[:byte_count]
+        return emitted
+
+    def finish(self):
+        if not self.buffer:
+            return None
+        final = bytes(self.buffer)
+        self.buffer.clear()
+        return final, True
+
+
 def test_recorder_start_stop_creates_pcm_wav():
     from voxd.core.recorder import AudioRecorder
 
@@ -50,7 +72,7 @@ def test_recorder_preserves_partial_audio_when_stream_stop_fails():
     assert recorder.last_temp_file.exists()
 
 
-def test_recorder_streams_overlapping_windows_before_stop(monkeypatch):
+def test_recorder_streams_vad_segments_before_stop(monkeypatch):
     from voxd.core.recorder import AudioRecorder
 
     class SilentStream:
@@ -67,7 +89,7 @@ def test_recorder_streams_overlapping_windows_before_stop(monkeypatch):
         samplerate=100,
         channels=1,
         segment_seconds=0.25,
-        segment_overlap_seconds=0.10,
+        segmenter_factory=lambda: _FixedSegmenter(25),
     )
     monkeypatch.setattr(recorder, "_open_stream", lambda *_: SilentStream())
     recorder.start_recording()
@@ -79,13 +101,14 @@ def test_recorder_streams_overlapping_windows_before_stop(monkeypatch):
     recorder.stop_recording()
     remaining = list(recorder.iter_segments())
     segments = [first, *remaining]
-    assert [index for index, _ in segments] == [0, 1, 2, 3]
+    assert [index for index, _, _ in segments] == [0, 1, 2]
+    assert all(speech_detected for _, _, speech_detected in segments)
 
     durations = []
-    for _, wav_bytes in segments:
+    for _, wav_bytes, _ in segments:
         with wave.open(io.BytesIO(wav_bytes), "rb") as audio:
             durations.append(audio.getnframes() / audio.getframerate())
-    assert durations == [0.25, 0.25, 0.25, 0.15]
+    assert durations == [0.25, 0.25, 0.10]
 
 
 def test_recorder_bounds_live_queue_and_preserves_capture(monkeypatch):
@@ -105,8 +128,8 @@ def test_recorder_bounds_live_queue_and_preserves_capture(monkeypatch):
         samplerate=100,
         channels=1,
         segment_seconds=0.25,
-        segment_overlap_seconds=0.10,
         segment_queue_size=1,
+        segmenter_factory=lambda: _FixedSegmenter(25),
     )
     monkeypatch.setattr(recorder, "_open_stream", lambda *_: SilentStream())
     recorder.start_recording()
@@ -118,6 +141,46 @@ def test_recorder_bounds_live_queue_and_preserves_capture(monkeypatch):
         assert audio.getnframes() == 60
     with pytest.raises(RuntimeError, match="transcription fell more than 1 segment behind"):
         next(recorder.iter_segments())
+
+
+def test_recorder_preserves_capture_when_live_vad_fails(monkeypatch):
+    from voxd.core.recorder import AudioRecorder
+
+    class SilentStream:
+        def start(self):
+            return None
+
+        def stop(self):
+            return None
+
+        def close(self):
+            return None
+
+    class FailingSegmenter:
+        def feed(self, _pcm_bytes, _sample_rate):
+            raise RuntimeError("VAD inference failed")
+
+        def finish(self):
+            raise AssertionError("failed VAD must not be finalized")
+
+    recorder = AudioRecorder(
+        samplerate=100,
+        channels=1,
+        segment_seconds=0.25,
+        segmenter_factory=FailingSegmenter,
+    )
+    monkeypatch.setattr(recorder, "_open_stream", lambda *_: SilentStream())
+    recorder.start_recording()
+
+    block = np.zeros((60, 1), dtype=np.float32)
+    recorder._audio_callback(block, 60, None, None)
+    recorder._audio_callback(block, 60, None, None)
+    output = recorder.stop_recording()
+
+    with pytest.raises(RuntimeError, match="VAD inference failed"):
+        list(recorder.iter_segments())
+    with wave.open(str(output), "rb") as audio:
+        assert audio.getnframes() == 120
 
 
 def test_recorder_closes_live_segment_stream_when_wav_close_fails(monkeypatch):
@@ -137,7 +200,7 @@ def test_recorder_closes_live_segment_stream_when_wav_close_fails(monkeypatch):
         samplerate=100,
         channels=1,
         segment_seconds=0.25,
-        segment_overlap_seconds=0.10,
+        segmenter_factory=lambda: _FixedSegmenter(25),
     )
     monkeypatch.setattr(recorder, "_open_stream", lambda *_: SilentStream())
     recorder.start_recording()
@@ -155,7 +218,7 @@ def test_recorder_closes_live_segment_stream_when_wav_close_fails(monkeypatch):
         recorder.stop_recording()
 
     segments = list(recorder.iter_segments())
-    assert [index for index, _ in segments] == [0]
+    assert [index for index, _, _ in segments] == [0]
 
 
 def test_live_segment_stream_drains_final_item_before_closing():
@@ -173,8 +236,8 @@ def test_live_segment_stream_drains_final_item_before_closing():
     consumer.start()
     assert consumer_started.wait(timeout=1)
 
-    assert stream.close((0, b"final audio", 16_000)) is True
+    assert stream.close((0, b"final audio", 16_000, False)) is True
     consumer.join(timeout=1)
 
     assert not consumer.is_alive()
-    assert received == [(0, b"final audio", 16_000)]
+    assert received == [(0, b"final audio", 16_000, False)]

@@ -6,16 +6,17 @@ from collections import deque
 from datetime import datetime
 from pathlib import Path
 from threading import Condition
-from typing import Iterator
+from typing import Callable, Iterator
 
 import numpy as np
 import sounddevice as sd
 
+from voxd.core.vad_segmenter import VadSegmenter
 from voxd.paths import DATA_DIR, RECORDINGS_DIR
 from voxd.utils.libw import verbo, verr
 
 
-_SegmentItem = tuple[int, bytes, int]
+_SegmentItem = tuple[int, bytes, int, bool]
 
 
 class _LiveSegmentStream:
@@ -71,6 +72,14 @@ class _LiveSegmentStream:
             self._condition.notify_all()
             return accepted
 
+    def fail(self, error: Exception) -> None:
+        with self._condition:
+            if self._closed or self._error is not None:
+                return
+            self._error = error
+            self._items.clear()
+            self._condition.notify_all()
+
     def iter_items(self) -> Iterator[_SegmentItem]:
         while True:
             with self._condition:
@@ -101,15 +110,13 @@ class AudioRecorder:
         input_device: str = "",
         prefer_pulse: bool = True,
         segment_seconds: float | None = None,
-        segment_overlap_seconds: float = 0.0,
         segment_queue_size: int = 8,
+        segmenter_factory: Callable[[], VadSegmenter] | None = None,
     ):
         if segment_seconds is not None and segment_seconds <= 0:
             raise ValueError("segment_seconds must be positive")
-        if segment_overlap_seconds < 0:
-            raise ValueError("segment_overlap_seconds must be non-negative")
-        if segment_seconds is not None and segment_overlap_seconds >= segment_seconds:
-            raise ValueError("segment overlap must be smaller than segment length")
+        if segment_seconds is not None and channels != 1:
+            raise ValueError("live VAD segmentation requires mono audio")
         if segment_queue_size < 1:
             raise ValueError("segment_queue_size must be at least 1")
 
@@ -121,8 +128,8 @@ class AudioRecorder:
         self.segment_seconds = (
             float(segment_seconds) if segment_seconds is not None else None
         )
-        self.segment_overlap_seconds = float(segment_overlap_seconds)
         self.segment_queue_size = int(segment_queue_size)
+        self._segmenter_factory = segmenter_factory
         self.temp_dir = DATA_DIR / "temp"
         self.temp_dir.mkdir(parents=True, mode=0o700, exist_ok=True)
         self.temp_dir.chmod(0o700)
@@ -136,11 +143,8 @@ class AudioRecorder:
         self._chunk_paths: list[Path] = []
         self._write_error: Exception | None = None
         self._segment_stream: _LiveSegmentStream | None = None
-        self._segment_buffer = bytearray()
+        self._segmenter: VadSegmenter | None = None
         self._segment_index = 0
-        self._segment_buffer_start_frame = 0
-        self._segment_total_frames = 0
-        self._segment_last_emitted_end_frame = 0
 
     def start_recording(self) -> None:
         verbo("[recorder] Recording started")
@@ -224,7 +228,13 @@ class AudioRecorder:
             pcm_bytes = pcm.tobytes()
             self._chunk_wave.writeframes(pcm_bytes)
             self._chunk_written_frames += frames
-            self._capture_segment_frames(pcm_bytes, frames)
+            try:
+                self._capture_segment_frames(pcm_bytes, frames)
+            except Exception as exc:
+                if self._segment_stream is not None:
+                    self._segment_stream.fail(exc)
+                self._segmenter = None
+                verr(f"[recorder] Live VAD failed; will replay after Stop: {exc}")
             if self._chunk_written_frames >= self._chunk_target_frames:
                 self._close_chunk()
                 self._open_new_chunk()
@@ -272,8 +282,8 @@ class AudioRecorder:
             )
         return output_path
 
-    def iter_segments(self) -> Iterator[tuple[int, bytes]]:
-        """Yield completed overlapping WAV windows until recording stops.
+    def iter_segments(self) -> Iterator[tuple[int, bytes, bool]]:
+        """Yield completed VAD-aligned WAV windows until recording stops.
 
         The queue is deliberately bounded. If transcription cannot keep pace,
         capture continues and this iterator fails so the caller can replay the
@@ -283,8 +293,8 @@ class AudioRecorder:
         if segment_stream is None:
             raise RuntimeError("live audio segments are not enabled")
 
-        for index, pcm_bytes, frame_rate in segment_stream.iter_items():
-            yield index, self._pcm_to_wav(pcm_bytes, frame_rate)
+        for index, pcm_bytes, frame_rate, speech_detected in segment_stream.iter_items():
+            yield index, self._pcm_to_wav(pcm_bytes, frame_rate), speech_detected
 
     def _reset_segment_stream(self) -> None:
         self._segment_stream = (
@@ -292,42 +302,32 @@ class AudioRecorder:
             if self.segment_seconds is not None
             else None
         )
-        self._segment_buffer = bytearray()
+        if self.segment_seconds is None:
+            self._segmenter = None
+        elif self._segmenter_factory is not None:
+            self._segmenter = self._segmenter_factory()
+        else:
+            self._segmenter = VadSegmenter(target_seconds=self.segment_seconds)
         self._segment_index = 0
-        self._segment_buffer_start_frame = 0
-        self._segment_total_frames = 0
-        self._segment_last_emitted_end_frame = 0
 
-    def _capture_segment_frames(self, pcm_bytes: bytes, frames: int) -> None:
-        if self._segment_stream is None or self._segment_stream.error is not None:
+    def _capture_segment_frames(self, pcm_bytes: bytes, _frames: int) -> None:
+        if (
+            self._segment_stream is None
+            or self._segment_stream.error is not None
+            or self._segmenter is None
+        ):
             return
-
-        frame_width = self.channels * 2
-        segment_frames = max(1, int(self.segment_seconds * self.fs))
-        overlap_frames = int(self.segment_overlap_seconds * self.fs)
-        step_frames = segment_frames - overlap_frames
-        segment_bytes = segment_frames * frame_width
-        step_bytes = step_frames * frame_width
-
-        self._segment_buffer.extend(pcm_bytes)
-        self._segment_total_frames += frames
-        while len(self._segment_buffer) >= segment_bytes:
-            segment = bytes(self._segment_buffer[:segment_bytes])
-            segment_end = self._segment_buffer_start_frame + segment_frames
-            if not self._queue_segment(segment):
+        for segment, speech_detected in self._segmenter.feed(pcm_bytes, self.fs):
+            if not self._queue_segment(segment, speech_detected):
                 return
-            self._segment_last_emitted_end_frame = segment_end
-            del self._segment_buffer[:step_bytes]
-            self._segment_buffer_start_frame += step_frames
 
-    def _queue_segment(self, pcm_bytes: bytes) -> bool:
+    def _queue_segment(self, pcm_bytes: bytes, speech_detected: bool) -> bool:
         if self._segment_stream is None:
             return False
         if not self._segment_stream.offer(
-            (self._segment_index, pcm_bytes, self.fs)
+            (self._segment_index, pcm_bytes, self.fs, speech_detected)
         ):
             error = self._segment_stream.error
-            self._segment_buffer.clear()
             if error is not None:
                 verr(f"[recorder] {error}; will replay after Stop")
             return False
@@ -338,20 +338,24 @@ class AudioRecorder:
         if self._segment_stream is None:
             return
         final_item = None
-        if self._segment_buffer and (
-            self._segment_total_frames > self._segment_last_emitted_end_frame
-        ):
+        if self._segmenter is not None and self._segment_stream.error is None:
+            final_segment = self._segmenter.finish()
+        else:
+            final_segment = None
+        if final_segment:
+            final_pcm, speech_detected = final_segment
             final_item = (
                 self._segment_index,
-                bytes(self._segment_buffer),
+                final_pcm,
                 self.fs,
+                speech_detected,
             )
         if self._segment_stream.close(final_item) and final_item is not None:
             self._segment_index += 1
         error = self._segment_stream.error
         if error is not None:
             verr(f"[recorder] {error}; will replay after Stop")
-        self._segment_buffer.clear()
+        self._segmenter = None
 
     def _pcm_to_wav(self, pcm_bytes: bytes, frame_rate: int) -> bytes:
         output = io.BytesIO()

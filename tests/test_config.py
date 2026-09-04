@@ -8,8 +8,7 @@ def test_gemma_transcription_defaults():
     assert cfg.gemma_server_url == "http://localhost:9292"
     assert cfg.gemma_model == "gemma-e4b"
     assert cfg.gemma_timeout == 300
-    assert cfg.gemma_segment_seconds == 15
-    assert cfg.gemma_segment_overlap_seconds == 3
+    assert cfg.gemma_segment_seconds == 10
     assert cfg.typing_delay == 0
     assert cfg.typing_word_delay == 10
     assert cfg.recording_archive_enabled is False
@@ -41,6 +40,50 @@ def test_load_drops_unknown_keys_from_saved_config():
     assert set(saved) == set(cfg.data)
 
 
+def test_load_migrates_legacy_default_segmentation_to_vad_target():
+    from voxd.core.config import AppConfig, CONFIG_PATH
+
+    CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG_PATH.write_text(
+        yaml.safe_dump(
+            {
+                "gemma_segment_seconds": 15,
+                "gemma_segment_overlap_seconds": 3,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    cfg = AppConfig()
+
+    assert cfg.gemma_segment_seconds == 10
+    saved = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+    assert saved["gemma_segment_seconds"] == 10
+    assert "gemma_segment_overlap_seconds" not in saved
+
+
+def test_load_preserves_custom_segmentation_during_legacy_key_cleanup():
+    from voxd.core.config import AppConfig, CONFIG_PATH
+
+    CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG_PATH.write_text(
+        yaml.safe_dump(
+            {
+                "gemma_segment_seconds": 12,
+                "gemma_segment_overlap_seconds": 3,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    cfg = AppConfig()
+
+    assert cfg.gemma_segment_seconds == 12
+    saved = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+    assert saved["gemma_segment_seconds"] == 12
+    assert "gemma_segment_overlap_seconds" not in saved
+
+
 def test_invalid_values_fall_back_to_safe_defaults():
     from voxd.core.config import AppConfig, CONFIG_PATH, DEFAULT_CONFIG
 
@@ -51,7 +94,6 @@ def test_invalid_values_fall_back_to_safe_defaults():
                 "typing_delay": "fast",
                 "typing_word_delay": -1,
                 "gemma_segment_seconds": 30,
-                "gemma_segment_overlap_seconds": 28,
                 "append_trailing_space": "yes",
                 "recording_archive_enabled": "yes",
                 "recording_archive_max_mb": 0,
@@ -65,21 +107,19 @@ def test_invalid_values_fall_back_to_safe_defaults():
     assert cfg.typing_delay == DEFAULT_CONFIG["typing_delay"]
     assert cfg.typing_word_delay == DEFAULT_CONFIG["typing_word_delay"]
     assert cfg.gemma_segment_seconds == DEFAULT_CONFIG["gemma_segment_seconds"]
-    assert cfg.gemma_segment_overlap_seconds < cfg.gemma_segment_seconds
     assert cfg.append_trailing_space is DEFAULT_CONFIG["append_trailing_space"]
     assert cfg.recording_archive_enabled is DEFAULT_CONFIG["recording_archive_enabled"]
     assert cfg.recording_archive_max_mb == DEFAULT_CONFIG["recording_archive_max_mb"]
 
 
-def test_small_segment_always_gets_smaller_overlap():
-    from voxd.core.config import AppConfig, CONFIG_PATH
+def test_segment_target_must_leave_room_for_the_vad_search_window():
+    from voxd.core.config import AppConfig, CONFIG_PATH, DEFAULT_CONFIG
 
     CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
     CONFIG_PATH.write_text(
         yaml.safe_dump(
             {
-                "gemma_segment_seconds": 0.5,
-                "gemma_segment_overlap_seconds": 1,
+                "gemma_segment_seconds": 2,
             }
         ),
         encoding="utf-8",
@@ -87,4 +127,4 @@ def test_small_segment_always_gets_smaller_overlap():
 
     cfg = AppConfig()
 
-    assert 0 <= cfg.gemma_segment_overlap_seconds < cfg.gemma_segment_seconds
+    assert cfg.gemma_segment_seconds == DEFAULT_CONFIG["gemma_segment_seconds"]

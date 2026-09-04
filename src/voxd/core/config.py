@@ -24,8 +24,7 @@ DEFAULT_CONFIG = {
     "gemma_server_url": "http://localhost:9292",
     "gemma_model": "gemma-e4b",
     "gemma_timeout": 300,
-    "gemma_segment_seconds": 15,
-    "gemma_segment_overlap_seconds": 3,
+    "gemma_segment_seconds": 10,
     "gemma_max_tokens": 1024,
 }
 
@@ -52,6 +51,20 @@ class AppConfig:
                     print("[config] Ignoring config because its top level is not a mapping")
             except (OSError, yaml.YAMLError) as exc:
                 print(f"[config] Could not read config; using defaults: {exc}")
+
+        # The fixed-overlap pipeline shipped with this exact default pair.
+        # Migrate only that recognizable legacy default; a different segment
+        # length or overlap represents an intentional user configuration.
+        try:
+            legacy_segment = float(user_config.get("gemma_segment_seconds"))
+            legacy_overlap = float(user_config.get("gemma_segment_overlap_seconds"))
+        except (TypeError, ValueError):
+            pass
+        else:
+            if legacy_segment == 15 and legacy_overlap == 3:
+                user_config["gemma_segment_seconds"] = DEFAULT_CONFIG[
+                    "gemma_segment_seconds"
+                ]
 
         # Keep the saved config aligned with the intentionally small public
         # surface by dropping unknown keys on the next save.
@@ -89,12 +102,8 @@ class AppConfig:
             self._number("gemma_max_tokens", minimum=1, maximum=16384)
         )
 
-        segment = self._number("gemma_segment_seconds", minimum=0.1, maximum=29.9)
-        overlap = self._number("gemma_segment_overlap_seconds", minimum=0, maximum=29.8)
-        if overlap >= segment:
-            overlap = min(DEFAULT_CONFIG["gemma_segment_overlap_seconds"], segment / 2)
+        segment = self._number("gemma_segment_seconds", minimum=2.1, maximum=27.9)
         self.data["gemma_segment_seconds"] = segment
-        self.data["gemma_segment_overlap_seconds"] = overlap
 
         for key in (
             "verbosity",

@@ -4,17 +4,17 @@ VOXD is a small Linux tray app for speech typing. It records until you stop,
 transcribes through a local OpenAI-compatible Gemma E4B service, and inserts the
 result as genuine keyboard input with `ydotool`.
 
-It deliberately has one runtime path: tray → recorder → E4B → clipboard recovery
-copy → `ydotool`. There is no Whisper model manager, post-processing layer,
-paste-based insertion, or continuous VAD mode.
+It deliberately has one runtime path: tray → recorder → Silero VAD → E4B →
+clipboard recovery copy → `ydotool`. There is no Whisper model manager,
+post-processing layer, or paste-based insertion.
 
 ## What it supports
 
 - Hindi in Latin/Roman script (Hinglish), English, and mixed speech
 - punctuation inferred from pauses and intonation
 - recordings of arbitrary practical length
-- E4B's sub-30-second input limit through sequential 15-second segments with a
-  3-second overlap
+- E4B's sub-30-second input limit through sequential, non-overlapping segments
+  cut near 10 seconds at the lowest local Silero speech probability
 - complete text insertion into terminals and coding tools through real key events
 - optional private FLAC recording history with transcript and model metadata
 - failure recovery: source audio is kept if transcription fails, and VOXD tries
@@ -22,13 +22,18 @@ paste-based insertion, or continuous VAD mode.
 
 Recording is streamed to bounded on-disk chunks, so speech duration is not capped
 by memory. A single background worker transcribes each completed E4B segment in
-order while recording continues. Stop closes and transcribes the final partial
-segment, merges the overlap, and only then types the complete result.
+order while recording continues. Each boundary is selected between 8 and 12
+seconds using one 96 ms local probability window. Stop closes and transcribes the
+final partial segment, directly concatenates non-empty segment text, and only then
+types the complete result. A window without Silero-detected speech is still sent to
+Gemma so quiet speech cannot be discarded, but previous-text context is withheld
+and an empty transcription is allowed.
 
 Live segments use a bounded in-memory queue. If the endpoint fails or falls too
 far behind, microphone capture and the full recording continue unaffected; after
-Stop, VOXD replays the stitched WAV through the same sequential transcription
-path. Archived FLAC audio therefore remains complete regardless of live decode.
+Stop, VOXD feeds the stitched WAV through the same VAD segmenter and sequential
+transcription path. Archived FLAC audio therefore remains complete regardless of
+live decode.
 
 ## Requirements
 
@@ -36,6 +41,7 @@ path. Archived FLAC audio therefore remains complete regardless of live decode.
 - Python 3.9+
 - `ydotool`, `ydotoold`, and a working user `ydotoold.service`
 - `ffmpeg` when FLAC recording history is enabled (WAV is retained if unavailable)
+- ONNX Runtime (installed automatically by the source/package setup)
 - an OpenAI-compatible E4B endpoint, defaulting to `http://localhost:9292`
 
 The endpoint must accept audio content at `/v1/chat/completions` using the
@@ -73,8 +79,7 @@ The user config is `~/.config/voxd/config.yaml`. Important defaults:
 ```yaml
 gemma_server_url: http://localhost:9292
 gemma_model: gemma-e4b
-gemma_segment_seconds: 15
-gemma_segment_overlap_seconds: 3
+gemma_segment_seconds: 10
 gemma_timeout: 300
 record_chunk_seconds: 300
 recording_archive_enabled: false
@@ -100,7 +105,8 @@ voxd --archive-recordings true
 ```
 
 Audio is archived under `~/.local/share/voxd/recordings/` as FLAC with a JSON
-sidecar containing the transcript, raw segments, prompt, and model metadata.
+sidecar containing the transcript, raw segments, per-segment request modes, the
+complete VAD/request/grammar protocol, and model metadata.
 The archive is private to the current user and capped by
 `recording_archive_max_mb`. Compression failure retains the source WAV instead.
 

@@ -56,231 +56,204 @@ class _Session:
         return _Response(response)
 
 
-def test_gemma_segments_long_wav_and_merges_overlap(tmp_path):
+def test_saved_wav_uses_the_shared_segmenter_and_direct_assembly(tmp_path):
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
     audio = tmp_path / "long.wav"
-    _write_silence(audio, duration_seconds=60)
-    session = _Session([
-        "hello duniya kaise ho",
-        "duniya kaise ho main theek hoon aaj bahut accha lag raha hai",
-        "lag raha hai dhanyavaad",
-    ])
+    _write_silence(audio, duration_seconds=30)
+    wav_segments = [
+        (0, _silence_wav_bytes(duration_seconds=10), True),
+        (1, _silence_wav_bytes(duration_seconds=10), True),
+        (2, _silence_wav_bytes(duration_seconds=10), True),
+    ]
+    factory_calls = []
+
+    class FakeSegmenter:
+        def iter_wav(self, path):
+            assert path == audio
+            yield from wav_segments
+
+    def segmenter_factory():
+        factory_calls.append(True)
+        return FakeSegmenter()
+
+    session = _Session(
+        ["hello repeated phrase", "repeated phrase again", "final words"]
+    )
     transcriber = GemmaAudioTranscriber(
-        server_url="http://localhost:9292/",
-        model="gemma-e4b",
-        segment_seconds=25,
-        overlap_seconds=1,
         delete_input=False,
         session=session,
+        segmenter_factory=segmenter_factory,
     )
 
     result = transcriber.transcribe(audio)
 
+    assert factory_calls == [True]
     assert result.text == (
-        "hello duniya kaise ho main theek hoon aaj bahut accha lag raha hai "
-        "dhanyavaad"
-    )
-    assert list(result.segments) == [
-        "hello duniya kaise ho",
-        "duniya kaise ho main theek hoon aaj bahut accha lag raha hai",
-        "lag raha hai dhanyavaad",
-    ]
-    assert result.streaming_shadow is not None
-    assert result.streaming_shadow.final_matches is True
-    assert result.streaming_shadow.stalled_boundaries == 0
-    assert result.streaming_shadow.committed_characters == len(
-        "hello duniya kaise ho main theek hoon aaj bahut accha lag raha hai"
-    )
-    assert result.streaming_shadow.provisional_characters == len("dhanyavaad")
-    assert [event.overlap_words for event in result.streaming_shadow.events] == [0, 3, 3]
-    assert audio.exists()
-    assert len(session.calls) == 3
-
-    durations = []
-    for url, payload, timeout in session.calls:
-        assert url == "http://localhost:9292/v1/chat/completions"
-        assert timeout == 300
-        assert payload["model"] == "gemma-e4b"
-        assert payload["chat_template_kwargs"] == {"enable_thinking": False}
-        user_message = next(
-            message for message in payload["messages"] if message["role"] == "user"
-        )
-        assert user_message["content"][0]["type"] == "text"
-        audio_part = user_message["content"][1]
-        assert audio_part["type"] == "input_audio"
-        wav_bytes = base64.b64decode(audio_part["input_audio"]["data"])
-        with wave.open(io.BytesIO(wav_bytes), "rb") as chunk:
-            durations.append(chunk.getnframes() / chunk.getframerate())
-
-    assert durations == [25, 25, 12]
-    second_messages = session.calls[1][1]["messages"]
-    assert second_messages[0]["role"] == "system"
-    assert "two-line transcript revision" in second_messages[0]["content"]
-    assert "do not stop after reproducing the overlap" in second_messages[0]["content"]
-    assert second_messages[1]["role"] == "user"
-    assert "Previous accumulated transcript" in second_messages[1]["content"][0]["text"]
-    assert second_messages[2] == {
-        "role": "assistant",
-        "content": "...hello —duniya kaise ho\n         —",
-    }
-    assert session.calls[0][1]["grammar"] == "root ::= [^—]+"
-    assert session.calls[1][1]["grammar"] == "root ::= [^—]+"
-
-
-def test_gemma_transcribes_live_segments_sequentially():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
-
-    session = _Session([
-        "hello duniya kaise ho",
-        "duniya kaise ho main theek hoon",
-    ])
-    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
-
-    result = transcriber.transcribe_segments(
-        [
-            (0, _silence_wav_bytes(duration_seconds=25)),
-            (1, _silence_wav_bytes(duration_seconds=5)),
-        ]
-    )
-
-    assert result.text == "hello duniya kaise ho main theek hoon"
-    assert list(result.segments) == [
-        "hello duniya kaise ho",
-        "duniya kaise ho main theek hoon",
-    ]
-    assert len(session.calls) == 2
-    second_messages = session.calls[1][1]["messages"]
-    assert [message["role"] for message in second_messages] == [
-        "system",
-        "user",
-        "assistant",
-    ]
-
-
-def test_span_revision_uses_capped_prefix_and_dedupes_earlier_overlap():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
-
-    session = _Session(
-        [
-            "alpha beta unless eye thing",
-            "alpha beta unless i think corrected words continue through all new speech now",
-        ]
-    )
-    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
-
-    result = transcriber.transcribe_segments(
-        [
-            (0, _silence_wav_bytes(duration_seconds=15)),
-            (1, _silence_wav_bytes(duration_seconds=15)),
-        ]
-    )
-
-    assert result.text == (
-        "alpha beta unless i think corrected words continue through all new speech now"
+        "hello repeated phrase repeated phrase again final words"
     )
     assert result.segments == (
-        "alpha beta unless eye thing",
-        "alpha beta unless i think corrected words continue through all new speech now",
+        "hello repeated phrase",
+        "repeated phrase again",
+        "final words",
     )
-    assert session.calls[1][1]["messages"][2] == {
-        "role": "assistant",
-        "content": "...alpha beta —unless eye thing\n              —",
-    }
-    assert session.calls[1][1]["grammar"] == "root ::= [^—]+"
-
-
-def test_span_revision_fuzzy_dedupes_a_longer_imperfect_overlap():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
-
-    stable = (
-        "aapne kuch rollback ke bare mein likha hai old stop container ke bare "
-        "mein likha hai"
-    )
-    completion = (
-        "kya old stop container ke bare mein likha hai backup ke bare mein "
-        "likha hai most likely"
-    )
-
-    assert GemmaAudioTranscriber._merge_span_revision(stable, completion) == (
-        "aapne kuch rollback ke bare mein likha hai old stop container ke bare "
-        "mein likha hai backup ke bare mein likha hai most likely"
-    )
-
-
-def test_short_full_span_falls_back_to_ordinary_decode():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
-
-    session = _Session(
-        [
-            "one two three four five six",
-            "four five six seven",
-            "four five six seven eight nine ten eleven twelve thirteen",
-        ]
-    )
-    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
-
-    result = transcriber.transcribe_segments(
-        [
-            (0, _silence_wav_bytes(duration_seconds=15)),
-            (1, _silence_wav_bytes(duration_seconds=15)),
-        ]
-    )
-
-    assert result.text == (
-        "one two three four five six seven eight nine ten eleven twelve thirteen"
-    )
+    assert result.segment_modes == ("ordinary", "ordinary", "ordinary")
+    assert audio.exists()
     assert len(session.calls) == 3
-    fallback_messages = session.calls[2][1]["messages"]
-    assert [message["role"] for message in fallback_messages] == ["user"]
-    assert "previous segment ended with" in fallback_messages[0]["content"][0]["text"]
-
-
-def test_span_validation_allows_literal_brackets():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
-
-    valid_with_brackets = "four [five] six seven eight nine ten eleven twelve thirteen"
-
-    assert GemmaAudioTranscriber._valid_span_completion(
-        valid_with_brackets, "four five six", full_segment=True
+    assert all(
+        call[1]["grammar"] == r"root ::= [\x20-\x7E]*"
+        for call in session.calls
+    )
+    assert all(
+        [message["role"] for message in call[1]["messages"]] == ["user"]
+        for call in session.calls
     )
 
 
-def test_span_that_omits_candidate_preserves_it_without_an_ordinary_retry():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
-
-    session = _Session(
-        [
-            "one two three four five six",
-            "seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen",
-        ]
+def test_context_uses_up_to_2000_characters_without_changing_assembly():
+    from voxd.core.gemma_transcriber import (
+        PREVIOUS_CONTEXT_CHARS,
+        GemmaAudioTranscriber,
     )
+
+    previous = "startmarker " + " ".join(f"word{index}" for index in range(500))
+    session = _Session([previous, "final words"])
     transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
 
     result = transcriber.transcribe_segments(
         [
-            (0, _silence_wav_bytes(duration_seconds=15)),
-            (1, _silence_wav_bytes(duration_seconds=15)),
+            (0, _silence_wav_bytes(duration_seconds=10), True),
+            (1, _silence_wav_bytes(duration_seconds=10), True),
         ]
     )
 
-    assert result.text == (
-        "one two three four five six seven eight nine ten eleven twelve thirteen "
-        "fourteen fifteen sixteen"
-    )
-    assert len(session.calls) == 2
+    sent_prompt = session.calls[1][1]["messages"][0]["content"][0]["text"]
+    marker = "previous accumulated transcript ends with: "
+    context = sent_prompt.split(marker, 1)[1].split(
+        ". Do not repeat that context", 1
+    )[0]
+    assert len(context) <= PREVIOUS_CONTEXT_CHARS + 2  # repr quotes
+    assert "startmarker" not in context
+    assert context.endswith("word499'")
+    assert result.text == f"{previous} final words"
 
 
-def test_preserved_candidate_dedupes_one_exact_boundary_word():
+def test_context_character_cap_is_strict_for_one_oversized_token():
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
-    previous = "old stop container ke bare mein likha hai backup ke bare"
-    completion = "bare mein likha hai most likely backup hata dena chahiye"
+    assert GemmaAudioTranscriber._context_tail("x" * 2100) == "x" * 2000
 
-    assert GemmaAudioTranscriber._merge_span_revision(previous, completion) == (
-        "old stop container ke bare mein likha hai backup ke bare mein likha hai "
-        "most likely backup hata dena chahiye"
+
+def test_vad_negative_audio_is_transcribed_without_previous_context():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    session = _Session(["first words", "quiet final words"])
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
+    wav = _silence_wav_bytes(duration_seconds=1)
+
+    result = transcriber.transcribe_segments(
+        [(0, wav, True), (1, wav, False)]
     )
+
+    second_prompt = session.calls[1][1]["messages"][0]["content"][0]["text"]
+    assert "previous accumulated transcript" not in second_prompt
+    assert result.text == "first words quiet final words"
+
+
+def test_empty_silent_segment_is_ignored_during_direct_assembly():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    session = _Session(["first words", ""])
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
+    wav = _silence_wav_bytes(duration_seconds=1)
+
+    result = transcriber.transcribe_segments(
+        [(0, wav, True), (1, wav, False)]
+    )
+
+    assert len(session.calls) == 2
+    assert result.text == "first words"
+    assert result.segments == ("first words",)
+    assert result.segment_modes == ("ordinary",)
+
+
+def test_all_empty_segments_return_a_successful_no_speech_result():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    session = _Session(["", "   "])
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
+    wav = _silence_wav_bytes(duration_seconds=1)
+
+    result = transcriber.transcribe_segments(
+        [(0, wav, False), (1, wav, False)]
+    )
+
+    assert len(session.calls) == 2
+    assert result.text == ""
+    assert result.segments == ()
+    assert result.segment_modes == ()
+
+
+def test_empty_speech_positive_segment_retries_instead_of_being_discarded(
+    monkeypatch,
+):
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    session = _Session(["", "recovered words"])
+    monkeypatch.setattr("voxd.core.gemma_transcriber.time.sleep", lambda *_: None)
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
+
+    result = transcriber.transcribe_segments(
+        [(0, _silence_wav_bytes(duration_seconds=1), True)]
+    )
+
+    assert len(session.calls) == 2
+    assert result.text == "recovered words"
+
+
+def test_repeated_empty_speech_positive_segment_is_an_error():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber, GemmaTranscriptionError
+
+    transcriber = GemmaAudioTranscriber(
+        delete_input=False,
+        session=_Session(["", "   "]),
+    )
+
+    with pytest.raises(GemmaTranscriptionError, match="speech-positive audio"):
+        transcriber.transcribe_segments(
+            [(0, _silence_wav_bytes(duration_seconds=1), True)]
+        )
+
+
+def test_no_audio_segments_remain_an_error():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber, GemmaTranscriptionError
+
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=_Session([]))
+
+    with pytest.raises(GemmaTranscriptionError, match="Audio input contains no frames"):
+        transcriber.transcribe_segments([])
+
+
+def test_gemma_request_contains_audio_and_generation_controls():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    session = _Session(["namaste duniya"])
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
+    wav = _silence_wav_bytes(duration_seconds=5)
+
+    transcriber.transcribe_segments([(0, wav, True)])
+
+    url, payload, timeout = session.calls[0]
+    assert url == "http://localhost:9292/v1/chat/completions"
+    assert timeout == 300
+    assert payload["model"] == "gemma-e4b"
+    assert payload["temperature"] == 0
+    assert payload["max_tokens"] == 1024
+    assert payload["grammar"] == r"root ::= [\x20-\x7E]*"
+    assert payload["chat_template_kwargs"] == {"enable_thinking": False}
+    audio_part = payload["messages"][0]["content"][1]
+    assert audio_part["type"] == "input_audio"
+    assert base64.b64decode(audio_part["input_audio"]["data"]) == wav
 
 
 def test_gemma_deletes_input_only_after_complete_success(tmp_path):
@@ -288,20 +261,24 @@ def test_gemma_deletes_input_only_after_complete_success(tmp_path):
 
     audio = tmp_path / "short.wav"
     _write_silence(audio, duration_seconds=1)
+
+    class FakeSegmenter:
+        def iter_wav(self, _path):
+            yield 0, _silence_wav_bytes(duration_seconds=1), True
+
     transcriber = GemmaAudioTranscriber(
         delete_input=True,
         session=_Session(["namaste duniya"]),
+        segmenter_factory=FakeSegmenter,
     )
 
     assert transcriber.transcribe(audio).text == "namaste duniya"
     assert not audio.exists()
 
 
-def test_gemma_captures_resolved_model_identity(tmp_path):
+def test_gemma_captures_resolved_model_identity():
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
-    audio = tmp_path / "identity.wav"
-    _write_silence(audio, duration_seconds=1)
     session = _Session(
         [
             _Response(
@@ -313,7 +290,9 @@ def test_gemma_captures_resolved_model_identity(tmp_path):
     )
     transcriber = GemmaAudioTranscriber(delete_input=False, session=session)
 
-    result = transcriber.transcribe(audio)
+    result = transcriber.transcribe_segments(
+        [(0, _silence_wav_bytes(duration_seconds=1), True)]
+    )
 
     assert result.resolved_model == "gemma-e4b-q8"
     assert result.system_fingerprint == "server-build-1"
@@ -356,11 +335,38 @@ def test_default_prompt_is_scoped_computer_dictation_context():
     assert "Never output Devanagari or any other Indic script" in DEFAULT_PROMPT
     assert "transliterate every Hindi word into natural Roman Hinglish" in DEFAULT_PROMPT
     assert "live voice dictation on a computer" in DEFAULT_PROMPT
-    assert "coding tools" in DEFAULT_PROMPT
-    assert "web searches" in DEFAULT_PROMPT
-    assert "only to resolve likely words and sentence boundaries" in DEFAULT_PROMPT
     assert "Do not answer the speaker" in DEFAULT_PROMPT
-    assert "Add readable punctuation" in DEFAULT_PROMPT
+    assert "transcribe the spoken words literally" in DEFAULT_PROMPT
+    assert "If the audio contains no intelligible speech, output nothing" in DEFAULT_PROMPT
+
+
+def test_protocol_metadata_describes_the_vad_and_direct_append_pipeline():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+
+    transcriber = GemmaAudioTranscriber(delete_input=False, session=_Session([]))
+
+    protocol = transcriber.protocol_metadata()
+
+    assert protocol["version"] == 6
+    assert protocol["prompt"] == transcriber.prompt
+    assert protocol["previous_context_max_characters"] == 2000
+    assert protocol["assembly"] == "space-concatenation"
+    assert protocol["silence_handling"] == "omit-context-and-allow-empty-output"
+    assert protocol["generation"]["grammar"] == r"root ::= [\x20-\x7E]*"
+    assert protocol["segmentation"] == {
+        "algorithm": "silero-minimum-local-speech-risk",
+        "target_seconds": 10.0,
+        "search_radius_seconds": 2.0,
+        "analysis_sample_rate": 16000,
+        "analysis_frame_samples": 512,
+        "local_window_ms": 96.0,
+        "decision_lookahead_ms": 32.0,
+        "speech_threshold": 0.5,
+        "model": "silero_vad_16k_op15.onnx",
+        "model_sha256": (
+            "7ed98ddbad84ccac4cd0aeb3099049280713df825c610a8ed34543318f1b2c49"
+        ),
+    }
 
 
 def test_gemma_failure_retries_and_retains_audio(monkeypatch, tmp_path):
@@ -376,9 +382,19 @@ def test_gemma_failure_retries_and_retains_audio(monkeypatch, tmp_path):
 
     audio = tmp_path / "failed.wav"
     _write_silence(audio, duration_seconds=1)
+
+    class FakeSegmenter:
+        def iter_wav(self, _path):
+            yield 0, _silence_wav_bytes(duration_seconds=1), True
+
     session = FailingSession()
     monkeypatch.setattr("voxd.core.gemma_transcriber.time.sleep", lambda *_: None)
-    transcriber = GemmaAudioTranscriber(delete_input=True, attempts=2, session=session)
+    transcriber = GemmaAudioTranscriber(
+        delete_input=True,
+        attempts=2,
+        session=session,
+        segmenter_factory=FakeSegmenter,
+    )
 
     with pytest.raises(GemmaTranscriptionError, match="Segment 1 failed"):
         transcriber.transcribe(audio)
@@ -387,15 +403,9 @@ def test_gemma_failure_retries_and_retains_audio(monkeypatch, tmp_path):
     assert audio.exists()
 
 
-@pytest.mark.parametrize(
-    ("segment_seconds", "overlap_seconds"),
-    [(30, 1), (0, 0), (25, 25), (25, -1)],
-)
-def test_gemma_rejects_invalid_segment_window(segment_seconds, overlap_seconds):
+@pytest.mark.parametrize("segment_seconds", [0, 2, 27.99, 28, 30])
+def test_gemma_rejects_invalid_segment_target(segment_seconds):
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
     with pytest.raises(ValueError):
-        GemmaAudioTranscriber(
-            segment_seconds=segment_seconds,
-            overlap_seconds=overlap_seconds,
-        )
+        GemmaAudioTranscriber(segment_seconds=segment_seconds)

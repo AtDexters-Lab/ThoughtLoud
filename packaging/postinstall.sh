@@ -35,4 +35,18 @@ if [ -n "$PY" ]; then
   fi
 fi
 
+if [ ! -x "$APPDIR/.venv/bin/python" ]; then
+  echo "voxd installation failed: could not create the Python environment" >&2
+  exit 1
+fi
+if ! "$APPDIR/.venv/bin/python" -m pip install --disable-pip-version-check --no-input \
+  "onnxruntime>=1.16.1" >/dev/null 2>&1; then
+  echo "voxd installation failed: could not install ONNX Runtime" >&2
+  exit 1
+fi
+if ! ORT_DISABLE_TELEMETRY=1 "$APPDIR/.venv/bin/python" -c "import onnxruntime" >/dev/null 2>&1; then
+  echo "voxd installation failed: ONNX Runtime is unavailable" >&2
+  exit 1
+fi
+
 echo "voxd installed. Log out once if input-group membership changed, then run: voxd --setup"

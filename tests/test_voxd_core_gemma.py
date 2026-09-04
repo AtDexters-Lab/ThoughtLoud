@@ -1,4 +1,5 @@
 import hashlib
+import json
 from threading import Event, Thread
 from types import SimpleNamespace
 
@@ -8,7 +9,6 @@ def _config(*, recording_archive_enabled=False):
         gemma_server_url="http://localhost:9292",
         gemma_model="gemma-e4b",
         gemma_segment_seconds=25,
-        gemma_segment_overlap_seconds=1,
         gemma_timeout=300,
         gemma_max_tokens=1024,
         record_chunk_seconds=300,
@@ -34,17 +34,14 @@ def _install_fakes(
     live_error=None,
     replay_error=None,
     segment_before_stop=False,
+    no_speech=False,
 ):
     import voxd.core.archive as archive_module
     import voxd.core.clipboard as clipboard_module
     import voxd.core.recorder as recorder_module
     import voxd.core.typer as typer_module
     import voxd.core.voxd_core as core_module
-    from voxd.core.gemma_transcriber import (
-        StreamingShadow,
-        StreamingShadowEvent,
-        TranscriptionResult,
-    )
+    from voxd.core.gemma_transcriber import TranscriptionResult
 
     events = {
         "transcriber_kwargs": None,
@@ -62,7 +59,7 @@ def _install_fakes(
         def __init__(self, **kwargs):
             assert kwargs["chunk_seconds"] == 300
             assert kwargs["segment_seconds"] == 25
-            assert kwargs["segment_overlap_seconds"] == 1
+            assert callable(kwargs["segmenter_factory"])
             self.is_recording = False
             self.last_temp_file = None
             self.stopped = Event()
@@ -85,7 +82,7 @@ def _install_fakes(
         def iter_segments(self):
             if not segment_before_stop:
                 assert self.stopped.wait(timeout=1)
-            yield 0, b"recording segment"
+            yield 0, b"recording segment", True
             if segment_before_stop:
                 assert self.stopped.wait(timeout=1)
 
@@ -101,41 +98,54 @@ def _install_fakes(
             if warmup_error:
                 raise warmup_error
 
+        def new_segmenter(self):
+            return object()
+
+        def protocol_metadata(self):
+            return {
+                "version": 6,
+                "prompt": self.prompt,
+                "previous_context_max_characters": 2000,
+                "assembly": "space-concatenation",
+                "silence_handling": "omit-context-and-allow-empty-output",
+                "segmentation": {
+                    "algorithm": "silero-minimum-local-speech-risk",
+                    "target_seconds": 25,
+                },
+                "generation": {
+                    "temperature": 0.0,
+                    "max_tokens": 1024,
+                    "enable_thinking": False,
+                    "grammar": r"root ::= [\x20-\x7E]*",
+                },
+            }
+
         def transcribe_segments(self, segments):
             received = []
             for segment in segments:
                 received.append(segment)
                 events["live_segment_seen"].set()
-            assert received == [(0, b"recording segment")]
+            assert received == [(0, b"recording segment", True)]
             events["order"].append("transcribe-live")
             if live_error:
                 # Simulate identity observed by a discarded partial live pass.
                 self.resolved_model = "discarded-live-model"
                 self.system_fingerprint = "discarded-live-fingerprint"
                 raise live_error
+            if no_speech:
+                return TranscriptionResult(
+                    text="",
+                    segments=(),
+                    resolved_model="resolved-e4b",
+                    system_fingerprint="test-fingerprint",
+                    segment_modes=(),
+                )
             return TranscriptionResult(
                 text="namaste doston",
                 segments=("namaste", "doston"),
                 resolved_model="resolved-e4b",
                 system_fingerprint="test-fingerprint",
-                streaming_shadow=StreamingShadow(
-                    events=(
-                        StreamingShadowEvent(
-                            segment_index=1,
-                            elapsed_seconds=1.2345,
-                            committed_delta_characters=7,
-                            committed_characters=7,
-                            provisional_characters=6,
-                            overlap_words=2,
-                            boundary_matched=True,
-                            commits_blocked=False,
-                        ),
-                    ),
-                    committed_characters=7,
-                    provisional_characters=6,
-                    stalled_boundaries=0,
-                    final_matches=True,
-                ),
+                segment_modes=("ordinary", "ordinary"),
             )
 
         def transcribe(self, path):
@@ -148,34 +158,7 @@ def _install_fakes(
                 segments=("namaste", "doston"),
                 resolved_model=None,
                 system_fingerprint=None,
-                streaming_shadow=StreamingShadow(
-                    events=(
-                        StreamingShadowEvent(
-                            segment_index=0,
-                            elapsed_seconds=0.1,
-                            committed_delta_characters=0,
-                            committed_characters=0,
-                            provisional_characters=7,
-                            overlap_words=0,
-                            boundary_matched=False,
-                            commits_blocked=False,
-                        ),
-                        StreamingShadowEvent(
-                            segment_index=1,
-                            elapsed_seconds=0.2,
-                            committed_delta_characters=0,
-                            committed_characters=0,
-                            provisional_characters=14,
-                            overlap_words=0,
-                            boundary_matched=False,
-                            commits_blocked=True,
-                        ),
-                    ),
-                    committed_characters=0,
-                    provisional_characters=14,
-                    stalled_boundaries=1,
-                    final_matches=True,
-                ),
+                segment_modes=("ordinary", "ordinary"),
             )
 
         def cleanup_input(self, path):
@@ -259,27 +242,35 @@ def test_archive_enabled_preserves_audio_and_records_replay_metadata(monkeypatch
     assert transcription["system_fingerprint"] == "test-fingerprint"
     assert transcription["text"] == "namaste doston"
     assert transcription["segments"] == ["namaste", "doston"]
+    assert transcription["segment_modes"] == ["ordinary", "ordinary"]
     assert transcription["prompt"] == "test prompt"
     assert transcription["prompt_sha256"] == hashlib.sha256(b"test prompt").hexdigest()
-    assert transcription["streaming_shadow"] == {
-        "source": "live",
-        "committed_characters": 7,
-        "provisional_characters": 6,
-        "stalled_boundaries": 0,
-        "final_matches": True,
-        "events": [
-            {
-                "segment_index": 1,
-                "elapsed_seconds": 1.234,
-                "committed_delta_characters": 7,
-                "committed_characters": 7,
-                "provisional_characters": 6,
-                "overlap_words": 2,
-                "boundary_matched": True,
-                "commits_blocked": False,
-            }
-        ],
+    assert transcription["protocol"] == {
+        "version": 6,
+        "prompt": "test prompt",
+        "previous_context_max_characters": 2000,
+        "assembly": "space-concatenation",
+        "silence_handling": "omit-context-and-allow-empty-output",
+        "segmentation": {
+            "algorithm": "silero-minimum-local-speech-risk",
+            "target_seconds": 25,
+        },
+        "generation": {
+            "temperature": 0.0,
+            "max_tokens": 1024,
+            "enable_thinking": False,
+            "grammar": r"root ::= [\x20-\x7E]*",
+        },
     }
+    assert transcription["protocol_sha256"] == hashlib.sha256(
+        json.dumps(
+            transcription["protocol"],
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+    ).hexdigest()
+    assert transcription["source"] == "live"
     assert events["typed"] == ["namaste doston"]
     assert finished == ["namaste doston"]
 
@@ -301,6 +292,44 @@ def test_core_decodes_completed_segment_before_recording_stops(monkeypatch, tmp_
     assert events["typed"] == ["namaste doston"]
 
 
+def test_no_speech_does_not_replay_copy_or_type(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(monkeypatch, tmp_path, no_speech=True)
+    finished = []
+    thread = CoreProcessThread(_config())
+    thread.should_stop = True
+    thread.finished.connect(finished.append)
+    thread.run()
+
+    assert events["order"] == ["recording-started", "warmup", "transcribe-live"]
+    assert len(events["cleaned"]) == 1
+    assert events["copied"] == []
+    assert events["typed"] == []
+    assert finished == [""]
+
+
+def test_archived_no_speech_is_not_recorded_as_a_failure(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(
+        monkeypatch,
+        tmp_path,
+        no_speech=True,
+    )
+    thread = CoreProcessThread(_config(recording_archive_enabled=True))
+    thread.should_stop = True
+    thread.run()
+
+    transcription = events["archives"][0][2]["transcription"]
+    assert transcription["status"] == "no_speech"
+    assert transcription["error"] is None
+    assert transcription["source"] == "live"
+    assert transcription["segments"] == []
+    assert events["copied"] == []
+    assert events["typed"] == []
+
+
 def test_archive_recovers_partial_wav_when_recorder_stop_raises(monkeypatch, tmp_path):
     from voxd.core.voxd_core import CoreProcessThread
 
@@ -320,6 +349,7 @@ def test_archive_recovers_partial_wav_when_recorder_stop_raises(monkeypatch, tmp
     assert recording_path.exists()
     assert metadata["transcription"]["status"] == "failed"
     assert metadata["transcription"]["error"] == "capture failed"
+    assert metadata["transcription"]["segment_modes"] == []
     assert events["typed"] == []
     assert finished == [""]
 
@@ -418,8 +448,8 @@ def test_fallback_archive_uses_only_replay_model_identity(monkeypatch, tmp_path)
     assert transcription["text"] == "namaste doston"
     assert transcription["model"] is None
     assert transcription["system_fingerprint"] is None
-    assert transcription["streaming_shadow"]["source"] == "replay"
-    assert transcription["streaming_shadow"]["final_matches"] is True
+    assert transcription["segment_modes"] == ["ordinary", "ordinary"]
+    assert transcription["source"] == "replay"
 
 
 def test_live_and_replay_failure_still_archives_full_audio(monkeypatch, tmp_path):
@@ -443,5 +473,6 @@ def test_live_and_replay_failure_still_archives_full_audio(monkeypatch, tmp_path
     assert metadata["transcription"]["status"] == "failed"
     assert metadata["transcription"]["error"] == "server offline"
     assert metadata["transcription"]["segments"] == []
+    assert metadata["transcription"]["segment_modes"] == []
     assert events["typed"] == []
     assert finished == [""]

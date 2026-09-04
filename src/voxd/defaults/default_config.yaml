@@ -17,6 +17,5 @@ mic_autoset_level: 0.45
 gemma_server_url: http://localhost:9292
 gemma_model: gemma-e4b
 gemma_timeout: 300
-gemma_segment_seconds: 15
-gemma_segment_overlap_seconds: 3
+gemma_segment_seconds: 10
 gemma_max_tokens: 1024

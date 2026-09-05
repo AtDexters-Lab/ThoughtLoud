@@ -103,11 +103,18 @@ def _install_fakes(
 
         def protocol_metadata(self):
             return {
-                "version": 6,
+                "version": 7,
                 "prompt": self.prompt,
                 "previous_context_max_characters": 2000,
                 "assembly": "space-concatenation",
                 "silence_handling": "omit-context-and-allow-empty-output",
+                "request_protocol": {
+                    "without_previous_context": "prompt-and-audio user message",
+                    "with_previous_context": {
+                        "roles": ["system", "user", "assistant", "user"],
+                        "assistant_prefill": None,
+                    },
+                },
                 "segmentation": {
                     "algorithm": "silero-minimum-local-speech-risk",
                     "target_seconds": 25,
@@ -246,11 +253,18 @@ def test_archive_enabled_preserves_audio_and_records_replay_metadata(monkeypatch
     assert transcription["prompt"] == "test prompt"
     assert transcription["prompt_sha256"] == hashlib.sha256(b"test prompt").hexdigest()
     assert transcription["protocol"] == {
-        "version": 6,
+        "version": 7,
         "prompt": "test prompt",
         "previous_context_max_characters": 2000,
         "assembly": "space-concatenation",
         "silence_handling": "omit-context-and-allow-empty-output",
+        "request_protocol": {
+            "without_previous_context": "prompt-and-audio user message",
+            "with_previous_context": {
+                "roles": ["system", "user", "assistant", "user"],
+                "assistant_prefill": None,
+            },
+        },
         "segmentation": {
             "algorithm": "silero-minimum-local-speech-risk",
             "target_seconds": 25,

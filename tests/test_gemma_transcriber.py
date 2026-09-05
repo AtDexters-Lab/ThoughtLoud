@@ -104,14 +104,20 @@ def test_saved_wav_uses_the_shared_segmenter_and_direct_assembly(tmp_path):
         call[1]["grammar"] == r"root ::= [\x20-\x7E]*"
         for call in session.calls
     )
+    assert [message["role"] for message in session.calls[0][1]["messages"]] == [
+        "user"
+    ]
     assert all(
-        [message["role"] for message in call[1]["messages"]] == ["user"]
-        for call in session.calls
+        [message["role"] for message in call[1]["messages"]]
+        == ["system", "user", "assistant", "user"]
+        for call in session.calls[1:]
     )
 
 
 def test_context_uses_up_to_2000_characters_without_changing_assembly():
     from voxd.core.gemma_transcriber import (
+        CONTEXT_ASSISTANT_ACKNOWLEDGEMENT,
+        CONTEXT_USER_TEMPLATE,
         PREVIOUS_CONTEXT_CHARS,
         GemmaAudioTranscriber,
     )
@@ -127,14 +133,38 @@ def test_context_uses_up_to_2000_characters_without_changing_assembly():
         ]
     )
 
-    sent_prompt = session.calls[1][1]["messages"][0]["content"][0]["text"]
-    marker = "previous accumulated transcript ends with: "
-    context = sent_prompt.split(marker, 1)[1].split(
-        ". Do not repeat that context", 1
-    )[0]
-    assert len(context) <= PREVIOUS_CONTEXT_CHARS + 2  # repr quotes
-    assert "startmarker" not in context
-    assert context.endswith("word499'")
+    messages = session.calls[1][1]["messages"]
+    expected_context = GemmaAudioTranscriber._context_tail(previous)
+    assert len(expected_context) <= PREVIOUS_CONTEXT_CHARS
+    assert "startmarker" not in expected_context
+    assert expected_context.endswith("word499")
+    assert messages == [
+        {"role": "system", "content": transcriber.prompt},
+        {
+            "role": "user",
+            "content": CONTEXT_USER_TEMPLATE.format(
+                transcription=expected_context
+            ),
+        },
+        {
+            "role": "assistant",
+            "content": CONTEXT_ASSISTANT_ACKNOWLEDGEMENT,
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "input_audio",
+                    "input_audio": {
+                        "data": base64.b64encode(
+                            _silence_wav_bytes(duration_seconds=10)
+                        ).decode("ascii"),
+                        "format": "wav",
+                    },
+                }
+            ],
+        },
+    ]
     assert result.text == f"{previous} final words"
 
 
@@ -155,8 +185,12 @@ def test_vad_negative_audio_is_transcribed_without_previous_context():
         [(0, wav, True), (1, wav, False)]
     )
 
-    second_prompt = session.calls[1][1]["messages"][0]["content"][0]["text"]
-    assert "previous accumulated transcript" not in second_prompt
+    second_messages = session.calls[1][1]["messages"]
+    assert [message["role"] for message in second_messages] == ["user"]
+    assert second_messages[0]["content"][0] == {
+        "type": "text",
+        "text": transcriber.prompt,
+    }
     assert result.text == "first words quiet final words"
 
 
@@ -256,6 +290,44 @@ def test_gemma_request_contains_audio_and_generation_controls():
     assert base64.b64decode(audio_part["input_audio"]["data"]) == wav
 
 
+def test_context_conversation_propagates_custom_prompt_without_prefill():
+    from voxd.core.gemma_transcriber import (
+        CONTEXT_ASSISTANT_ACKNOWLEDGEMENT,
+        CONTEXT_USER_TEMPLATE,
+        GemmaAudioTranscriber,
+    )
+
+    session = _Session(["first words", "second words"])
+    transcriber = GemmaAudioTranscriber(
+        delete_input=False,
+        prompt="custom transcription prompt",
+        session=session,
+    )
+    wav = _silence_wav_bytes(duration_seconds=1)
+
+    transcriber.transcribe_segments([(0, wav, True), (1, wav, True)])
+
+    messages = session.calls[1][1]["messages"]
+    assert messages[0] == {
+        "role": "system",
+        "content": "custom transcription prompt",
+    }
+    assert messages[1] == {
+        "role": "user",
+        "content": CONTEXT_USER_TEMPLATE.format(transcription="first words"),
+    }
+    assert messages[2] == {
+        "role": "assistant",
+        "content": CONTEXT_ASSISTANT_ACKNOWLEDGEMENT,
+    }
+    assert messages[3]["role"] == "user"
+    assert len(messages[3]["content"]) == 1
+    assert messages[3]["content"][0]["type"] == "input_audio"
+    assert base64.b64decode(
+        messages[3]["content"][0]["input_audio"]["data"]
+    ) == wav
+
+
 def test_gemma_deletes_input_only_after_complete_success(tmp_path):
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
@@ -347,11 +419,36 @@ def test_protocol_metadata_describes_the_vad_and_direct_append_pipeline():
 
     protocol = transcriber.protocol_metadata()
 
-    assert protocol["version"] == 6
+    assert protocol["version"] == 7
     assert protocol["prompt"] == transcriber.prompt
     assert protocol["previous_context_max_characters"] == 2000
     assert protocol["assembly"] == "space-concatenation"
     assert protocol["silence_handling"] == "omit-context-and-allow-empty-output"
+    assert protocol["request_protocol"] == {
+        "without_previous_context": (
+            "one user message containing the transcription prompt followed by "
+            "the current audio"
+        ),
+        "with_previous_context": {
+            "applies_to": (
+                "speech-positive segments with an accumulated transcript"
+            ),
+            "roles": ["system", "user", "assistant", "user"],
+            "context_user_template": (
+                "ok, I'm sharing the audio transcribed so far, please leverage this "
+                "context to better transcribe the next audio chunk i'll share shortly.\n"
+                "Transcribed so far:\n"
+                "`{transcription}`"
+            ),
+            "assistant_acknowledgement": (
+                "ok, I have internalized the previous transcript as context. please "
+                "share the next continued speech chunk audio file and i'll transcribe "
+                "it following the system instructions."
+            ),
+            "current_audio": "audio-only final user message",
+            "assistant_prefill": None,
+        },
+    }
     assert protocol["generation"]["grammar"] == r"root ::= [\x20-\x7E]*"
     assert protocol["segmentation"] == {
         "algorithm": "silero-minimum-local-speech-risk",

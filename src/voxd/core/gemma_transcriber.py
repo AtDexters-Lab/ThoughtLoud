@@ -50,6 +50,17 @@ DEFAULT_PROMPT = (
 
 PREVIOUS_CONTEXT_CHARS = 2000
 TRANSCRIPT_GRAMMAR = r"root ::= [\x20-\x7E]*"
+CONTEXT_USER_TEMPLATE = (
+    "ok, I'm sharing the audio transcribed so far, please leverage this context "
+    "to better transcribe the next audio chunk i'll share shortly.\n"
+    "Transcribed so far:\n"
+    "`{transcription}`"
+)
+CONTEXT_ASSISTANT_ACKNOWLEDGEMENT = (
+    "ok, I have internalized the previous transcript as context. please share the "
+    "next continued speech chunk audio file and i'll transcribe it following the "
+    "system instructions."
+)
 
 
 class GemmaTranscriptionError(RuntimeError):
@@ -184,11 +195,29 @@ class GemmaAudioTranscriber:
     def protocol_metadata(self) -> dict:
         """Return the complete stable request and segmentation protocol."""
         return {
-            "version": 6,
+            "version": 7,
             "prompt": self.prompt,
             "previous_context_max_characters": PREVIOUS_CONTEXT_CHARS,
             "assembly": "space-concatenation",
             "silence_handling": "omit-context-and-allow-empty-output",
+            "request_protocol": {
+                "without_previous_context": (
+                    "one user message containing the transcription prompt followed "
+                    "by the current audio"
+                ),
+                "with_previous_context": {
+                    "applies_to": (
+                        "speech-positive segments with an accumulated transcript"
+                    ),
+                    "roles": ["system", "user", "assistant", "user"],
+                    "context_user_template": CONTEXT_USER_TEMPLATE,
+                    "assistant_acknowledgement": (
+                        CONTEXT_ASSISTANT_ACKNOWLEDGEMENT
+                    ),
+                    "current_audio": "audio-only final user message",
+                    "assistant_prefill": None,
+                },
+            },
             "segmentation": {
                 "algorithm": "silero-minimum-local-speech-risk",
                 "target_seconds": self.segment_seconds,
@@ -245,29 +274,39 @@ class GemmaAudioTranscriber:
         *,
         allow_empty: bool,
     ) -> _SegmentTranscription:
-        prompt = self.prompt
-        if context:
-            prompt += (
-                "\nFor continuity only, the previous accumulated transcript ends with: "
-                f"{context!r}. Do not repeat that context unless it is actually "
-                "spoken in this audio segment."
-            )
-
         audio = base64.b64encode(wav_bytes).decode("ascii")
-        payload = {
-            "model": self.model,
-            "messages": [
+        audio_part = {
+            "type": "input_audio",
+            "input_audio": {"data": audio, "format": "wav"},
+        }
+        if context:
+            messages = [
+                {"role": "system", "content": self.prompt},
+                {
+                    "role": "user",
+                    "content": CONTEXT_USER_TEMPLATE.format(
+                        transcription=context
+                    ),
+                },
+                {
+                    "role": "assistant",
+                    "content": CONTEXT_ASSISTANT_ACKNOWLEDGEMENT,
+                },
+                {"role": "user", "content": [audio_part]},
+            ]
+        else:
+            messages = [
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "input_audio",
-                            "input_audio": {"data": audio, "format": "wav"},
-                        },
+                        {"type": "text", "text": self.prompt},
+                        audio_part,
                     ],
                 }
-            ],
+            ]
+        payload = {
+            "model": self.model,
+            "messages": messages,
             "stream": False,
             "temperature": 0.0,
             "max_tokens": self.max_tokens,

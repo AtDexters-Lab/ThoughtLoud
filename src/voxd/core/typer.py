@@ -8,6 +8,7 @@ import subprocess
 import time
 from pathlib import Path
 
+from voxd.core.keyboard_state import KeyboardState, KeyStateError
 from voxd.utils.libw import verbo
 
 
@@ -19,6 +20,7 @@ _RELEASE_ARGS = [
     f"{keycode}:0"
     for keycode in (
         list(range(2, 14))
+        + [15, 28]  # Tab and Enter can also be interrupted while held.
         + list(range(16, 28))
         + list(range(30, 42))
         + [29, 42, 43]
@@ -147,8 +149,38 @@ class YdotoolTyper:
             rendered += " "
 
         verbo(f"[typer] Typing {len(rendered)} characters with ydotool")
-        for chunk in self._split_chunks(rendered):
-            self._type_chunk(chunk)
+        self._key_monitor = self._open_key_monitor()
+        self._typing_process = None
+        attempted = False
+        try:
+            if self._key_monitor and self._key_monitor.pressed_keys():
+                raise RuntimeError("ydotool keyboard is already held; typing was not started")
+            for chunk in self._split_chunks(rendered):
+                attempted = True
+                self._type_chunk(chunk)
+            if self._key_monitor:
+                self._key_monitor.settle(released=True)
+        except Exception as exc:
+            if self._key_monitor and attempted:
+                try:
+                    self._recover_keys()
+                except Exception as recovery_error:
+                    raise RuntimeError(f"{exc}; keyboard recovery failed: {recovery_error}") from exc
+            raise
+        finally:
+            if self._key_monitor:
+                self._key_monitor.close()
+                self._key_monitor = None
+
+    def _open_key_monitor(self) -> KeyboardState | None:
+        try:
+            if not self.supports_key_hold:
+                raise OSError("legacy ydotool has no explicit bounded key hold")
+            return KeyboardState.open(self.socket_path)
+        except (OSError, KeyStateError) as exc:
+            print(f"[typer] Key-state monitoring unavailable; using compatibility cleanup: {exc}",
+                  flush=True)
+            return None
 
     def _type_chunk(self, text: str) -> None:
         word_runs = self._word_runs(text) if self.supports_word_pacing else []
@@ -204,8 +236,9 @@ class YdotoolTyper:
             ]
             input_text = text
         succeeded = self._run_tool(command, timeout=timeout, input_text=input_text)
-        time.sleep(_DRAIN_DELAY)
-        self._release_keys()
+        if self._key_monitor is None:
+            time.sleep(_DRAIN_DELAY)
+            self._release_keys()
         if not succeeded:
             raise RuntimeError("ydotool failed before the complete transcript was typed")
 
@@ -240,6 +273,8 @@ class YdotoolTyper:
         self, command: list[str], *, timeout: float, input_text: str | None = None
     ) -> bool:
         try:
+            if self._key_monitor is not None:
+                return self._run_monitored_tool(command, timeout=timeout, input_text=input_text)
             result = subprocess.run(
                 command,
                 input=input_text,
@@ -253,16 +288,75 @@ class YdotoolTyper:
         except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
             return False
 
-    def _release_keys(self) -> None:
-        if not self.tool:
-            return
+    def _run_monitored_tool(
+        self, command: list[str], *, timeout: float, input_text: str | None
+    ) -> bool:
+        # Wake promptly on input events while the child emits independently.
+        # This adds no per-key acknowledgement and owns only this child process.
+        process = subprocess.Popen(
+            command, stdin=subprocess.PIPE if input_text is not None else subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            text=input_text is not None,
+        )
+        self._typing_process = process
+        deadline = time.monotonic() + timeout
         try:
-            subprocess.run(
-                [self.tool, "key", *_RELEASE_ARGS],
+            if input_text is not None:
+                # A bounded <=400-character chunk fits in an empty pipe. Close
+                # it immediately so the stdin-based client can observe EOF.
+                process.stdin.write(input_text)
+                process.stdin.close()
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise subprocess.TimeoutExpired(command, timeout)
+                self._key_monitor.wait(min(0.02, remaining))
+                stuck = self._key_monitor.stuck_keys()
+                if stuck:
+                    raise KeyStateError(f"ydotool key remained held during typing: {sorted(stuck)}")
+                if process.poll() is not None:
+                    return process.returncode == 0
+        finally:
+            # Recovery must never race an owned process that is still emitting.
+            if process.poll() is None:
+                process.kill()
+            process.wait(timeout=2)
+            if process.stdin is not None:
+                process.stdin.close()
+            self._typing_process = None
+
+    def _recover_keys(self) -> None:
+        if self._typing_process is not None and self._typing_process.poll() is None:
+            raise RuntimeError("typing process could not be stopped; refusing concurrent cleanup")
+        try:
+            keys = self._key_monitor.settle(released=False)
+        except KeyStateError:
+            # Observation was lost. Retain the old recovery as a last resort,
+            # but do not claim that the keyboard or insertion was verified.
+            time.sleep(_DRAIN_DELAY)
+            self._release_keys()
+            raise
+        if keys and not self._release_keys(keys):
+            raise RuntimeError("ydotool key-release command failed")
+        self._key_monitor.settle(released=True)
+
+    def _release_keys(self, keys: set[int] | None = None) -> bool:
+        if not self.tool:
+            return False
+        release_args = _RELEASE_ARGS if keys is None else [f"{key}:0" for key in sorted(keys)]
+        if not release_args:
+            return True
+        # Modern key accepts an explicit delay. Recovery should not spend
+        # ~12 ms on each release; legacy CLI retains its compatible arguments.
+        delay_args = ["-d", "0"] if self.supports_key_hold else []
+        try:
+            result = subprocess.run(
+                [self.tool, "key", *delay_args, *release_args],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 timeout=2,
                 check=False,
             )
+            return result.returncode == 0
         except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
-            pass
+            return False

@@ -95,6 +95,21 @@ VOXD sends each bounded text chunk in one process, so word pacing does not add a
 process launch per word. Older ydotool builds retain the compatible stdin typing
 path and ignore `typing_word_delay`.
 
+With a modern ydotool and read access to its uniquely identified virtual input
+device, VOXD observes key press/release events while typing. Healthy chunks run
+without a cleanup pause. A key held for 250 ms triggers stopping the typing
+process, releasing the affected keys, and reporting an incomplete insertion; the
+complete transcript remains on the clipboard when the recovery copy succeeded.
+One bounded quiet-state check runs after the final chunk. This checks keyboard
+state, not whether the target application inserted every character correctly.
+
+Monitoring is limited to the default `~/.ydotool_socket` and assumes VOXD is the
+only active typing client on that virtual device. It never monitors physical
+keyboards. Custom sockets, legacy clients, ambiguous devices, or unavailable
+device access retain compatibility cleanup. If observation is lost during typing,
+insertion stops and compatibility key release is attempted; recovery is reported
+as unverified. No input permissions are changed.
+
 `record_chunk_seconds` controls on-disk chunk rotation, not maximum speech length.
 The E4B service should stay warm for low latency; VOXD does not own or restart it.
 

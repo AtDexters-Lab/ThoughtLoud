@@ -70,6 +70,34 @@ The release publishes DEB, RPM, application source, complete dependency source
 and `SHA256SUMS` together. Workstation installation and actual physical microphone
 and host reboot verification are deployment steps after publication; the results
 above do not imply those steps have happened.
+
+### Published release and workstation deployment
+
+[ThoughtLoud 1.4.0](https://github.com/AtDexters-Lab/ThoughtLoud/releases/tag/v1.4.0)
+is public. The annotated tag identifies commit
+`b78a9e8cccf0c07c79c1a94a530f6d56ce7688b7`. All five uploaded assets were checked
+against their local sizes and GitHub SHA-256 digests. An anonymous download of
+the public DEB and checksum list passed verification before workstation install.
+The application-source archive matches all 146 tagged files, with only the
+additional release-provenance file; both source archives contain the same lock.
+
+The workstation now runs that released executable, with the package-owned typing
+service active and enabled. Its tray registers once with a Ready tooltip and
+nontransparent icon pixels. The saved Ctrl+. shortcut, all configuration values,
+USB default microphone selection, mute state and 45% volume were preserved.
+Autostart invokes the packaged executable. The existing iGPU endpoint remains
+independently running and answers model discovery.
+
+The first workstation handoff attempted activation before package unpacking had
+finished and stopped at its installed-file check. Repeating activation after the
+verified installation completed repaired the user-local source launcher and
+replaced the idle source tray. This was a deployment sequencing error; it did
+not require changes to the released application.
+
+Physical microphone/editor confirmation and an actual workstation reboot remain
+open. Tray registration is not a substitute for visual desktop verification,
+and the VM reboot evidence above does not establish a workstation reboot.
+
 The existing five-minute unload policy remains; this release does not claim to
 eliminate cold model-loading latency. Physical microphone and actual workstation
 reboot checks are separate from VM and prerecorded-audio evidence.

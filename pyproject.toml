@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "thoughtloud"
-version = "1.4.0"  # bump manually on releases
+version = "1.4.1"  # bump manually on releases
 description = "Think out loud, in your own words. Local Linux dictation with Gemma."
 authors = [{ name = "Jakov", email = "jakov.iv@proton.me" }]
 requires-python = ">=3.9"

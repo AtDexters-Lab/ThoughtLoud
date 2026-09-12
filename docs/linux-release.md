@@ -9,6 +9,52 @@ This page records release validation and support boundaries. Earlier evidence
 below applies to its identified artifacts; retained candidates are not substitutes
 for testing the final published package.
 
+## Preference echo fix: 1.4.1
+
+Physical microphone testing after the 1.4.0 workstation deployment exposed a
+regression: the model returned the configured speech preference for an empty
+note and for the silent final chunk of a long note. The earlier release tests
+did not cover this combination of non-empty preferences and silent audio.
+
+Protocol 8 omits optional preferences, as well as prior transcript context, for
+VAD-negative segments. It still transcribes their complete audio and retains
+returned words. Speech-positive requests are unchanged. Both frozen prompts and
+their selection rule are stored in the archived protocol and covered by its hash.
+
+Validation of the patch:
+
+- **345 tests passed.** Regression coverage includes first and trailing
+  VAD-negative requests, custom base prompts, resumed speech context, archived
+  protocol metadata, and retaining legitimately returned preference words.
+- Both reported silent chunks return empty output on the existing local model,
+  before and after speech controls. Replaying the full 92.85-second note preserves
+  all nine spoken chunks exactly and removes the invented final chunk.
+- Two public Hindi-English clips produce identical before/after transcripts.
+  Quieter clips at gains 0.03 and 0.01 also retain intelligible Hindi-English
+  through a deliberately forced VAD-negative path. At gain 0.001, real VAD is
+  negative and both old and new prompts produce unreliable text: this patch
+  does not establish accuracy for barely audible speech or eliminate every
+  possible silence hallucination.
+- The native inference runtime and existing dependency binaries are unchanged.
+  This builder also collects `libxcb-cursor.so.0`, which was already a declared
+  host package dependency. Its copyright notice and four matching source files
+  are included. Source verification covers **231 binaries and 245 archives**.
+- The exact 1.4.1 DEB passed in the Ubuntu 24.04 GNOME Wayland VM: the saved
+  hotkey captured a silent virtual microphone, returned `no_speech` and inserted
+  nothing. Public speech then passed through live VAD, the existing host Vulkan
+  endpoint and editor insertion. Saved text matched exactly, accounting for the
+  configured trailing space and the editor's final newline. Both archives record
+  protocol 8 and the configured preference. The VM was shut down after the test.
+- The exact RPM passed fresh Fedora 44 installation, clean `rpm -V`, all four
+  command version checks, unprivileged offscreen Settings/IPC and removal. Its
+  temporary container was removed. Both installed executables match SHA-256
+  `f5d74d169c43a785f574778c1daf9813e21a20689c975e7d4e3a8fb508e4de12`.
+
+Detailed private replay evidence and package checks are retained locally under
+`build/validation/prompt-echo-20260912/`; user audio and transcripts are not
+published. These tests support the reported echo fix. Workstation activation,
+physical microphone retesting and an actual host reboot remain deployment steps.
+
 ## Final release profile: 2026-09-12
 
 The user approved publishing tagged packages with matching source attachments and

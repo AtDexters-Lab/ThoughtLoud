@@ -467,6 +467,12 @@
       "source_version": "1:1.0.9-1build6"
     },
     {
+      "binary": "libxcb-cursor0:amd64",
+      "version": "0.1.4-1build1",
+      "source": "xcb-util-cursor",
+      "source_version": "0.1.4-1build1"
+    },
+    {
       "binary": "libxcb-glx0:amd64",
       "version": "1.15-1ubuntu2",
       "source": "libxcb",
@@ -769,128 +775,8 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libfullscreen-shell-v1.so",
-      "sha256": "2a66b4ced1791d02cf0b060045cd61e1177d5a420cc0b14dc6832e6128a5830e",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqicns.so",
-      "sha256": "56ba43983778b4ffa90390dcc32ff21e36441cf1debf50738fe29bedde497825",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqpdf.so",
-      "sha256": "3c1f6b3db424a3afb4f720d7a0e92630c21262d0f17c0022f7aa134af75beed4",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqwayland.so",
-      "sha256": "7a2a9a11ca1718666c6982af0cccfe31297bde4bf38acac129c6be4c6b056aae",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/xcbglintegrations/libqxcb-glx-integration.so",
-      "sha256": "318a5e905246d26ac0640d34a011d7b34ed2e5302553792388c073176164c7ac",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqminimalegl.so",
-      "sha256": "11f66d34948f29e338bb755e118a022415bac24151d273d6b46ac03cdc045e6b",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/egldeviceintegrations/libqeglfs-x11-integration.so",
-      "sha256": "e9343079ed68fdf2e703949e9e3f06351dce5c5d6cfd99775400e9929e106e1e",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/generic/libqevdevtouchplugin.so",
-      "sha256": "17b34f7d52c17994899aa1baef3ae96eda6a6869685e638e0cdf174de2cefd22",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqeglfs.so",
-      "sha256": "a6129b496524cc373ea947e05a68ff69a3fb6eb730eacc2614443bff1d6342a1",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/wayland-decoration-client/libadwaita.so",
-      "sha256": "e3f12c7c325052f910f9fd7402f49d5433ae47230a7b8af5119cee283a75b087",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platformthemes/libqgtk3.so",
-      "sha256": "4d29d8f04aac1d990dae98227941680fbd375aff3d91a25475fe8e2111abac99",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/generic/libqevdevmouseplugin.so",
-      "sha256": "76ff27f8a68cdaecb5b3f3d1582afc9508f9ab5f63256e6efb54a68ddfaecd88",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libdmabuf-server.so",
-      "sha256": "6d1e9f15c78fddc4f9b10569b6a2511cbf925f967da1f1ca3b9654a401e84930",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqwebp.so",
-      "sha256": "990e4bc0f37aab81a31b6f29db8fe7d4c6d634bae20e5ff7204e7f2ba9df0d28",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so",
-      "sha256": "d08bff4c3b137632a4498933e7d38c6338b8133e75c42ccb9d5e2e9ecc72696d",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/generic/libqtuiotouchplugin.so",
-      "sha256": "a025e3d60794fa13d39c75e3332588222b9f97e9eeedb51a023a7705d6e41f2f",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/egldeviceintegrations/libqeglfs-emu-integration.so",
-      "sha256": "b3853427fba0131b7719fdeafad540b30822e0346a8652fe89a4b013a7083a1f",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqsvg.so",
-      "sha256": "17f6125ef78e931abad94184dff61874d3f93f21adccb27a246cdf7f11b87fb0",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so",
-      "sha256": "92437edcc4cdf67ea3479a3b0b7a8de04a3e536e77621abf7df1dbcfdaedf941",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqoffscreen.so",
-      "sha256": "4e4f6e0e54234e362a1a9b2fc37c2d10647508e193f18b0218c84f2985e63966",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/generic/libqevdevtabletplugin.so",
-      "sha256": "0e04fee3590fb9bb2df0eee0ec0c18240a80f441c537d8dc0f62290fd6ec603d",
+      "path": "PyQt6/Qt6/plugins/xcbglintegrations/libqxcb-egl-integration.so",
+      "sha256": "004179d65716c907e594d7ef922ac774e33eb0553dc09ff0cccbfbb12b122d48",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
@@ -901,32 +787,8 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqwbmp.so",
-      "sha256": "8db43182afaaa946725cca340a9942b059025142cfb291f3a14d1709693c5f9d",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqvkkhrdisplay.so",
-      "sha256": "27979210d8424a78df8adb968c6865e8e27a647ff947aede783177851705199e",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libdrm-egl-server.so",
-      "sha256": "12cc6b2b7a1f349c052bb748995c0b00c1e916b2dab47a557648e2090f74ce2f",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/generic/libqevdevkeyboardplugin.so",
-      "sha256": "41fd1024b7957ea28bf97d5acae9200d362e2266091ff6e8707b64fc1f1bfebf",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libshm-emulation-server.so",
-      "sha256": "b961b254c55235b67fccdfe6720fca86efff31adf1e33adf376ffdd0d3f8b7d9",
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libdmabuf-server.so",
+      "sha256": "6d1e9f15c78fddc4f9b10569b6a2511cbf925f967da1f1ca3b9654a401e84930",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
@@ -937,68 +799,14 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqgif.so",
-      "sha256": "8f602245038c508504445876ea675507508e3442ecf6faa964b39ce1ff2d8c80",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/xcbglintegrations/libqxcb-egl-integration.so",
-      "sha256": "004179d65716c907e594d7ef922ac774e33eb0553dc09ff0cccbfbb12b122d48",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/wayland-decoration-client/libbradient.so",
-      "sha256": "961aa2a7d85a200e1738990ab07da456d940a3c56c337b67cbb7dcd0834db878",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqvnc.so",
-      "sha256": "81b5a1decd44b711a8634f3dc39eca1973e90e0c9b694411848d0179639b4f7f",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/iconengines/libqsvgicon.so",
-      "sha256": "dee247929cbf23f66f4738aadebdb523f304eb1e36089de489e1a1a31dce2b30",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platforms/libqlinuxfb.so",
-      "sha256": "f57281999c0fde12ac232590f75c8fddb84fb96a3d577cab68db77cdb9463721",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
       "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libvulkan-server.so",
       "sha256": "dcaa1c1efb0cac97359993fee7960d797c162291d7e38a8fb50d4714fc972923",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqico.so",
-      "sha256": "0572f900823c5c1200ec14db0d533f9df8025a6888ad1b11df37ada551dc5c57",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqjpeg.so",
-      "sha256": "3c02b7d32fb1fd564c9409e91e850fe94b274f7fad73d2be84cd6c198e326d71",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/platformthemes/libqxdgdesktopportal.so",
-      "sha256": "30e3ea36831cd5e8be27b965ceec0557096d8573acccff7df3d7cfb193c777ba",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/imageformats/libqtiff.so",
-      "sha256": "fcf586d90273ee2a107c6bacc3253ef73897cb9d68641d0028a62f30baa16bb0",
+      "path": "PyQt6/Qt6/plugins/platforms/libqeglfs.so",
+      "sha256": "a6129b496524cc373ea947e05a68ff69a3fb6eb730eacc2614443bff1d6342a1",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
@@ -1009,14 +817,8 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libqt-shell.so",
-      "sha256": "d38581778f99c5dc47830744fc0b7621ec358c7fb45ca9ffe53cf5b6e7544967",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libivi-shell.so",
-      "sha256": "b9aacca6f28b10e8ed5f0beac7210064d11024980770a76792cd40ef46745bb9",
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevmouseplugin.so",
+      "sha256": "76ff27f8a68cdaecb5b3f3d1582afc9508f9ab5f63256e6efb54a68ddfaecd88",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
@@ -1027,14 +829,218 @@
       "kind": "BINARY"
     },
     {
+      "path": "PyQt6/Qt6/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so",
+      "sha256": "92437edcc4cdf67ea3479a3b0b7a8de04a3e536e77621abf7df1dbcfdaedf941",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platformthemes/libqgtk3.so",
+      "sha256": "4d29d8f04aac1d990dae98227941680fbd375aff3d91a25475fe8e2111abac99",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/egldeviceintegrations/libqeglfs-x11-integration.so",
+      "sha256": "e9343079ed68fdf2e703949e9e3f06351dce5c5d6cfd99775400e9929e106e1e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqtiff.so",
+      "sha256": "fcf586d90273ee2a107c6bacc3253ef73897cb9d68641d0028a62f30baa16bb0",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libfullscreen-shell-v1.so",
+      "sha256": "2a66b4ced1791d02cf0b060045cd61e1177d5a420cc0b14dc6832e6128a5830e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libqt-shell.so",
+      "sha256": "d38581778f99c5dc47830744fc0b7621ec358c7fb45ca9ffe53cf5b6e7544967",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqgif.so",
+      "sha256": "8f602245038c508504445876ea675507508e3442ecf6faa964b39ce1ff2d8c80",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqminimalegl.so",
+      "sha256": "11f66d34948f29e338bb755e118a022415bac24151d273d6b46ac03cdc045e6b",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-decoration-client/libbradient.so",
+      "sha256": "961aa2a7d85a200e1738990ab07da456d940a3c56c337b67cbb7dcd0834db878",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqlinuxfb.so",
+      "sha256": "f57281999c0fde12ac232590f75c8fddb84fb96a3d577cab68db77cdb9463721",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platformthemes/libqxdgdesktopportal.so",
+      "sha256": "30e3ea36831cd5e8be27b965ceec0557096d8573acccff7df3d7cfb193c777ba",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqtuiotouchplugin.so",
+      "sha256": "a025e3d60794fa13d39c75e3332588222b9f97e9eeedb51a023a7705d6e41f2f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqvnc.so",
+      "sha256": "81b5a1decd44b711a8634f3dc39eca1973e90e0c9b694411848d0179639b4f7f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libdrm-egl-server.so",
+      "sha256": "12cc6b2b7a1f349c052bb748995c0b00c1e916b2dab47a557648e2090f74ce2f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so",
+      "sha256": "d08bff4c3b137632a4498933e7d38c6338b8133e75c42ccb9d5e2e9ecc72696d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqpdf.so",
+      "sha256": "3c1f6b3db424a3afb4f720d7a0e92630c21262d0f17c0022f7aa134af75beed4",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqjpeg.so",
+      "sha256": "3c02b7d32fb1fd564c9409e91e850fe94b274f7fad73d2be84cd6c198e326d71",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libshm-emulation-server.so",
+      "sha256": "b961b254c55235b67fccdfe6720fca86efff31adf1e33adf376ffdd0d3f8b7d9",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/egldeviceintegrations/libqeglfs-emu-integration.so",
+      "sha256": "b3853427fba0131b7719fdeafad540b30822e0346a8652fe89a4b013a7083a1f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqwbmp.so",
+      "sha256": "8db43182afaaa946725cca340a9942b059025142cfb291f3a14d1709693c5f9d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqwayland.so",
+      "sha256": "7a2a9a11ca1718666c6982af0cccfe31297bde4bf38acac129c6be4c6b056aae",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqico.so",
+      "sha256": "0572f900823c5c1200ec14db0d533f9df8025a6888ad1b11df37ada551dc5c57",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/xcbglintegrations/libqxcb-glx-integration.so",
+      "sha256": "318a5e905246d26ac0640d34a011d7b34ed2e5302553792388c073176164c7ac",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevkeyboardplugin.so",
+      "sha256": "41fd1024b7957ea28bf97d5acae9200d362e2266091ff6e8707b64fc1f1bfebf",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/iconengines/libqsvgicon.so",
+      "sha256": "dee247929cbf23f66f4738aadebdb523f304eb1e36089de489e1a1a31dce2b30",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevtouchplugin.so",
+      "sha256": "17b34f7d52c17994899aa1baef3ae96eda6a6869685e638e0cdf174de2cefd22",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-decoration-client/libadwaita.so",
+      "sha256": "e3f12c7c325052f910f9fd7402f49d5433ae47230a7b8af5119cee283a75b087",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqicns.so",
+      "sha256": "56ba43983778b4ffa90390dcc32ff21e36441cf1debf50738fe29bedde497825",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqwebp.so",
+      "sha256": "990e4bc0f37aab81a31b6f29db8fe7d4c6d634bae20e5ff7204e7f2ba9df0d28",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
       "path": "PyQt6/Qt6/plugins/imageformats/libqtga.so",
       "sha256": "544f70899386c93a842e0ae1bf90e678da2ccff6f0e4cad544e270f6e4853a60",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
+      "path": "PyQt6/Qt6/plugins/platforms/libqoffscreen.so",
+      "sha256": "4e4f6e0e54234e362a1a9b2fc37c2d10647508e193f18b0218c84f2985e63966",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
       "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so",
       "sha256": "fc6714c83383c892bace2c00eb287acc5b6798683da70a5e9dbd0e966aa12489",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevtabletplugin.so",
+      "sha256": "0e04fee3590fb9bb2df0eee0ec0c18240a80f441c537d8dc0f62290fd6ec603d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqsvg.so",
+      "sha256": "17f6125ef78e931abad94184dff61874d3f93f21adccb27a246cdf7f11b87fb0",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqvkkhrdisplay.so",
+      "sha256": "27979210d8424a78df8adb968c6865e8e27a647ff947aede783177851705199e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libivi-shell.so",
+      "sha256": "b9aacca6f28b10e8ed5f0beac7210064d11024980770a76792cd40ef46745bb9",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
@@ -1327,27 +1333,27 @@
       "kind": "EXTENSION"
     },
     {
-      "path": "libstdc++.so.6",
-      "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
-      "provider": "libstdc++6:amd64",
-      "kind": "BINARY"
-    },
-    {
       "path": "libgcc_s.so.1",
       "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
       "provider": "libgcc-s1:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libgomp.so.1",
-      "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1",
-      "provider": "libgomp1:amd64",
+      "path": "libstdc++.so.6",
+      "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+      "provider": "libstdc++6:amd64",
       "kind": "BINARY"
     },
     {
       "path": "libggml-base.so.0",
       "sha256": "f5edd4074a512aa17675433c48e8f853b02241fc68a5c8217eae79dd5deb27b1",
       "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgomp.so.1",
+      "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1",
+      "provider": "libgomp1:amd64",
       "kind": "BINARY"
     },
     {
@@ -1399,27 +1405,21 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/lib/libQt6DBus.so.6",
-      "sha256": "548e934455d147fe9c2f9e78a345a4458bcfad846c0d1e7fe0a80d71b0a04e15",
-      "provider": "wheel:PyQt6",
+      "path": "libxcb-shm.so.0",
+      "sha256": "ad78a7b22409685ca82e54346c2b9465d697f303e69e74a9c1693bb206e319df",
+      "provider": "libxcb-shm0:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libgpg-error.so.0",
-      "sha256": "6cb18a007bfcb623029f4528a36b46578fea7dc34c2b505b8e6e0d99e6348cd1",
-      "provider": "libgpg-error0:amd64",
+      "path": "libxcb-keysyms.so.1",
+      "sha256": "f131860e51ff109c1255c91a05ebf2c2a3f612939e35b00df24f63483521a568",
+      "provider": "libxcb-keysyms1:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libpng16.so.16",
-      "sha256": "eac265b3506df0d9110dd9143e1d0503e2daabafe1d98b23fac8ca17b71d1f6b",
-      "provider": "libpng16-16t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libfontconfig.so.1",
-      "sha256": "a94b4059b27766f563894c8f7e61762b6f6b2e25c59ef36b730164d4b75c6c98",
-      "provider": "libfontconfig1:amd64",
+      "path": "libxcb-image.so.0",
+      "sha256": "bc618150f945e862397c575d642e55ff79937b4060d3aa1d7665bde34a0e4b27",
+      "provider": "libxcb-image0:amd64",
       "kind": "BINARY"
     },
     {
@@ -1429,45 +1429,27 @@
       "kind": "BINARY"
     },
     {
-      "path": "libbrotlicommon.so.1",
-      "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
-      "provider": "libbrotli1:amd64",
+      "path": "liblzma.so.5",
+      "sha256": "696e868dd0700a19a6d65fc01608ec2d70d3cb91f65710e89180cd2e688f30cb",
+      "provider": "liblzma5:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libxkbcommon.so.0",
-      "sha256": "3eb6c7315985803a7c72cb81aa3293b763e6cfc907b70b7b2f641c2827cd90f9",
-      "provider": "libxkbcommon0:amd64",
+      "path": "PyQt6/Qt6/lib/libQt6DBus.so.6",
+      "sha256": "548e934455d147fe9c2f9e78a345a4458bcfad846c0d1e7fe0a80d71b0a04e15",
+      "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
-      "path": "libffi.so.8",
-      "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
-      "provider": "libffi8:amd64",
+      "path": "libgcrypt.so.20",
+      "sha256": "6ad6d7007ee1ad8319eb18ba9a512cf09dda49396a303774c68b47477020bad4",
+      "provider": "libgcrypt20:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libbrotlidec.so.1",
-      "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
-      "provider": "libbrotli1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libX11.so.6",
-      "sha256": "c5b5d782bd9cab3420a62df88f5c991507edf3331a89f98464ddbc538c37b879",
-      "provider": "libx11-6:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libfreetype.so.6",
-      "sha256": "c14c53c5baff12afafb610c6312fb879e9bb77e80dd42e27504d52d6d8bcd059",
-      "provider": "libfreetype6:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libcap.so.2",
-      "sha256": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
-      "provider": "libcap2:amd64",
+      "path": "libxcb-icccm.so.4",
+      "sha256": "3373d6518194012d73658443165450232f0dcb08bf126d09da67cbe0ec4c29df",
+      "provider": "libxcb-icccm4:amd64",
       "kind": "BINARY"
     },
     {
@@ -1477,15 +1459,27 @@
       "kind": "BINARY"
     },
     {
-      "path": "libXdmcp.so.6",
-      "sha256": "667d97d6da16016400ab10de9f83ef4ab209ceb6adf68ff9650225ec13e723b0",
-      "provider": "libxdmcp6:amd64",
+      "path": "libpng16.so.16",
+      "sha256": "eac265b3506df0d9110dd9143e1d0503e2daabafe1d98b23fac8ca17b71d1f6b",
+      "provider": "libpng16-16t64:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "liblzma.so.5",
-      "sha256": "696e868dd0700a19a6d65fc01608ec2d70d3cb91f65710e89180cd2e688f30cb",
-      "provider": "liblzma5:amd64",
+      "path": "libxcb-shape.so.0",
+      "sha256": "370c60dd84cfe5f8517866b573ccbaf2b3fd97bd980f427f3bbb3dbc9288369e",
+      "provider": "libxcb-shape0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-render.so.0",
+      "sha256": "35fdef7a90d7f44a0ad9cb259c9ee22f04a48cb064ceb1fc7d17be815acab327",
+      "provider": "libxcb-render0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-randr.so.0",
+      "sha256": "9fa6b0ec4af163a86bc9a9ded3309a5979155fb5ef2d311fdda7fff0e9eee01a",
+      "provider": "libxcb-randr0:amd64",
       "kind": "BINARY"
     },
     {
@@ -1495,8 +1489,26 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/lib/libicudata.so.73",
-      "sha256": "4f182a855296cf96d39f75c9028b12765a78fe6afff3d3781d633110525b7a8b",
+      "path": "libcap.so.2",
+      "sha256": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+      "provider": "libcap2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libbrotlicommon.so.1",
+      "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+      "provider": "libbrotli1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libmd.so.0",
+      "sha256": "423e18586b6ea740f4465afd64f7a9a4cb7264ed979c8e7256f9085af5345fef",
+      "provider": "libmd0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Gui.so.6",
+      "sha256": "c1797794be8cfd5e64e324c5068ff9f32bd54fda21af1a637c087550ebae73a0",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
@@ -1507,21 +1519,21 @@
       "kind": "BINARY"
     },
     {
-      "path": "libdbus-1.so.3",
-      "sha256": "a6ae7b4ef48562b40d7b9ba8efd2e49f6528b7cc6364bea382dcee4b473b5413",
-      "provider": "libdbus-1-3:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libbsd.so.0",
-      "sha256": "e86cd4f0019f42c2ba5e60602e0edc8694d2948377d98c3654d0f6bddb5254bb",
-      "provider": "libbsd0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/lib/libicui18n.so.73",
-      "sha256": "a18e48266e59efff3ec872d9dc5cc99b776e180b8ede57269d354e6bc6595778",
+      "path": "PyQt6/Qt6/lib/libicudata.so.73",
+      "sha256": "4f182a855296cf96d39f75c9028b12765a78fe6afff3d3781d633110525b7a8b",
       "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-cursor.so.0",
+      "sha256": "10fc489c85d5a208843437d4a9b8867b9599b29a1b0a8e864afa79dca141aceb",
+      "provider": "libxcb-cursor0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libfontconfig.so.1",
+      "sha256": "a94b4059b27766f563894c8f7e61762b6f6b2e25c59ef36b730164d4b75c6c98",
+      "provider": "libfontconfig1:amd64",
       "kind": "BINARY"
     },
     {
@@ -1531,45 +1543,9 @@
       "kind": "BINARY"
     },
     {
-      "path": "libsystemd.so.0",
-      "sha256": "bdf59c828b547bcdbe7b3576c0810d9d9d2e982d8b61b365812542da6a4c4a99",
-      "provider": "libsystemd0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/lib/libQt6WaylandClient.so.6",
-      "sha256": "a2628e71258b5fda3bc4fd920541a34298137fd2d46f447e65cc0d52e0bf4f64",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/lib/libQt6Gui.so.6",
-      "sha256": "c1797794be8cfd5e64e324c5068ff9f32bd54fda21af1a637c087550ebae73a0",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libmd.so.0",
-      "sha256": "423e18586b6ea740f4465afd64f7a9a4cb7264ed979c8e7256f9085af5345fef",
-      "provider": "libmd0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgcrypt.so.20",
-      "sha256": "6ad6d7007ee1ad8319eb18ba9a512cf09dda49396a303774c68b47477020bad4",
-      "provider": "libgcrypt20:amd64",
-      "kind": "BINARY"
-    },
-    {
       "path": "libgthread-2.0.so.0",
       "sha256": "ada85713638e7c43fd56d0af8786dbc438e88b7ea345d5f943f1790954d17e8a",
       "provider": "libglib2.0-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/lib/libQt6Core.so.6",
-      "sha256": "23651543e0ff970f1d21b2abc1250221f0dd854fe68e3027462925532afbe22b",
-      "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
@@ -1579,75 +1555,81 @@
       "kind": "BINARY"
     },
     {
+      "path": "PyQt6/Qt6/lib/libQt6XcbQpa.so.6",
+      "sha256": "0e582e1461f9fe9fa208d83ff09edab901dcd3ba2702e047f458f72f00f9a9f5",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxkbcommon.so.0",
+      "sha256": "3eb6c7315985803a7c72cb81aa3293b763e6cfc907b70b7b2f641c2827cd90f9",
+      "provider": "libxkbcommon0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libbsd.so.0",
+      "sha256": "e86cd4f0019f42c2ba5e60602e0edc8694d2948377d98c3654d0f6bddb5254bb",
+      "provider": "libbsd0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-render-util.so.0",
+      "sha256": "637b518e674812ce9dc03ad4fbdfa58fe34d789190f144e9d58ea3726d50dfa6",
+      "provider": "libxcb-render-util0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgpg-error.so.0",
+      "sha256": "6cb18a007bfcb623029f4528a36b46578fea7dc34c2b505b8e6e0d99e6348cd1",
+      "provider": "libgpg-error0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libsystemd.so.0",
+      "sha256": "bdf59c828b547bcdbe7b3576c0810d9d9d2e982d8b61b365812542da6a4c4a99",
+      "provider": "libsystemd0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-util.so.1",
+      "sha256": "53a59cf786fc63d7e5968392fc70098e8d922b311015b7ccd711c44ca352bd39",
+      "provider": "libxcb-util1:amd64",
+      "kind": "BINARY"
+    },
+    {
       "path": "liblz4.so.1",
       "sha256": "40bffd0a098387368b16b992abd5f7cf43c0fa2f05cabe5a6d483719554adfda",
       "provider": "liblz4-1:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libgssapi_krb5.so.2",
-      "sha256": "6c1b81696044d79a47d6f0f494ee60aaf641c525c46a11da0c6e4a041a782d3c",
-      "provider": "libgssapi-krb5-2:amd64",
+      "path": "libxcb-xkb.so.1",
+      "sha256": "f6b3ca63ff23f3e82d122af4622aaebed49c58614e2f840568a0bb4c9048436c",
+      "provider": "libxcb-xkb1:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libkeyutils.so.1",
-      "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
-      "provider": "libkeyutils1:amd64",
+      "path": "libXdmcp.so.6",
+      "sha256": "667d97d6da16016400ab10de9f83ef4ab209ceb6adf68ff9650225ec13e723b0",
+      "provider": "libxdmcp6:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libkrb5.so.3",
-      "sha256": "9615a2841f0783c410eec7fae005a951282551cfedd377737ad8431c8c8cde64",
-      "provider": "libkrb5-3:amd64",
+      "path": "libxkbcommon-x11.so.0",
+      "sha256": "109a5c2095ab6bcc36f751d3c0deb3b066ecbfb664a36904b6ca212f987a408a",
+      "provider": "libxkbcommon-x11-0:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/lib/libQt6Network.so.6",
-      "sha256": "bdf6d5cedfda840257bdc3e7393f159c250b51124969d4eae388f3c79912e646",
+      "path": "PyQt6/Qt6/lib/libQt6Core.so.6",
+      "sha256": "23651543e0ff970f1d21b2abc1250221f0dd854fe68e3027462925532afbe22b",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
-      "path": "libcom_err.so.2",
-      "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
-      "provider": "libcom-err2:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libk5crypto.so.3",
-      "sha256": "73bc9d72c0c684d6149a3c38f96aab891d178375415c05954fdda587685936f5",
-      "provider": "libk5crypto3:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/lib/libQt6Pdf.so.6",
-      "sha256": "782708b66cfd40d77ed412d9378e7462d5f885e0c8965cbfb59a21084c7b7fd8",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libkrb5support.so.0",
-      "sha256": "0aa43578471faecbd642ed2ee6ab92b6682a2b676644193e956fc59d18ca24bb",
-      "provider": "libkrb5support0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-glx.so.0",
-      "sha256": "7537790510f7a4a14cc54785761dffb1c6fc0058fc379f9cdb0ff26bafee3ff1",
-      "provider": "libxcb-glx0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-shape.so.0",
-      "sha256": "370c60dd84cfe5f8517866b573ccbaf2b3fd97bd980f427f3bbb3dbc9288369e",
-      "provider": "libxcb-shape0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "PyQt6/Qt6/lib/libQt6XcbQpa.so.6",
-      "sha256": "0e582e1461f9fe9fa208d83ff09edab901dcd3ba2702e047f458f72f00f9a9f5",
-      "provider": "wheel:PyQt6",
+      "path": "libdbus-1.so.3",
+      "sha256": "a6ae7b4ef48562b40d7b9ba8efd2e49f6528b7cc6364bea382dcee4b473b5413",
+      "provider": "libdbus-1-3:amd64",
       "kind": "BINARY"
     },
     {
@@ -1663,51 +1645,9 @@
       "kind": "BINARY"
     },
     {
-      "path": "libxcb-image.so.0",
-      "sha256": "bc618150f945e862397c575d642e55ff79937b4060d3aa1d7665bde34a0e4b27",
-      "provider": "libxcb-image0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-shm.so.0",
-      "sha256": "ad78a7b22409685ca82e54346c2b9465d697f303e69e74a9c1693bb206e319df",
-      "provider": "libxcb-shm0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-icccm.so.4",
-      "sha256": "3373d6518194012d73658443165450232f0dcb08bf126d09da67cbe0ec4c29df",
-      "provider": "libxcb-icccm4:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxkbcommon-x11.so.0",
-      "sha256": "109a5c2095ab6bcc36f751d3c0deb3b066ecbfb664a36904b6ca212f987a408a",
-      "provider": "libxkbcommon-x11-0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-render-util.so.0",
-      "sha256": "637b518e674812ce9dc03ad4fbdfa58fe34d789190f144e9d58ea3726d50dfa6",
-      "provider": "libxcb-render-util0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-keysyms.so.1",
-      "sha256": "f131860e51ff109c1255c91a05ebf2c2a3f612939e35b00df24f63483521a568",
-      "provider": "libxcb-keysyms1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-randr.so.0",
-      "sha256": "9fa6b0ec4af163a86bc9a9ded3309a5979155fb5ef2d311fdda7fff0e9eee01a",
-      "provider": "libxcb-randr0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libxcb-xkb.so.1",
-      "sha256": "f6b3ca63ff23f3e82d122af4622aaebed49c58614e2f840568a0bb4c9048436c",
-      "provider": "libxcb-xkb1:amd64",
+      "path": "libbrotlidec.so.1",
+      "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+      "provider": "libbrotli1:amd64",
       "kind": "BINARY"
     },
     {
@@ -1717,15 +1657,39 @@
       "kind": "BINARY"
     },
     {
-      "path": "libxcb-util.so.1",
-      "sha256": "53a59cf786fc63d7e5968392fc70098e8d922b311015b7ccd711c44ca352bd39",
-      "provider": "libxcb-util1:amd64",
+      "path": "libfreetype.so.6",
+      "sha256": "c14c53c5baff12afafb610c6312fb879e9bb77e80dd42e27504d52d6d8bcd059",
+      "provider": "libfreetype6:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libxcb-render.so.0",
-      "sha256": "35fdef7a90d7f44a0ad9cb259c9ee22f04a48cb064ceb1fc7d17be815acab327",
-      "provider": "libxcb-render0:amd64",
+      "path": "PyQt6/Qt6/lib/libicui18n.so.73",
+      "sha256": "a18e48266e59efff3ec872d9dc5cc99b776e180b8ede57269d354e6bc6595778",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libX11.so.6",
+      "sha256": "c5b5d782bd9cab3420a62df88f5c991507edf3331a89f98464ddbc538c37b879",
+      "provider": "libx11-6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6WlShellIntegration.so.6",
+      "sha256": "23e047a07ec4fb78c5640f1493cea17b8c05a9d01cc7cfc874b6cd60fdfc0f0b",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6WaylandClient.so.6",
+      "sha256": "a2628e71258b5fda3bc4fd920541a34298137fd2d46f447e65cc0d52e0bf4f64",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libffi.so.8",
+      "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+      "provider": "libffi8:amd64",
       "kind": "BINARY"
     },
     {
@@ -1741,69 +1705,9 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/lib/libQt6Svg.so.6",
-      "sha256": "6cc863209dc92d29e2698cc59f61064976b25c3e24fd36c34973a4e880d78e8d",
-      "provider": "wheel:PyQt6",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libatspi.so.0",
-      "sha256": "4af877d2d235b7eaab015abe6d81b82c82fe506a5d71403b9bbdfcbce99e8141",
-      "provider": "libatspi2.0-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXi.so.6",
-      "sha256": "a51348c921ce1a35123fa7c99dc59bfd3e815be6829874fe15ae55172901d3e4",
-      "provider": "libxi6:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libpangoft2-1.0.so.0",
-      "sha256": "cfcd528cfb737212719b3273b433b7fe35b6528acbb08c2223a486449314d629",
-      "provider": "libpangoft2-1.0-0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libcairo.so.2",
-      "sha256": "3144bd5935aee427d6c191b6b6d0ebf9010fb6320295a7f73edd276bc6993f2d",
-      "provider": "libcairo2:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgmodule-2.0.so.0",
-      "sha256": "f8445c01952fd3ff0bb4f17f73be821af3e4b9b61546ff517392e9baeb8f2126",
-      "provider": "libglib2.0-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libmount.so.1",
-      "sha256": "7472255ae5799059b37ddd544788f5665dbd3e1cb78259f52180293039efc2a5",
-      "provider": "libmount1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libselinux.so.1",
-      "sha256": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
-      "provider": "libselinux1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libpangocairo-1.0.so.0",
-      "sha256": "229b50cdc7e7675000815e18338189db6f03fd564baaa4d0f257dbbe34f14652",
-      "provider": "libpangocairo-1.0-0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libatk-1.0.so.0",
-      "sha256": "d312f3dbed8f19037bf4d8581f0e41ddfe53796dc7abbc9b7f253495d472a923",
-      "provider": "libatk1.0-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libcairo-gobject.so.2",
-      "sha256": "61b4b6cb475c8c2c4622fd1618981d466b716b11903255b68975830fa20d982c",
-      "provider": "libcairo-gobject2:amd64",
+      "path": "libgdk-3.so.0",
+      "sha256": "0b52fb8111e4baf38d469d1fa0b0c49f166faa41bbcde1494221232302829dea",
+      "provider": "libgtk-3-0t64:amd64",
       "kind": "BINARY"
     },
     {
@@ -1813,9 +1717,9 @@
       "kind": "BINARY"
     },
     {
-      "path": "libharfbuzz.so.0",
-      "sha256": "4562cfcfd18935324ba3ac74a944898b867ab87a56e925ab3e351ba773f1513e",
-      "provider": "libharfbuzz0b:amd64",
+      "path": "libgio-2.0.so.0",
+      "sha256": "d8c4cf698e9b8790584cc5ede813a86ec4f041c0d58daa452b72431572685a87",
+      "provider": "libglib2.0-0t64:amd64",
       "kind": "BINARY"
     },
     {
@@ -1825,93 +1729,9 @@
       "kind": "BINARY"
     },
     {
-      "path": "libatk-bridge-2.0.so.0",
-      "sha256": "366fcd2f2cd9a77767855a7c25b00ffce57e6b55109a2bf800872f0337a28415",
-      "provider": "libatk-bridge2.0-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXdamage.so.1",
-      "sha256": "6ff910fbde851ede163b9066671e1740e374df414591015d90770b99d5b3de4a",
-      "provider": "libxdamage1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXinerama.so.1",
-      "sha256": "dceff724f4f74c420116fa6a11ece62894af4fc0e74a2254c923ccc215e1a041",
-      "provider": "libxinerama1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgraphite2.so.3",
-      "sha256": "fcfaf843b25b58b88319ced52f826fc8213a661f3693c916f88641eddffe05b8",
-      "provider": "libgraphite2-3:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXcursor.so.1",
-      "sha256": "09bd5941a53ee7fb06898fa066709cf098df8e33a45042e065d2f8461d92672c",
-      "provider": "libxcursor1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXfixes.so.3",
-      "sha256": "89e5897f438456013d2297850a7558cd28c9ad1f6978447197568949fb6a0fd9",
-      "provider": "libxfixes3:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libjpeg.so.8",
-      "sha256": "ac09f2cd6f8a3b8e3cb123999ce275f9bcbe31c6cf9e20212c8f297772591d15",
-      "provider": "libjpeg-turbo8:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXrender.so.1",
-      "sha256": "250977e0e004b6c0556144c3e683487063b4582dc83d205196ec3aa65d54e2c6",
-      "provider": "libxrender1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgdk_pixbuf-2.0.so.0",
-      "sha256": "f9f51980f9d8978507c3637fa5d4e89f9910d01d74c91905f27158efca27279d",
-      "provider": "libgdk-pixbuf-2.0-0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libthai.so.0",
-      "sha256": "1a72e318418dc0ee6014401de9d9976516fe127358c07c305e1198b9814e2b31",
-      "provider": "libthai0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgdk-3.so.0",
-      "sha256": "0b52fb8111e4baf38d469d1fa0b0c49f166faa41bbcde1494221232302829dea",
-      "provider": "libgtk-3-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libdatrie.so.1",
-      "sha256": "507f33edbbc19b80637d6d66f8e3f62fac097d0b4e9ee6f6f23f535ecea26a61",
-      "provider": "libdatrie1:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXrandr.so.2",
-      "sha256": "bc6120a734d52e7f5e3611334e9f3cff0b3ce1b129bb20b6412ce8f0f62c049d",
-      "provider": "libxrandr2:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgobject-2.0.so.0",
-      "sha256": "99bf0727e0ca4faf12ab09b753b3d03294562c29c559b970c4dad435f9ec2bc6",
-      "provider": "libglib2.0-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libepoxy.so.0",
-      "sha256": "5fc7dd1ea433bfe5f1fd9854e66246bdb44e0cbf148707121c5f4c99fe11be29",
-      "provider": "libepoxy0:amd64",
+      "path": "libcairo.so.2",
+      "sha256": "3144bd5935aee427d6c191b6b6d0ebf9010fb6320295a7f73edd276bc6993f2d",
+      "provider": "libcairo2:amd64",
       "kind": "BINARY"
     },
     {
@@ -1921,27 +1741,15 @@
       "kind": "BINARY"
     },
     {
-      "path": "libgio-2.0.so.0",
-      "sha256": "d8c4cf698e9b8790584cc5ede813a86ec4f041c0d58daa452b72431572685a87",
-      "provider": "libglib2.0-0t64:amd64",
+      "path": "libpangocairo-1.0.so.0",
+      "sha256": "229b50cdc7e7675000815e18338189db6f03fd564baaa4d0f257dbbe34f14652",
+      "provider": "libpangocairo-1.0-0:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libpango-1.0.so.0",
-      "sha256": "44fbb30ec8f9b2621095bad0d27cc15cec39245133124a44e8abc45193cbb493",
-      "provider": "libpango-1.0-0:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libgtk-3.so.0",
-      "sha256": "0611fd19d1354a39a7cfafceffa3bdf4289d4c497c7f69ff337f86e99cf37d93",
-      "provider": "libgtk-3-0t64:amd64",
-      "kind": "BINARY"
-    },
-    {
-      "path": "libXext.so.6",
-      "sha256": "2907e6a996465de5b32a0dd10534d4416b87f1dee5670aaa7b19301a1fc93f44",
-      "provider": "libxext6:amd64",
+      "path": "libXdamage.so.1",
+      "sha256": "6ff910fbde851ede163b9066671e1740e374df414591015d90770b99d5b3de4a",
+      "provider": "libxdamage1:amd64",
       "kind": "BINARY"
     },
     {
@@ -1951,15 +1759,213 @@
       "kind": "BINARY"
     },
     {
-      "path": "PyQt6/Qt6/lib/libQt6WlShellIntegration.so.6",
-      "sha256": "23e047a07ec4fb78c5640f1493cea17b8c05a9d01cc7cfc874b6cd60fdfc0f0b",
+      "path": "libselinux.so.1",
+      "sha256": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+      "provider": "libselinux1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgdk_pixbuf-2.0.so.0",
+      "sha256": "f9f51980f9d8978507c3637fa5d4e89f9910d01d74c91905f27158efca27279d",
+      "provider": "libgdk-pixbuf-2.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgobject-2.0.so.0",
+      "sha256": "99bf0727e0ca4faf12ab09b753b3d03294562c29c559b970c4dad435f9ec2bc6",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libatspi.so.0",
+      "sha256": "4af877d2d235b7eaab015abe6d81b82c82fe506a5d71403b9bbdfcbce99e8141",
+      "provider": "libatspi2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpango-1.0.so.0",
+      "sha256": "44fbb30ec8f9b2621095bad0d27cc15cec39245133124a44e8abc45193cbb493",
+      "provider": "libpango-1.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libharfbuzz.so.0",
+      "sha256": "4562cfcfd18935324ba3ac74a944898b867ab87a56e925ab3e351ba773f1513e",
+      "provider": "libharfbuzz0b:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgraphite2.so.3",
+      "sha256": "fcfaf843b25b58b88319ced52f826fc8213a661f3693c916f88641eddffe05b8",
+      "provider": "libgraphite2-3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXext.so.6",
+      "sha256": "2907e6a996465de5b32a0dd10534d4416b87f1dee5670aaa7b19301a1fc93f44",
+      "provider": "libxext6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libthai.so.0",
+      "sha256": "1a72e318418dc0ee6014401de9d9976516fe127358c07c305e1198b9814e2b31",
+      "provider": "libthai0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcairo-gobject.so.2",
+      "sha256": "61b4b6cb475c8c2c4622fd1618981d466b716b11903255b68975830fa20d982c",
+      "provider": "libcairo-gobject2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXinerama.so.1",
+      "sha256": "dceff724f4f74c420116fa6a11ece62894af4fc0e74a2254c923ccc215e1a041",
+      "provider": "libxinerama1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpangoft2-1.0.so.0",
+      "sha256": "cfcd528cfb737212719b3273b433b7fe35b6528acbb08c2223a486449314d629",
+      "provider": "libpangoft2-1.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXi.so.6",
+      "sha256": "a51348c921ce1a35123fa7c99dc59bfd3e815be6829874fe15ae55172901d3e4",
+      "provider": "libxi6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgtk-3.so.0",
+      "sha256": "0611fd19d1354a39a7cfafceffa3bdf4289d4c497c7f69ff337f86e99cf37d93",
+      "provider": "libgtk-3-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXrender.so.1",
+      "sha256": "250977e0e004b6c0556144c3e683487063b4582dc83d205196ec3aa65d54e2c6",
+      "provider": "libxrender1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgmodule-2.0.so.0",
+      "sha256": "f8445c01952fd3ff0bb4f17f73be821af3e4b9b61546ff517392e9baeb8f2126",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXcursor.so.1",
+      "sha256": "09bd5941a53ee7fb06898fa066709cf098df8e33a45042e065d2f8461d92672c",
+      "provider": "libxcursor1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libmount.so.1",
+      "sha256": "7472255ae5799059b37ddd544788f5665dbd3e1cb78259f52180293039efc2a5",
+      "provider": "libmount1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libepoxy.so.0",
+      "sha256": "5fc7dd1ea433bfe5f1fd9854e66246bdb44e0cbf148707121c5f4c99fe11be29",
+      "provider": "libepoxy0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libdatrie.so.1",
+      "sha256": "507f33edbbc19b80637d6d66f8e3f62fac097d0b4e9ee6f6f23f535ecea26a61",
+      "provider": "libdatrie1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libatk-bridge-2.0.so.0",
+      "sha256": "366fcd2f2cd9a77767855a7c25b00ffce57e6b55109a2bf800872f0337a28415",
+      "provider": "libatk-bridge2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXrandr.so.2",
+      "sha256": "bc6120a734d52e7f5e3611334e9f3cff0b3ce1b129bb20b6412ce8f0f62c049d",
+      "provider": "libxrandr2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libatk-1.0.so.0",
+      "sha256": "d312f3dbed8f19037bf4d8581f0e41ddfe53796dc7abbc9b7f253495d472a923",
+      "provider": "libatk1.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libjpeg.so.8",
+      "sha256": "ac09f2cd6f8a3b8e3cb123999ce275f9bcbe31c6cf9e20212c8f297772591d15",
+      "provider": "libjpeg-turbo8:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXfixes.so.3",
+      "sha256": "89e5897f438456013d2297850a7558cd28c9ad1f6978447197568949fb6a0fd9",
+      "provider": "libxfixes3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcom_err.so.2",
+      "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+      "provider": "libcom-err2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libkrb5support.so.0",
+      "sha256": "0aa43578471faecbd642ed2ee6ab92b6682a2b676644193e956fc59d18ca24bb",
+      "provider": "libkrb5support0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgssapi_krb5.so.2",
+      "sha256": "6c1b81696044d79a47d6f0f494ee60aaf641c525c46a11da0c6e4a041a782d3c",
+      "provider": "libgssapi-krb5-2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Network.so.6",
+      "sha256": "bdf6d5cedfda840257bdc3e7393f159c250b51124969d4eae388f3c79912e646",
       "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
-      "path": "libjack.so.0",
-      "sha256": "7fb2c6394e6d6ce1fec715e6ba8d24c6555ff045f8ccaead10bc6efbed4ad7e6",
-      "provider": "libjack-jackd2-0:amd64",
+      "path": "libkeyutils.so.1",
+      "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+      "provider": "libkeyutils1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libkrb5.so.3",
+      "sha256": "9615a2841f0783c410eec7fae005a951282551cfedd377737ad8431c8c8cde64",
+      "provider": "libkrb5-3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libk5crypto.so.3",
+      "sha256": "73bc9d72c0c684d6149a3c38f96aab891d178375415c05954fdda587685936f5",
+      "provider": "libk5crypto3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Pdf.so.6",
+      "sha256": "782708b66cfd40d77ed412d9378e7462d5f885e0c8965cbfb59a21084c7b7fd8",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-glx.so.0",
+      "sha256": "7537790510f7a4a14cc54785761dffb1c6fc0058fc379f9cdb0ff26bafee3ff1",
+      "provider": "libxcb-glx0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Svg.so.6",
+      "sha256": "6cc863209dc92d29e2698cc59f61064976b25c3e24fd36c34973a4e880d78e8d",
+      "provider": "wheel:PyQt6",
       "kind": "BINARY"
     },
     {
@@ -1969,15 +1975,15 @@
       "kind": "BINARY"
     },
     {
-      "path": "libasound.so.2",
-      "sha256": "ff4c69ef420f2d0ab92c813d2222d097c6a7eafe3b13952aed069e2bb0204f55",
-      "provider": "libasound2t64:amd64",
+      "path": "libjack.so.0",
+      "sha256": "7fb2c6394e6d6ce1fec715e6ba8d24c6555ff045f8ccaead10bc6efbed4ad7e6",
+      "provider": "libjack-jackd2-0:amd64",
       "kind": "BINARY"
     },
     {
-      "path": "libtinfo.so.6",
-      "sha256": "e6089d7bb95eee5b545f3770dd69095b0bca47d26701cad145af429561d16306",
-      "provider": "libtinfo6:amd64",
+      "path": "libasound.so.2",
+      "sha256": "ff4c69ef420f2d0ab92c813d2222d097c6a7eafe3b13952aed069e2bb0204f55",
+      "provider": "libasound2t64:amd64",
       "kind": "BINARY"
     },
     {
@@ -1987,8 +1993,14 @@
       "kind": "BINARY"
     },
     {
-      "path": "numpy.libs/libgfortran-83c28eba-468e71e5.so.5.0.0",
-      "sha256": "a6a368328d02a5d8a149746f13f6268f8cc9192df5c18777b25c3c9b5ef52160",
+      "path": "libtinfo.so.6",
+      "sha256": "e6089d7bb95eee5b545f3770dd69095b0bca47d26701cad145af429561d16306",
+      "provider": "libtinfo6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "numpy.libs/libscipy_openblas64_-f48b354e.so",
+      "sha256": "432e1c1739731468ba305771af96773939e43016643e2d630f58cb45b6670e96",
       "provider": "wheel:numpy.libs",
       "kind": "BINARY"
     },
@@ -1999,8 +2011,8 @@
       "kind": "BINARY"
     },
     {
-      "path": "numpy.libs/libscipy_openblas64_-f48b354e.so",
-      "sha256": "432e1c1739731468ba305771af96773939e43016643e2d630f58cb45b6670e96",
+      "path": "numpy.libs/libgfortran-83c28eba-468e71e5.so.5.0.0",
+      "sha256": "a6a368328d02a5d8a149746f13f6268f8cc9192df5c18777b25c3c9b5ef52160",
       "provider": "wheel:numpy.libs",
       "kind": "BINARY"
     },
@@ -2043,7 +2055,7 @@
   ],
   "executable": {
     "path": "thoughtloud",
-    "sha256": "7d7317e6ca522335a81b542f7816230bf43a3a5918497101d397b40152d53693"
+    "sha256": "f5d74d169c43a785f574778c1daf9813e21a20689c975e7d4e3a8fb508e4de12"
   },
   "archives": [
     {
@@ -4024,6 +4036,42 @@
       "sha256": "5f95219fc189b4c09ce537d8ec1ea4b5861b087cd00b6d821f99aecf6e9dddce",
       "size": 2642760,
       "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/vulkan-loader/1.3.275.0-1build1/vulkan-loader_1.3.275.0-1build1.dsc"
+    },
+    {
+      "component": "xcb-util-cursor",
+      "version": "0.1.4-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4-1build1.debian.tar.xz",
+      "file": "xcb-util-cursor_0.1.4-1build1.debian.tar.xz",
+      "sha256": "dc151c6dbd01e192be4856eea45220a320e3332a822cb7b59260eb6c46b583f2",
+      "size": 6116,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4-1build1.dsc"
+    },
+    {
+      "component": "xcb-util-cursor",
+      "version": "0.1.4-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4-1build1.dsc",
+      "file": "xcb-util-cursor_0.1.4-1build1.dsc",
+      "sha256": "d1f039f06bd3c85a48b541de75af1b93e1fa0f8058deaff64aa13502230a20a7",
+      "size": 2456,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xcb-util-cursor&version=0.1.4-1build1&exact_match=true"
+    },
+    {
+      "component": "xcb-util-cursor",
+      "version": "0.1.4-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4.orig.tar.gz",
+      "file": "xcb-util-cursor_0.1.4.orig.tar.gz",
+      "sha256": "cc8608ebb695742b6cf84712be29b2b66aa5f6768039528794fca0fa283022bf",
+      "size": 394342,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4-1build1.dsc"
+    },
+    {
+      "component": "xcb-util-cursor",
+      "version": "0.1.4-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4.orig.tar.gz.asc",
+      "file": "xcb-util-cursor_0.1.4.orig.tar.gz.asc",
+      "sha256": "7eefc92b95d5dd785cbe03a47fa5ebd57cbe9b4a4e93b717e58605574efeac0d",
+      "size": 801,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-cursor/0.1.4-1build1/xcb-util-cursor_0.1.4-1build1.dsc"
     },
     {
       "component": "xcb-util-image",

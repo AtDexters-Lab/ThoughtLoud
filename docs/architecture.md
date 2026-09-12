@@ -134,8 +134,8 @@ memory requirements or latency. This is not a platform-independent native bundle
   radius and a 96 ms local probability window; configured bounds keep every
   segment below the model's 30-second limit.
 - A segment without VAD-detected speech still reaches Gemma, with previous-text
-  context omitted and empty output allowed. Quiet speech must not be discarded
-  solely by VAD.
+  context and optional speech preferences omitted and empty output allowed.
+  Quiet speech must not be discarded solely by VAD.
 - Speech-positive segments receive up to 2,000 characters of previous text via
   the existing system/user/assistant/user conversation, with no assistant
   prefill. Non-empty results are joined with spaces, without overlap removal or
@@ -150,9 +150,17 @@ memory requirements or latency. This is not a platform-independent native bundle
   Archives record the exact prompt/protocol and their hashes for reproducibility.
 
 `speech_preferences` is optional freeform language/terminology context. The
-backend appends it as a quoted hint to the base requirements and composes the
-prompt once. The Linux facade freezes the setting when the recording worker is
-created, so live chunks, replay, and archive use the same prompt. Settings changes
+backend appends it as a quoted hint to the base requirements for speech-positive
+segments. VAD-negative segments use the base requirements alone: preference text
+can otherwise become invented output on silence. Their audio is still transcribed,
+and returned words are retained without filtering out preference text. This
+reduces the observed preference echo; it does not guarantee that a model will
+never hallucinate on silence.
+
+The Linux facade freezes the setting when the recording worker is created.
+Live chunks and replay use the same prompt selection. Archive protocol version 8
+stores both prompts and the selection rule, covered by the protocol hash; the
+top-level prompt/hash still identify the speech-positive prompt. Settings changes
 apply to the next recording.
 
 Fresh installs save an explicit empty preference. Existing configurations

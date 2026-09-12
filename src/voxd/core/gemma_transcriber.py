@@ -136,7 +136,8 @@ class GemmaAudioTranscriber:
 
         self.server_url = server_url.rstrip("/")
         self.model = model
-        # Compose once so every live/replay chunk and its archive use one prompt.
+        # Freeze both prompts for live capture, replay and archive metadata.
+        self.base_prompt = compose_prompt(prompt=prompt)
         self.prompt = compose_prompt(speech_preferences, prompt=prompt)
         self.segment_seconds = float(segment_seconds)
         self.timeout = float(timeout)
@@ -188,6 +189,7 @@ class GemmaAudioTranscriber:
                 index,
                 wav_bytes,
                 context,
+                prompt=self.prompt if speech_detected else self.base_prompt,
                 allow_empty=not speech_detected,
             )
             if segment.text:
@@ -212,11 +214,16 @@ class GemmaAudioTranscriber:
     def protocol_metadata(self) -> dict:
         """Return the complete stable request and segmentation protocol."""
         return {
-            "version": 7,
+            "version": 8,
             "prompt": self.prompt,
+            "base_prompt": self.base_prompt,
+            "prompt_selection": {
+                "speech_positive": "prompt",
+                "speech_negative": "base_prompt",
+            },
             "previous_context_max_characters": PREVIOUS_CONTEXT_CHARS,
             "assembly": "space-concatenation",
-            "silence_handling": "omit-context-and-allow-empty-output",
+            "silence_handling": "omit-context-and-preferences-and-allow-empty-output",
             "request_protocol": {
                 "without_previous_context": (
                     "one user message containing the transcription prompt followed "
@@ -289,6 +296,7 @@ class GemmaAudioTranscriber:
         wav_bytes: bytes,
         context: str,
         *,
+        prompt: str,
         allow_empty: bool,
     ) -> _SegmentTranscription:
         audio = base64.b64encode(wav_bytes).decode("ascii")
@@ -298,7 +306,7 @@ class GemmaAudioTranscriber:
         }
         if context:
             messages = [
-                {"role": "system", "content": self.prompt},
+                {"role": "system", "content": prompt},
                 {
                     "role": "user",
                     "content": CONTEXT_USER_TEMPLATE.format(
@@ -316,7 +324,7 @@ class GemmaAudioTranscriber:
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": self.prompt},
+                        {"type": "text", "text": prompt},
                         audio_part,
                     ],
                 }

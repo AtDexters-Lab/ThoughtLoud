@@ -194,6 +194,40 @@ def test_vad_negative_audio_is_transcribed_without_previous_context():
     assert result.text == "first words quiet final words"
 
 
+@pytest.mark.parametrize("first_speech", [False, True])
+@pytest.mark.parametrize("custom_prompt", ["", "  Custom transcription rules.  "])
+def test_vad_negative_audio_omits_preferences_but_preserves_words(
+    first_speech, custom_prompt
+):
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber, compose_prompt
+
+    preference = "I speak Hindi and English."
+    session = _Session(["quiet first words", preference, "last words"])
+    transcriber = GemmaAudioTranscriber(
+        speech_preferences=preference, prompt=custom_prompt, session=session
+    )
+    wav = _silence_wav_bytes(duration_seconds=1)
+
+    result = transcriber.transcribe_segments(
+        [(0, wav, first_speech), (1, wav, False), (2, wav, True)]
+    )
+
+    for index, speech in enumerate([first_speech, False]):
+        messages = session.calls[index][1]["messages"]
+        assert [message["role"] for message in messages] == ["user"]
+        assert messages[0]["content"][0]["text"] == compose_prompt(
+            preference if speech else "", prompt=custom_prompt
+        )
+        assert base64.b64decode(
+            messages[0]["content"][1]["input_audio"]["data"]
+        ) == wav
+    assert session.calls[2][1]["messages"][0] == {
+        "role": "system", "content": transcriber.prompt
+    }
+    # A speaker may actually say the preference words: never strip that text.
+    assert result.text == f"quiet first words {preference} last words"
+
+
 def test_empty_silent_segment_is_ignored_during_direct_assembly():
     from voxd.core.gemma_transcriber import GemmaAudioTranscriber
 
@@ -443,18 +477,29 @@ def test_preference_prompt_is_shared_by_initial_and_context_requests():
     assert transcriber.protocol_metadata()["prompt"] == prompt
 
 
-def test_protocol_metadata_describes_the_vad_and_direct_append_pipeline():
-    from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+@pytest.mark.parametrize("preference", ["", "I speak Hindi and English."])
+def test_protocol_metadata_describes_the_vad_and_direct_append_pipeline(preference):
+    from voxd.core.gemma_transcriber import DEFAULT_PROMPT, GemmaAudioTranscriber
 
-    transcriber = GemmaAudioTranscriber(delete_input=False, session=_Session([]))
+    transcriber = GemmaAudioTranscriber(
+        delete_input=False, speech_preferences=preference, session=_Session([])
+    )
 
     protocol = transcriber.protocol_metadata()
 
-    assert protocol["version"] == 7
+    assert protocol["version"] == 8
     assert protocol["prompt"] == transcriber.prompt
+    assert protocol["base_prompt"] == transcriber.base_prompt == DEFAULT_PROMPT
+    assert (protocol["prompt"] != protocol["base_prompt"]) == bool(preference)
+    assert protocol["prompt_selection"] == {
+        "speech_positive": "prompt",
+        "speech_negative": "base_prompt",
+    }
     assert protocol["previous_context_max_characters"] == 2000
     assert protocol["assembly"] == "space-concatenation"
-    assert protocol["silence_handling"] == "omit-context-and-allow-empty-output"
+    assert protocol["silence_handling"] == (
+        "omit-context-and-preferences-and-allow-empty-output"
+    )
     assert protocol["request_protocol"] == {
         "without_previous_context": (
             "one user message containing the transcription prompt followed by "

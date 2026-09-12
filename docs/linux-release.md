@@ -6,14 +6,61 @@ shortcut and optional speech preference, download/use the model, and dictate
 into an application without a developer environment or manual Python setup.
 
 This page records the implemented candidate, its actual validation and remaining
-publication/support boundaries. The work is local and uncommitted; no release has
-been published.
+publication/support boundaries. The implementation is checkpointed in Git;
+no tagged binary release has been published.
 
 The latest candidate includes the workstation repairs and portable CPU dispatch
 described below and passes **329 tests**. Its rebuilt packages are recorded in
 the portable CPU section. Earlier package and VM evidence applies to the
 identified earlier artifacts; those packages and their matching source were
 retained separately before rebuilding.
+
+## Repository checkpoint: 2026-09-12
+
+Implementation checkpoint: `3e838d3137ef3f5f4b1a4fbfca3c9fe126e6eb35`
+(`feat: checkpoint ThoughtLoud Linux release candidate`). Its complete 146-file
+Git tree matches the validated application-source snapshot byte for byte.
+This subsequent documentation update records closure without changing that
+tested implementation or rewriting the immutable candidate artifacts.
+
+The checkpoint includes ThoughtLoud branding, the platform-independent dictation
+session and Linux adapters, setup/hotkey/microphone behavior, bundled runtime and
+verified model downloads, startup/tray fixes, stable iGPU device selection,
+portable CPU dispatch, licensing/source attachments and release build recipes.
+Validation is complete for the documented candidate scope: 329 tests; installed
+non-AVX DEB dictation through VAD and editor insertion; optimized CPU and Radeon
+780M/MTP audio; and verification of 230 binaries and 241 source archives.
+Implementation review and final traceability checks found no blocking omissions.
+Task VMs and temporary inference containers were stopped after validation.
+
+The application-source archive is
+`thoughtloud-1.4.0-source.tar.gz`, SHA-256
+`a59fd733fae23cef7439d120c222a52b251536e227f3fa5383e03c6ad1d8f51b`.
+Its provenance correctly records assembly from the pre-commit working tree; the
+commit above now identifies those exact source bytes. Package and dependency
+source identities are in the portable CPU candidate section below. Build outputs,
+models, recordings, VM disks/keys and private host-repair backups are local ignored
+artifacts, not repository contents. The reviewed Qt notice corpus is committed.
+
+Project-file whitespace checks passed. Two unchanged upstream license copies
+(`PyInstaller-COPYING.txt` and `libquadmath-LGPL-2.1.txt`) retain their original
+whitespace; their bytes were verified against the validated source snapshot.
+
+Remaining follow-ups are explicit:
+
+- Investigate cold-load optimization; the five-minute unload policy and current
+  loading behavior remain in place.
+- Decide and implement any managed iGPU/MTP default change. The managed profile
+  currently omits the assistant; the established external iGPU/MTP profile works.
+- Extend physical microphone/headset and KDE portal coverage before advertising
+  those environments as fully validated.
+- For a downloadable binary release, select a reviewed version/tag and execute
+  the release workflow with matching package, application-source and dependency-
+  source attachments. A repository push does not run that manual workflow.
+
+These follow-ups do not block the requested source checkpoint and repository
+push. This closes the current implementation workstream; it does not represent
+completion of those follow-ups or a tagged binary release.
 
 ## Accepted scope
 
@@ -77,7 +124,7 @@ artifacts can be produced and start in the build environment. Synthetic-silence
 endpoint checks establish acceptance of the audio protocol. Neither proves
 speech quality or that a focused editor received the intended text.
 
-The candidate is an uncommitted working tree based on
+The original candidate was built from an uncommitted working tree based on
 `03d4cce661fa36f66f91a5032a9569f55e452623`. The builder is Ubuntu 24.04,
 Python 3.12, with the hash-locked Python dependencies and native recipes in
 `packaging/` and `runtime/linux/`. The following identities record the validated pre-rebrand baseline from

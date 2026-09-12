@@ -55,6 +55,27 @@ Detailed private replay evidence and package checks are retained locally under
 published. These tests support the reported echo fix. Workstation activation,
 physical microphone retesting and an actual host reboot remain deployment steps.
 
+### Published patch checkpoint
+
+[ThoughtLoud 1.4.1](https://github.com/AtDexters-Lab/ThoughtLoud/releases/tag/v1.4.1)
+is public and supersedes 1.4.0. Tag `v1.4.1` identifies reviewed commit
+`aa1e1656346c1774f2666353c715242cd30346f2`. All five uploaded asset sizes and
+GitHub SHA-256 digests match the local release artifacts. The application source
+matches all 146 tagged files, with only release provenance added; both source
+archives contain the same build lock.
+
+An anonymous public DEB download and checksum list were also verified. DEB
+SHA-256: `5712f4727cb10c420a10be172c35865f0a02cfeacf94b99dba5248b87dd6b868`.
+The initial download stalled; a bounded retry completed successfully.
+
+Workstation installation is pending an unlocked desktop for native package
+authentication. Its existing 1.4.0 tray remains running and directly reports
+Ready. The first activation preflight stopped before changing the installation
+or tray because the locked GNOME session had temporarily removed its tray
+watcher. Local `build/validation/prompt-echo-20260912/checkpoint.json` and
+`install-host.py` retain the verified artifact and guarded activation steps.
+Physical microphone retesting and actual workstation reboot remain open.
+
 ## Final release profile: 2026-09-12
 
 The user approved publishing tagged packages with matching source attachments and

@@ -10,6 +10,11 @@ from platformdirs import user_config_dir
 DEFAULT_CONFIG = {
     "verbosity": False,
     "autostart": False,
+    "setup_completed": False,
+    "hotkey_description": "",
+    "managed_runtime_enabled": True,
+    "runtime_device": "cpu",
+    "speech_preferences": "",
     "typing_delay": 0,
     "typing_word_delay": 10,
     "typing_start_delay": 0.15,
@@ -19,14 +24,17 @@ DEFAULT_CONFIG = {
     "audio_input_device": "",
     "recording_archive_enabled": False,
     "recording_archive_max_mb": 5120,
-    "mic_autoset_enabled": True,
-    "mic_autoset_level": 0.45,
     "gemma_server_url": "http://localhost:9292",
     "gemma_model": "gemma-e4b",
     "gemma_timeout": 300,
     "gemma_segment_seconds": 10,
     "gemma_max_tokens": 1024,
 }
+
+LEGACY_SPEECH_PREFERENCES = (
+    "I speak Hindi or mixed Hindi-English. Transliterate every Hindi word into "
+    "natural Roman Hinglish; preserve English words and do not translate the speech."
+)
 
 CONFIG_DIR = Path(user_config_dir("voxd"))
 CONFIG_PATH = CONFIG_DIR / "config.yaml"
@@ -47,6 +55,14 @@ class AppConfig:
                 loaded = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8")) or {}
                 if isinstance(loaded, dict):
                     user_config = loaded
+                    # Existing users own their configured inference endpoint.
+                    # Only fresh configurations opt into the bundled runtime.
+                    user_config.setdefault("managed_runtime_enabled", False)
+                    # Existing installations used a Hindi-English prompt. A
+                    # newly written template has an explicit empty preference,
+                    # while actual old configs missing the key retain that hint.
+                    if "speech_preferences" not in user_config:
+                        user_config["speech_preferences"] = LEGACY_SPEECH_PREFERENCES
                 else:
                     print("[config] Ignoring config because its top level is not a mapping")
             except (OSError, yaml.YAMLError) as exc:
@@ -92,9 +108,6 @@ class AppConfig:
         self.data["recording_archive_max_mb"] = int(
             self._number("recording_archive_max_mb", minimum=100, maximum=1_000_000)
         )
-        self.data["mic_autoset_level"] = self._number(
-            "mic_autoset_level", minimum=0, maximum=1
-        )
         self.data["gemma_timeout"] = self._number(
             "gemma_timeout", minimum=1, maximum=3600
         )
@@ -108,10 +121,11 @@ class AppConfig:
         for key in (
             "verbosity",
             "autostart",
+            "setup_completed",
+            "managed_runtime_enabled",
             "append_trailing_space",
             "audio_prefer_pulse",
             "recording_archive_enabled",
-            "mic_autoset_enabled",
         ):
             if not isinstance(self.data[key], bool):
                 self.data[key] = DEFAULT_CONFIG[key]
@@ -122,6 +136,15 @@ class AppConfig:
             "gemma_model",
         ):
             if not isinstance(self.data[key], str) or not self.data[key].strip():
+                self.data[key] = DEFAULT_CONFIG[key]
+
+        if self.data["runtime_device"] not in ("cpu", "vulkan"):
+            self.data["runtime_device"] = "cpu"
+
+        for key in ("speech_preferences", "hotkey_description"):
+            # Empty is meaningful: it requests neutral transcription/no saved
+            # portal binding. Preserve the user's freeform text as written.
+            if not isinstance(self.data[key], str):
                 self.data[key] = DEFAULT_CONFIG[key]
 
     def _number(self, key: str, *, minimum: float, maximum: float) -> float:

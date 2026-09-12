@@ -1,5 +1,6 @@
 import hashlib
 import json
+import pytest
 from threading import Event, Thread
 from types import SimpleNamespace
 
@@ -35,6 +36,7 @@ def _install_fakes(
     replay_error=None,
     segment_before_stop=False,
     no_speech=False,
+    use_composed_prompt=False,
 ):
     import voxd.core.archive as archive_module
     import voxd.core.clipboard as clipboard_module
@@ -52,6 +54,7 @@ def _install_fakes(
         "archives": [],
         "cleaned": [],
         "live_segment_seen": Event(),
+        "observed_prompts": [],
     }
     recording_path = tmp_path / "recording.wav"
 
@@ -90,6 +93,9 @@ def _install_fakes(
         def __init__(self, **kwargs):
             events["transcriber_kwargs"] = kwargs
             self.prompt = "test prompt"
+            if use_composed_prompt:
+                from voxd.core.gemma_transcriber import compose_prompt
+                self.prompt = compose_prompt(kwargs["speech_preferences"])
             self.resolved_model = "resolved-e4b"
             self.system_fingerprint = "test-fingerprint"
 
@@ -128,6 +134,7 @@ def _install_fakes(
             }
 
         def transcribe_segments(self, segments):
+            events["observed_prompts"].append(self.prompt)
             received = []
             for segment in segments:
                 received.append(segment)
@@ -156,6 +163,7 @@ def _install_fakes(
             )
 
         def transcribe(self, path):
+            events["observed_prompts"].append(self.prompt)
             assert path == recording_path
             events["order"].append("transcribe-replay")
             if replay_error:
@@ -489,4 +497,122 @@ def test_live_and_replay_failure_still_archives_full_audio(monkeypatch, tmp_path
     assert metadata["transcription"]["segments"] == []
     assert metadata["transcription"]["segment_modes"] == []
     assert events["typed"] == []
+    assert finished == [""]
+
+
+def test_session_freezes_preference_for_live_replay_and_archive(monkeypatch, tmp_path):
+    from voxd.core.gemma_transcriber import compose_prompt
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(
+        monkeypatch, tmp_path,
+        live_error=RuntimeError("server restarted"),
+        use_composed_prompt=True,
+    )
+    cfg = _config(recording_archive_enabled=True)
+    cfg.speech_preferences = "I mix Marathi and English."
+    thread = CoreProcessThread(cfg)
+    cfg.speech_preferences = "A settings change for the next session."
+    thread.should_stop = True
+    thread.run()
+
+    prompt = compose_prompt("I mix Marathi and English.")
+    transcription = events["archives"][0][2]["transcription"]
+    assert events["observed_prompts"] == [prompt, prompt]
+    assert transcription["prompt"] == prompt
+    assert transcription["protocol"]["prompt"] == prompt
+    assert transcription["prompt_sha256"] == hashlib.sha256(prompt.encode()).hexdigest()
+
+
+@pytest.mark.parametrize("replay", [False, True])
+def test_managed_lease_spans_capture_decode_replay_and_archive(monkeypatch, tmp_path, replay):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(
+        monkeypatch, tmp_path,
+        live_error=RuntimeError("retry full audio") if replay else None,
+    )
+    waits = []
+    released = []
+
+    class Lease:
+        server_url = "http://127.0.0.1:45678"
+
+        def wait_ready(self, *, timeout):
+            # Loading must never delay microphone capture.
+            assert "recording-started" in events["order"]
+            assert not released
+            waits.append(timeout)
+
+        def release(self):
+            assert len(events["archives"]) == 1
+            assert events["typed"] == ["namaste doston"]
+            released.append(True)
+
+    class Runtime:
+        def acquire(self):
+            assert not events["order"]
+            return Lease()
+
+    cfg = _config(recording_archive_enabled=True)
+    thread = CoreProcessThread(cfg, runtime=Runtime())
+    # All settings, including nested data, belong to the session snapshot.
+    cfg.gemma_segment_seconds = 99
+    cfg.data["append_trailing_space"] = False
+    finished = []
+    thread.finished.connect(finished.append)
+    thread.should_stop = True
+    thread.run()
+
+    assert cfg.gemma_server_url == "http://localhost:9292"
+    assert thread.cfg.data["append_trailing_space"] is True
+    assert events["transcriber_kwargs"]["server_url"] == Lease.server_url
+    assert events["archives"][0][2]["transcription"]["server_url"] == Lease.server_url
+    assert len(waits) == (3 if replay else 2)
+    assert released == [True]
+    assert finished == ["namaste doston"]
+
+
+def test_managed_start_failure_is_visible_and_finishes_without_capture(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(monkeypatch, tmp_path)
+    class Runtime:
+        def acquire(self):
+            raise RuntimeError("Local models missing")
+
+    thread = CoreProcessThread(_config(), runtime=Runtime())
+    errors, finished = [], []
+    thread.error.connect(errors.append)
+    thread.finished.connect(finished.append)
+    thread.run()
+    assert events["order"] == []
+    assert errors == ["Could not start dictation: Local models missing"]
+    assert finished == [""]
+
+
+def test_managed_decode_failure_retains_audio_and_releases_lease(monkeypatch, tmp_path):
+    from voxd.core.voxd_core import CoreProcessThread
+
+    events = _install_fakes(monkeypatch, tmp_path)
+    released = []
+    class Lease:
+        server_url = "http://127.0.0.1:45678"
+        def wait_ready(self, **kwargs):
+            raise RuntimeError("Model did not load")
+        def release(self):
+            released.append(True)
+    thread = CoreProcessThread(
+        _config(recording_archive_enabled=True),
+        runtime=SimpleNamespace(acquire=lambda: Lease()),
+    )
+    errors, finished = [], []
+    thread.error.connect(errors.append)
+    thread.finished.connect(finished.append)
+    thread.should_stop = True
+    thread.run()
+    assert released == [True]
+    assert events["typed"] == []
+    assert events["archives"][0][1].exists()
+    assert "Model did not load" in errors[0]
     assert finished == [""]

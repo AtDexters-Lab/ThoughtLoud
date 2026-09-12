@@ -13,7 +13,7 @@ def _socket_path():
 # recording/transcription threads.
 _DEBOUNCE_SEC = 0.5
 
-def start_ipc_server(trigger_callback):
+def start_ipc_server(trigger_callback, settings_callback=None):
     """Starts a background thread that listens for 'trigger_record' and calls trigger_callback()."""
     sock_path = _socket_path()
     sock_path.parent.mkdir(parents=True, exist_ok=True)
@@ -25,7 +25,7 @@ def start_ipc_server(trigger_callback):
         except OSError:
             sock_path.unlink()
         else:
-            raise RuntimeError("another VOXD tray is already running")
+            raise RuntimeError("another ThoughtLoud instance is already running")
         finally:
             probe.close()
 
@@ -47,7 +47,9 @@ def start_ipc_server(trigger_callback):
                     data = conn.recv(1024).strip()
                 except OSError:
                     continue
-                if data == b"trigger_record":
+                if data == b"show_settings" and settings_callback is not None:
+                    settings_callback()
+                elif data == b"trigger_record":
                     fire = False
                     with lock:
                         now = time.monotonic()

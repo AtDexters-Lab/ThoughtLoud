@@ -1,0 +1,4233 @@
+{
+  "wheels": [
+    {
+      "name": "PyQt6",
+      "version": "6.11.0"
+    },
+    {
+      "name": "PyQt6-Qt6",
+      "version": "6.11.2"
+    },
+    {
+      "name": "PyQt6-sip",
+      "version": "13.12.0"
+    },
+    {
+      "name": "numpy",
+      "version": "2.5.3"
+    },
+    {
+      "name": "onnxruntime",
+      "version": "1.30.0"
+    },
+    {
+      "name": "sounddevice",
+      "version": "0.5.6"
+    },
+    {
+      "name": "cffi",
+      "version": "2.1.1"
+    },
+    {
+      "name": "pycparser",
+      "version": "3.0"
+    },
+    {
+      "name": "platformdirs",
+      "version": "4.11.8"
+    },
+    {
+      "name": "PyYAML",
+      "version": "6.0.3"
+    },
+    {
+      "name": "pyperclip",
+      "version": "1.11.0"
+    },
+    {
+      "name": "requests",
+      "version": "2.34.2"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.7.0"
+    },
+    {
+      "name": "certifi",
+      "version": "2026.7.22"
+    },
+    {
+      "name": "charset-normalizer",
+      "version": "3.5.1"
+    },
+    {
+      "name": "idna",
+      "version": "3.19"
+    },
+    {
+      "name": "dbus-next",
+      "version": "0.2.3"
+    },
+    {
+      "name": "flatbuffers",
+      "version": "25.12.19"
+    },
+    {
+      "name": "packaging",
+      "version": "26.3"
+    },
+    {
+      "name": "protobuf",
+      "version": "7.36.1"
+    },
+    {
+      "name": "pyinstaller",
+      "version": "6.22.2"
+    },
+    {
+      "name": "pyinstaller-hooks-contrib",
+      "version": "2026.7"
+    },
+    {
+      "name": "altgraph",
+      "version": "0.17.5"
+    }
+  ],
+  "system_packages": [
+    {
+      "binary": "libasound2t64:amd64",
+      "version": "1.2.11-1ubuntu0.3",
+      "source": "alsa-lib",
+      "source_version": "1.2.11-1ubuntu0.3"
+    },
+    {
+      "binary": "libatk-bridge2.0-0t64:amd64",
+      "version": "2.52.0-1build1",
+      "source": "at-spi2-core",
+      "source_version": "2.52.0-1build1"
+    },
+    {
+      "binary": "libatk1.0-0t64:amd64",
+      "version": "2.52.0-1build1",
+      "source": "at-spi2-core",
+      "source_version": "2.52.0-1build1"
+    },
+    {
+      "binary": "libatspi2.0-0t64:amd64",
+      "version": "2.52.0-1build1",
+      "source": "at-spi2-core",
+      "source_version": "2.52.0-1build1"
+    },
+    {
+      "binary": "libblkid1:amd64",
+      "version": "2.39.3-9ubuntu6.6",
+      "source": "util-linux",
+      "source_version": "2.39.3-9ubuntu6.6"
+    },
+    {
+      "binary": "libbrotli1:amd64",
+      "version": "1.1.0-2build2",
+      "source": "brotli",
+      "source_version": "1.1.0-2build2"
+    },
+    {
+      "binary": "libbsd0:amd64",
+      "version": "0.12.1-1build1.1",
+      "source": "libbsd",
+      "source_version": "0.12.1-1build1.1"
+    },
+    {
+      "binary": "libbz2-1.0:amd64",
+      "version": "1.0.8-5.1ubuntu0.1",
+      "source": "bzip2",
+      "source_version": "1.0.8-5.1ubuntu0.1"
+    },
+    {
+      "binary": "libcairo-gobject2:amd64",
+      "version": "1.18.0-3build1",
+      "source": "cairo",
+      "source_version": "1.18.0-3build1"
+    },
+    {
+      "binary": "libcairo2:amd64",
+      "version": "1.18.0-3build1",
+      "source": "cairo",
+      "source_version": "1.18.0-3build1"
+    },
+    {
+      "binary": "libcap2:amd64",
+      "version": "1:2.66-5ubuntu2.4",
+      "source": "libcap2",
+      "source_version": "1:2.66-5ubuntu2.4"
+    },
+    {
+      "binary": "libcom-err2:amd64",
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "source": "e2fsprogs",
+      "source_version": "1.47.0-2.4~exp1ubuntu4.1"
+    },
+    {
+      "binary": "libdatrie1:amd64",
+      "version": "0.2.13-3build1",
+      "source": "libdatrie",
+      "source_version": "0.2.13-3build1"
+    },
+    {
+      "binary": "libdb5.3t64:amd64",
+      "version": "5.3.28+dfsg2-7",
+      "source": "db5.3",
+      "source_version": "5.3.28+dfsg2-7"
+    },
+    {
+      "binary": "libdbus-1-3:amd64",
+      "version": "1.14.10-4ubuntu4.1",
+      "source": "dbus",
+      "source_version": "1.14.10-4ubuntu4.1"
+    },
+    {
+      "binary": "libepoxy0:amd64",
+      "version": "1.5.10-1build1",
+      "source": "libepoxy",
+      "source_version": "1.5.10-1build1"
+    },
+    {
+      "binary": "libexpat1:amd64",
+      "version": "2.6.1-2ubuntu0.4",
+      "source": "expat",
+      "source_version": "2.6.1-2ubuntu0.4"
+    },
+    {
+      "binary": "libffi8:amd64",
+      "version": "3.4.6-1build1",
+      "source": "libffi",
+      "source_version": "3.4.6-1build1"
+    },
+    {
+      "binary": "libfontconfig1:amd64",
+      "version": "2.15.0-1.1ubuntu2",
+      "source": "fontconfig",
+      "source_version": "2.15.0-1.1ubuntu2"
+    },
+    {
+      "binary": "libfreetype6:amd64",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "source": "freetype",
+      "source_version": "2.13.2+dfsg-1ubuntu0.1"
+    },
+    {
+      "binary": "libfribidi0:amd64",
+      "version": "1.0.13-3build1",
+      "source": "fribidi",
+      "source_version": "1.0.13-3build1"
+    },
+    {
+      "binary": "libgcc-s1:amd64",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "source": "gcc-14",
+      "source_version": "14.2.0-4ubuntu2~24.04.1"
+    },
+    {
+      "binary": "libgcrypt20:amd64",
+      "version": "1.10.3-2ubuntu0.2",
+      "source": "libgcrypt20",
+      "source_version": "1.10.3-2ubuntu0.2"
+    },
+    {
+      "binary": "libgdk-pixbuf-2.0-0:amd64",
+      "version": "2.42.10+dfsg-3ubuntu3.3",
+      "source": "gdk-pixbuf",
+      "source_version": "2.42.10+dfsg-3ubuntu3.3"
+    },
+    {
+      "binary": "libglib2.0-0t64:amd64",
+      "version": "2.80.0-6ubuntu3.8",
+      "source": "glib2.0",
+      "source_version": "2.80.0-6ubuntu3.8"
+    },
+    {
+      "binary": "libgomp1:amd64",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "source": "gcc-14",
+      "source_version": "14.2.0-4ubuntu2~24.04.1"
+    },
+    {
+      "binary": "libgpg-error0:amd64",
+      "version": "1.47-3build2.1",
+      "source": "libgpg-error",
+      "source_version": "1.47-3build2.1"
+    },
+    {
+      "binary": "libgraphite2-3:amd64",
+      "version": "1.3.14-2ubuntu0.24.04.1",
+      "source": "graphite2",
+      "source_version": "1.3.14-2ubuntu0.24.04.1"
+    },
+    {
+      "binary": "libgssapi-krb5-2:amd64",
+      "version": "1.20.1-6ubuntu2.8",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.8"
+    },
+    {
+      "binary": "libgtk-3-0t64:amd64",
+      "version": "3.24.41-4ubuntu1.3",
+      "source": "gtk+3.0",
+      "source_version": "3.24.41-4ubuntu1.3"
+    },
+    {
+      "binary": "libharfbuzz0b:amd64",
+      "version": "8.3.0-2build2",
+      "source": "harfbuzz",
+      "source_version": "8.3.0-2build2"
+    },
+    {
+      "binary": "libjack-jackd2-0:amd64",
+      "version": "1.9.21~dfsg-3ubuntu3",
+      "source": "jackd2",
+      "source_version": "1.9.21~dfsg-3ubuntu3"
+    },
+    {
+      "binary": "libjpeg-turbo8:amd64",
+      "version": "2.1.5-2ubuntu2",
+      "source": "libjpeg-turbo",
+      "source_version": "2.1.5-2ubuntu2"
+    },
+    {
+      "binary": "libk5crypto3:amd64",
+      "version": "1.20.1-6ubuntu2.8",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.8"
+    },
+    {
+      "binary": "libkeyutils1:amd64",
+      "version": "1.6.3-3build1",
+      "source": "keyutils",
+      "source_version": "1.6.3-3build1"
+    },
+    {
+      "binary": "libkrb5-3:amd64",
+      "version": "1.20.1-6ubuntu2.8",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.8"
+    },
+    {
+      "binary": "libkrb5support0:amd64",
+      "version": "1.20.1-6ubuntu2.8",
+      "source": "krb5",
+      "source_version": "1.20.1-6ubuntu2.8"
+    },
+    {
+      "binary": "liblz4-1:amd64",
+      "version": "1.9.4-1build1.1",
+      "source": "lz4",
+      "source_version": "1.9.4-1build1.1"
+    },
+    {
+      "binary": "liblzma5:amd64",
+      "version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "source": "xz-utils",
+      "source_version": "5.6.1+really5.4.5-1ubuntu0.3"
+    },
+    {
+      "binary": "libmd0:amd64",
+      "version": "1.1.0-2build1.1",
+      "source": "libmd",
+      "source_version": "1.1.0-2build1.1"
+    },
+    {
+      "binary": "libmount1:amd64",
+      "version": "2.39.3-9ubuntu6.6",
+      "source": "util-linux",
+      "source_version": "2.39.3-9ubuntu6.6"
+    },
+    {
+      "binary": "libpango-1.0-0:amd64",
+      "version": "1.52.1+ds-1build1",
+      "source": "pango1.0",
+      "source_version": "1.52.1+ds-1build1"
+    },
+    {
+      "binary": "libpangocairo-1.0-0:amd64",
+      "version": "1.52.1+ds-1build1",
+      "source": "pango1.0",
+      "source_version": "1.52.1+ds-1build1"
+    },
+    {
+      "binary": "libpangoft2-1.0-0:amd64",
+      "version": "1.52.1+ds-1build1",
+      "source": "pango1.0",
+      "source_version": "1.52.1+ds-1build1"
+    },
+    {
+      "binary": "libpcre2-8-0:amd64",
+      "version": "10.42-4ubuntu2.1",
+      "source": "pcre2",
+      "source_version": "10.42-4ubuntu2.1"
+    },
+    {
+      "binary": "libpixman-1-0:amd64",
+      "version": "0.42.2-1build1",
+      "source": "pixman",
+      "source_version": "0.42.2-1build1"
+    },
+    {
+      "binary": "libpng16-16t64:amd64",
+      "version": "1.6.43-5ubuntu0.6",
+      "source": "libpng1.6",
+      "source_version": "1.6.43-5ubuntu0.6"
+    },
+    {
+      "binary": "libportaudio2:amd64",
+      "version": "19.6.0-1.2build3",
+      "source": "portaudio19",
+      "source_version": "19.6.0-1.2build3"
+    },
+    {
+      "binary": "libpython3.12-minimal:amd64",
+      "version": "3.12.3-1ubuntu0.17",
+      "source": "python3.12",
+      "source_version": "3.12.3-1ubuntu0.17"
+    },
+    {
+      "binary": "libpython3.12-stdlib:amd64",
+      "version": "3.12.3-1ubuntu0.17",
+      "source": "python3.12",
+      "source_version": "3.12.3-1ubuntu0.17"
+    },
+    {
+      "binary": "libpython3.12t64:amd64",
+      "version": "3.12.3-1ubuntu0.17",
+      "source": "python3.12",
+      "source_version": "3.12.3-1ubuntu0.17"
+    },
+    {
+      "binary": "libreadline8t64:amd64",
+      "version": "8.2-4build1",
+      "source": "readline",
+      "source_version": "8.2-4build1"
+    },
+    {
+      "binary": "libselinux1:amd64",
+      "version": "3.5-2ubuntu2.1",
+      "source": "libselinux",
+      "source_version": "3.5-2ubuntu2.1"
+    },
+    {
+      "binary": "libssl3t64:amd64",
+      "version": "3.0.13-0ubuntu3.15",
+      "source": "openssl",
+      "source_version": "3.0.13-0ubuntu3.15"
+    },
+    {
+      "binary": "libstdc++6:amd64",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "source": "gcc-14",
+      "source_version": "14.2.0-4ubuntu2~24.04.1"
+    },
+    {
+      "binary": "libsystemd0:amd64",
+      "version": "255.4-1ubuntu8.17",
+      "source": "systemd",
+      "source_version": "255.4-1ubuntu8.17"
+    },
+    {
+      "binary": "libthai0:amd64",
+      "version": "0.1.29-2build1",
+      "source": "libthai",
+      "source_version": "0.1.29-2build1"
+    },
+    {
+      "binary": "libtinfo6:amd64",
+      "version": "6.4+20240113-1ubuntu2.2",
+      "source": "ncurses",
+      "source_version": "6.4+20240113-1ubuntu2.2"
+    },
+    {
+      "binary": "libvulkan1:amd64",
+      "version": "1.3.275.0-1build1",
+      "source": "vulkan-loader",
+      "source_version": "1.3.275.0-1build1"
+    },
+    {
+      "binary": "libx11-6:amd64",
+      "version": "2:1.8.7-1build1",
+      "source": "libx11",
+      "source_version": "2:1.8.7-1build1"
+    },
+    {
+      "binary": "libx11-xcb1:amd64",
+      "version": "2:1.8.7-1build1",
+      "source": "libx11",
+      "source_version": "2:1.8.7-1build1"
+    },
+    {
+      "binary": "libxau6:amd64",
+      "version": "1:1.0.9-1build6",
+      "source": "libxau",
+      "source_version": "1:1.0.9-1build6"
+    },
+    {
+      "binary": "libxcb-glx0:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-icccm4:amd64",
+      "version": "0.4.1-1.1build3",
+      "source": "xcb-util-wm",
+      "source_version": "0.4.1-1.1build3"
+    },
+    {
+      "binary": "libxcb-image0:amd64",
+      "version": "0.4.0-2build1",
+      "source": "xcb-util-image",
+      "source_version": "0.4.0-2build1"
+    },
+    {
+      "binary": "libxcb-keysyms1:amd64",
+      "version": "0.4.0-1build4",
+      "source": "xcb-util-keysyms",
+      "source_version": "0.4.0-1build4"
+    },
+    {
+      "binary": "libxcb-randr0:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-render-util0:amd64",
+      "version": "0.3.9-1build4",
+      "source": "xcb-util-renderutil",
+      "source_version": "0.3.9-1build4"
+    },
+    {
+      "binary": "libxcb-render0:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-shape0:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-shm0:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-sync1:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-util1:amd64",
+      "version": "0.4.0-1build3",
+      "source": "xcb-util",
+      "source_version": "0.4.0-1build3"
+    },
+    {
+      "binary": "libxcb-xfixes0:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcb-xkb1:amd64",
+      "version": "1.15-1ubuntu2",
+      "source": "libxcb",
+      "source_version": "1.15-1ubuntu2"
+    },
+    {
+      "binary": "libxcomposite1:amd64",
+      "version": "1:0.4.5-1build3",
+      "source": "libxcomposite",
+      "source_version": "1:0.4.5-1build3"
+    },
+    {
+      "binary": "libxcursor1:amd64",
+      "version": "1:1.2.1-1build1",
+      "source": "libxcursor",
+      "source_version": "1:1.2.1-1build1"
+    },
+    {
+      "binary": "libxdamage1:amd64",
+      "version": "1:1.1.6-1build1",
+      "source": "libxdamage",
+      "source_version": "1:1.1.6-1build1"
+    },
+    {
+      "binary": "libxdmcp6:amd64",
+      "version": "1:1.1.3-0ubuntu6",
+      "source": "libxdmcp",
+      "source_version": "1:1.1.3-0ubuntu6"
+    },
+    {
+      "binary": "libxext6:amd64",
+      "version": "2:1.3.4-1build2",
+      "source": "libxext",
+      "source_version": "2:1.3.4-1build2"
+    },
+    {
+      "binary": "libxfixes3:amd64",
+      "version": "1:6.0.0-2build1",
+      "source": "libxfixes",
+      "source_version": "1:6.0.0-2build1"
+    },
+    {
+      "binary": "libxi6:amd64",
+      "version": "2:1.8.1-1build1",
+      "source": "libxi",
+      "source_version": "2:1.8.1-1build1"
+    },
+    {
+      "binary": "libxinerama1:amd64",
+      "version": "2:1.1.4-3build1",
+      "source": "libxinerama",
+      "source_version": "2:1.1.4-3build1"
+    },
+    {
+      "binary": "libxkbcommon-x11-0:amd64",
+      "version": "1.6.0-1build1",
+      "source": "libxkbcommon",
+      "source_version": "1.6.0-1build1"
+    },
+    {
+      "binary": "libxkbcommon0:amd64",
+      "version": "1.6.0-1build1",
+      "source": "libxkbcommon",
+      "source_version": "1.6.0-1build1"
+    },
+    {
+      "binary": "libxrandr2:amd64",
+      "version": "2:1.5.2-2build1",
+      "source": "libxrandr",
+      "source_version": "2:1.5.2-2build1"
+    },
+    {
+      "binary": "libxrender1:amd64",
+      "version": "1:0.9.10-1.1build1",
+      "source": "libxrender",
+      "source_version": "1:0.9.10-1.1build1"
+    },
+    {
+      "binary": "libzstd1:amd64",
+      "version": "1.5.5+dfsg2-2build1.1",
+      "source": "libzstd",
+      "source_version": "1.5.5+dfsg2-2build1.1"
+    },
+    {
+      "binary": "zlib1g:amd64",
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "source": "zlib",
+      "source_version": "1:1.3.dfsg-3.1ubuntu2.2"
+    }
+  ],
+  "binaries": [
+    {
+      "path": "onnxruntime/capi/libonnxruntime_providers_shared.so",
+      "sha256": "086ec1d5388f64153d9c63470d126693db9a182c8ce236d3a1119068471b8a0d",
+      "provider": "wheel:onnxruntime",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-base.so.0.9.11",
+      "sha256": "f5edd4074a512aa17675433c48e8f853b02241fc68a5c8217eae79dd5deb27b1",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-alderlake.so",
+      "sha256": "0d6ba6de179a4cd83126a06cd76c9105f8e3e251f3d03fd35988874f23ebdc26",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-cannonlake.so",
+      "sha256": "35fd615dcc04d296d4ed3723a4137d28af04543eece5b0ccea1cdfe36a79364a",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-cascadelake.so",
+      "sha256": "09e99b9aff7a91adc26e5ee44953dca98a9f0318b0755f5c9e2b7bc488b034a0",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-cooperlake.so",
+      "sha256": "5043cba2975728cb0d1ae60f8cb96e785fea2a8eee9693a4e8791c05a8af2b7f",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-haswell.so",
+      "sha256": "63b7f07c17ff5256c71af28f86b9d15dd097a1b8d6b66238dc6715a9895e1ac8",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-icelake.so",
+      "sha256": "416eb1d5b497a6122872a87d6bd69e4de19067bf91a38995baf86fc09d63e459",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-ivybridge.so",
+      "sha256": "ac00936aa610f9f9f047b6b18b02629da79059ca0ea537319880c1bcf3da7811",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-piledriver.so",
+      "sha256": "828fb36589b08c7430e94edb099068dba9f7ed30e6205dfb5c707d98a290414c",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-sandybridge.so",
+      "sha256": "ff81b0384cfd7dabeaf5f52102d9545a37a1ddd8c376fd3d622526f5ab29027c",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-sapphirerapids.so",
+      "sha256": "f0484a1b5048bc2897e8fce01b3468337e034f1e38421b688dc3b44b85c789d3",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-skylakex.so",
+      "sha256": "d543d1716ebcd7e571d2e28b951fdbf8610d7fdb9ffc6e6a64609c38213ac621",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-sse42.so",
+      "sha256": "817c7f0a2592c7dd3d3059038c7ba565a8cbdc1c14c133ef6a1bf8edc1d7f580",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-x64.so",
+      "sha256": "9ef550da500d2f14eda60be78310018f332bafafebde80847197f94a27ecd705",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-cpu-zen4.so",
+      "sha256": "065e48ada5197b03bbf99ba5af97db5d652ad2a96d8d1e8faf212f035118b270",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml-vulkan.so",
+      "sha256": "3acf963b1f1dbc1bc1faa87380bc3488f2a839e20a57b26072eeabb0a04baaf6",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libggml.so.0.9.11",
+      "sha256": "80a834ae16e13f9df2555f5a70da20c53fdde964ef3a120b12bc228fd27cef48",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libllama.so.0.0.9019",
+      "sha256": "486fe16570e2f25df2258281620c5f7be5208d727400bfb98dce7349d38127eb",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/libmtmd.so.0.0.9019",
+      "sha256": "8d05b8891e9d19d987bf87180893a3373b1d5e0bcbfc49fc7fd342b461de6fd4",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "llama/llama-server",
+      "sha256": "3b60a0327ad6e33efdd1a52cb183e41e3771e902884caea25887004fe809be6e",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "onnxruntime/capi/libonnxruntime_providers_shared.so",
+      "sha256": "086ec1d5388f64153d9c63470d126693db9a182c8ce236d3a1119068471b8a0d",
+      "provider": "wheel:onnxruntime",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpython3.12.so.1.0",
+      "sha256": "1021f236227334ded6d1bbbc4bb6f5d933f793d8397c969896cfbdf03ce96223",
+      "provider": "libpython3.12t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platformthemes/libqxdgdesktopportal.so",
+      "sha256": "30e3ea36831cd5e8be27b965ceec0557096d8573acccff7df3d7cfb193c777ba",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqoffscreen.so",
+      "sha256": "4e4f6e0e54234e362a1a9b2fc37c2d10647508e193f18b0218c84f2985e63966",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqpdf.so",
+      "sha256": "3c1f6b3db424a3afb4f720d7a0e92630c21262d0f17c0022f7aa134af75beed4",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-decoration-client/libbradient.so",
+      "sha256": "961aa2a7d85a200e1738990ab07da456d940a3c56c337b67cbb7dcd0834db878",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqwayland.so",
+      "sha256": "7a2a9a11ca1718666c6982af0cccfe31297bde4bf38acac129c6be4c6b056aae",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqico.so",
+      "sha256": "0572f900823c5c1200ec14db0d533f9df8025a6888ad1b11df37ada551dc5c57",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libxdg-shell.so",
+      "sha256": "f7fc95f585531bf89313d55d555f79d50d44357a9ba98367aaed14047f05b525",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqvnc.so",
+      "sha256": "81b5a1decd44b711a8634f3dc39eca1973e90e0c9b694411848d0179639b4f7f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqlinuxfb.so",
+      "sha256": "f57281999c0fde12ac232590f75c8fddb84fb96a3d577cab68db77cdb9463721",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqgif.so",
+      "sha256": "8f602245038c508504445876ea675507508e3442ecf6faa964b39ce1ff2d8c80",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libdmabuf-server.so",
+      "sha256": "6d1e9f15c78fddc4f9b10569b6a2511cbf925f967da1f1ca3b9654a401e84930",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqsvg.so",
+      "sha256": "17f6125ef78e931abad94184dff61874d3f93f21adccb27a246cdf7f11b87fb0",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqeglfs.so",
+      "sha256": "a6129b496524cc373ea947e05a68ff69a3fb6eb730eacc2614443bff1d6342a1",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/xcbglintegrations/libqxcb-egl-integration.so",
+      "sha256": "004179d65716c907e594d7ef922ac774e33eb0553dc09ff0cccbfbb12b122d48",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqvkkhrdisplay.so",
+      "sha256": "27979210d8424a78df8adb968c6865e8e27a647ff947aede783177851705199e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libvulkan-server.so",
+      "sha256": "dcaa1c1efb0cac97359993fee7960d797c162291d7e38a8fb50d4714fc972923",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libdrm-egl-server.so",
+      "sha256": "12cc6b2b7a1f349c052bb748995c0b00c1e916b2dab47a557648e2090f74ce2f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqminimalegl.so",
+      "sha256": "11f66d34948f29e338bb755e118a022415bac24151d273d6b46ac03cdc045e6b",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqtiff.so",
+      "sha256": "fcf586d90273ee2a107c6bacc3253ef73897cb9d68641d0028a62f30baa16bb0",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so",
+      "sha256": "92437edcc4cdf67ea3479a3b0b7a8de04a3e536e77621abf7df1dbcfdaedf941",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so",
+      "sha256": "d08bff4c3b137632a4498933e7d38c6338b8133e75c42ccb9d5e2e9ecc72696d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqminimal.so",
+      "sha256": "eedbedccf3b61bfd42e730f7caf9fb268428e11ace34fd1cc62b9ab56ae26c75",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/egldeviceintegrations/libqeglfs-emu-integration.so",
+      "sha256": "b3853427fba0131b7719fdeafad540b30822e0346a8652fe89a4b013a7083a1f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqtuiotouchplugin.so",
+      "sha256": "a025e3d60794fa13d39c75e3332588222b9f97e9eeedb51a023a7705d6e41f2f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqjpeg.so",
+      "sha256": "3c02b7d32fb1fd564c9409e91e850fe94b274f7fad73d2be84cd6c198e326d71",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libqt-shell.so",
+      "sha256": "d38581778f99c5dc47830744fc0b7621ec358c7fb45ca9ffe53cf5b6e7544967",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/xcbglintegrations/libqxcb-glx-integration.so",
+      "sha256": "318a5e905246d26ac0640d34a011d7b34ed2e5302553792388c073176164c7ac",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/iconengines/libqsvgicon.so",
+      "sha256": "dee247929cbf23f66f4738aadebdb523f304eb1e36089de489e1a1a31dce2b30",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevtabletplugin.so",
+      "sha256": "0e04fee3590fb9bb2df0eee0ec0c18240a80f441c537d8dc0f62290fd6ec603d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevmouseplugin.so",
+      "sha256": "76ff27f8a68cdaecb5b3f3d1582afc9508f9ab5f63256e6efb54a68ddfaecd88",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platformthemes/libqgtk3.so",
+      "sha256": "4d29d8f04aac1d990dae98227941680fbd375aff3d91a25475fe8e2111abac99",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libivi-shell.so",
+      "sha256": "b9aacca6f28b10e8ed5f0beac7210064d11024980770a76792cd40ef46745bb9",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libshm-emulation-server.so",
+      "sha256": "b961b254c55235b67fccdfe6720fca86efff31adf1e33adf376ffdd0d3f8b7d9",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-decoration-client/libadwaita.so",
+      "sha256": "e3f12c7c325052f910f9fd7402f49d5433ae47230a7b8af5119cee283a75b087",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqwebp.so",
+      "sha256": "990e4bc0f37aab81a31b6f29db8fe7d4c6d634bae20e5ff7204e7f2ba9df0d28",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevkeyboardplugin.so",
+      "sha256": "41fd1024b7957ea28bf97d5acae9200d362e2266091ff6e8707b64fc1f1bfebf",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqicns.so",
+      "sha256": "56ba43983778b4ffa90390dcc32ff21e36441cf1debf50738fe29bedde497825",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libwl-shell-plugin.so",
+      "sha256": "bd403bf49eaca767442c37cd42365f78d5946f10ef7d6bc76cdb57bb67b3a893",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqwbmp.so",
+      "sha256": "8db43182afaaa946725cca340a9942b059025142cfb291f3a14d1709693c5f9d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/platforms/libqxcb.so",
+      "sha256": "83981915129d4143e1a93d0bc8d190cf430f4f4bed37bfea544244eff18baf2f",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/imageformats/libqtga.so",
+      "sha256": "544f70899386c93a842e0ae1bf90e678da2ccff6f0e4cad544e270f6e4853a60",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/egldeviceintegrations/libqeglfs-x11-integration.so",
+      "sha256": "e9343079ed68fdf2e703949e9e3f06351dce5c5d6cfd99775400e9929e106e1e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-shell-integration/libfullscreen-shell-v1.so",
+      "sha256": "2a66b4ced1791d02cf0b060045cd61e1177d5a420cc0b14dc6832e6128a5830e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/generic/libqevdevtouchplugin.so",
+      "sha256": "17b34f7d52c17994899aa1baef3ae96eda6a6869685e638e0cdf174de2cefd22",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/plugins/wayland-graphics-integration-client/libqt-plugin-wayland-egl.so",
+      "sha256": "fc6714c83383c892bace2c00eb287acc5b6798683da70a5e9dbd0e966aa12489",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libportaudio.so.2",
+      "sha256": "62eed4dd6a8e105e57bc34f7b1fa252123aec7e4c27b55ceece4d20aa6f9622b",
+      "provider": "libportaudio2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "python3.12/lib-dynload/resource.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "c8cc35580b497bf128cf8bb0e25efc36573a4f21a1c6877a91737fcd52e24907",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_lzma.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "cb298120e40f064dc047e638d911f8b3b0abf625bf1d6bd07902b46efd820fd7",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_bz2.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "eff8df23cdc54d38ce9ca600d07c21ccfd7f22bd52a0720e599e6828d3e2eb76",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_contextvars.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "da24b21e136402103121806aa5b031bc50e1576a44cd4a0e1f60bc16fd936706",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_decimal.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "20326fc4d39abff46814b64bf5304f8898d180ae58a66b5d60c0177ae317887d",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_hashlib.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "8dc6cda6dd9495b95a2bfb5b26e8cf06b72f36dc0213d958b9277a958287f0fe",
+      "provider": "libpython3.12-minimal:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/termios.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "53fb6241c3b0a5177b5723a79eb0550fe2cd1867189cf9b1db0d12d272df3310",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_ssl.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "80c755c80688b92e0f32af9168a605f1283256077f35d30f6cf518252f2a6660",
+      "provider": "libpython3.12-minimal:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_ctypes.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "aad3e24f186e6c0a1c7efa8f16004f951f527db86f6451d30118657384a456c1",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_queue.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "6e253343c58e3d83d5aca52e85dcad640d6e332d48dc4ff9bd55fcfd8be55d2b",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_json.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "ca8e35c58f7bc8e27258c4af43651c941413bc6318903621253485b0395758a3",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/mmap.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "533b42ea7b719c129a0a02fda105c74a263d11a91945457a2c03bd6cd01065bc",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_posixshmem.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "bc7d2bf7f72457b50540feae0154d3a2ebf672017ff3642531023268622be2e5",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_multiprocessing.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "d9194cd202544d7dc11b2d5c821c82d7f2b836059ebac0958f95881255c368d6",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/readline.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "e5c64520b2582d221bec1bb39f584eb20fc5f095f8a0b0a55a53f6781585830d",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "PyQt6/QtSvg.abi3.so",
+      "sha256": "71aa52591bab1ff900b7afc14eba1e824f63b45d03924262bbd7811fb397a425",
+      "provider": "wheel:PyQt6",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "PyQt6/QtGui.abi3.so",
+      "sha256": "25bfbfc86683822a9741e91af60c5bda7ddee32b3c1ba6645b3ee10cf402c231",
+      "provider": "wheel:PyQt6",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "PyQt6/QtCore.abi3.so",
+      "sha256": "6700a9ec2f5062caf544a63cb5d2164f08c2bdfda2ccc5d13c7387a6a730ec9c",
+      "provider": "wheel:PyQt6",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "PyQt6/sip.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "e8cdddc160a6af4c411e9d8efd28b8b4233e36d2091f8a5c1e3bdb3235aa4b44",
+      "provider": "wheel:PyQt6",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/_core/_multiarray_tests.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "01fbdfb35211b8e07d1b0c395f84f15f709e78859fe7a3f4a89915a5d7aa7309",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/_core/_multiarray_umath.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "ceec5ba13ab88318632307fdd2df74f317fa293ce77be559c4298ddd1f4306b0",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "charset_normalizer/cd.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "b16e644c978a0f7661a6c7b8640556f645bc5840c752b2d8e80c67fdb1f1857d",
+      "provider": "wheel:charset_normalizer",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "charset_normalizer/md.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "8efd70bb6f5b91f780b0aaf9eaaaed9e2098321c015853c569ef52bb6534df1b",
+      "provider": "wheel:charset_normalizer",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/linalg/_umath_linalg.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "19d024507f73b42889baeb00f9da0004e33a42ed7a78fd77662fd6236e930d78",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_asyncio.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "bf62de8aaab17955c9164e582ae7ea0aae3a704e2d8068ff6da12dbf29f784e5",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/mtrand.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "53a0dea25039fd6e55ce2a6c94789c9273fdfa1cc4bda60dde6e813f455c9bc5",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/bit_generator.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "3734537d37d6d54654e33890ec17cf6e54cca3aba8cfc5e6160786c236457df3",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_sfc64.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "cb9c0d024e0e30dbc6bbec4bad8fbee6ba2aeaa4f444c5ea66473d8c8c31a609",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_philox.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "51f2c84d85fbd199adf32b234e2558b3add7f7a8b86d0797fb36d3ee068619ef",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_pcg64.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "61175f3da7d43f4811277cdf743906b8d405d1800cee79632a17fbca478e6964",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_mt19937.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "3f06703c3971d813adda172ffd2de8af16df18875242e4b1542d9e8e8f33919f",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_generator.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "e362c7a4c9d5d97404ee1fcbf00c2b345ecec945df50f6ea3e0f4631d4ab336e",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_common.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "232d131170bce32fbe3bfed38a5f14a0104d7efd7bff521162c2e0b6e2ac4bee",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/random/_bounded_integers.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "73bf58f374a46edac9bd1fbb3fc16f199b4a8e8ed12a222a23897e722655adcd",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "numpy/fft/_pocketfft_umath.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "29a1547b480b7ddc1e45cdc772b3f4b614cccced70204181bf5d3ad138a04ebb",
+      "provider": "wheel:numpy",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "yaml/_yaml.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "957a099a4521c1f7669306fb6f79ca63fa4b9a0b4c463f7cac833a65a5c5c0cb",
+      "provider": "wheel:yaml",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "_cffi_backend.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "9bc1d08072255a5ec2db10fc75df1dd9e73097a75cd9150cfe875ebd6712f17c",
+      "provider": "wheel:_cffi_backend.cpython-312-x86_64-linux-gnu.so",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "PyQt6/QtDBus.abi3.so",
+      "sha256": "d93cec5729d1ad49cce72d9b50b81dfbc0f3f1a8cb1595b16610623b885a2630",
+      "provider": "wheel:PyQt6",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_multibytecodec.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "564968ab04f879409bbf8864dd0b7f3e9ebc4a2901072766486731e341f52a4f",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_codecs_jp.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "6791fcb3fb05bf62140670da6578e08581b252271bad441046cfba3913e1cac5",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_codecs_kr.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "e22ece67cb97d685f8a3a32a8f97b4d52775760b1bb16f86a8c137c4d6a7d29e",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_codecs_iso2022.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "469273f41255ecd52b9ea04cd4557cdedbf6831d02e02a97b934d9e170be224c",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_codecs_cn.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "0880c743db9191196306f48494598d900a87df9bf0d566f46762def13195cad3",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_codecs_tw.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "22f2a1c8301f4527f803aba3769dd712b1285303e03719ee09351d828c46824b",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "python3.12/lib-dynload/_codecs_hk.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "61b28f65b6833f8f7a7853ecbf51372ce97d82340c10c96955f1130ccf44c97a",
+      "provider": "libpython3.12-stdlib:amd64",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "onnxruntime/capi/onnxruntime_pybind11_state.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "0b2a6e0d6dfe7fdb04e8ddefb488f69f3c90b7552a148b0c42ff3f28a3c2b33b",
+      "provider": "wheel:onnxruntime",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "PyQt6/QtWidgets.abi3.so",
+      "sha256": "95ae703b26b7b97b13e419f72a6f5133a12114ab43e92ece0d332b7f66d154c4",
+      "provider": "wheel:PyQt6",
+      "kind": "EXTENSION"
+    },
+    {
+      "path": "libstdc++.so.6",
+      "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+      "provider": "libstdc++6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgcc_s.so.1",
+      "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "provider": "libgcc-s1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libggml-base.so.0",
+      "sha256": "f5edd4074a512aa17675433c48e8f853b02241fc68a5c8217eae79dd5deb27b1",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgomp.so.1",
+      "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1",
+      "provider": "libgomp1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libvulkan.so.1",
+      "sha256": "e833b010f814b72c6aca0300c8b5f19b6106ffa06c24ddc95a293970c7d6058e",
+      "provider": "libvulkan1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libggml.so.0",
+      "sha256": "80a834ae16e13f9df2555f5a70da20c53fdde964ef3a120b12bc228fd27cef48",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libllama.so.0",
+      "sha256": "486fe16570e2f25df2258281620c5f7be5208d727400bfb98dce7349d38127eb",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libssl.so.3",
+      "sha256": "8e49cebd373d90b55f3626da71dd97fe8e95c68dc4c064d8962b27907690736e",
+      "provider": "libssl3t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcrypto.so.3",
+      "sha256": "6a66c3ba6b3749aacc9497973fff00f6ba61c703ba7015d0d7ab3fd9510974b6",
+      "provider": "libssl3t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libmtmd.so.0",
+      "sha256": "8d05b8891e9d19d987bf87180893a3373b1d5e0bcbfc49fc7fd342b461de6fd4",
+      "provider": "native:llama.cpp (bundled source and BUILD.txt)",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libz.so.1",
+      "sha256": "86200da370f20476a2507e9097a789b5ef97269b4ca8d5e164ad82dab9d99892",
+      "provider": "zlib1g:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libexpat.so.1",
+      "sha256": "c42ff317838b4b4639e2ea801905f0317177c6df7e31b2f0d0240e3c3ac0cfde",
+      "provider": "libexpat1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libbz2.so.1.0",
+      "sha256": "cc08c9f50a8009ffd6391e0116a100369b11ca9238fa52392c019e6645b122a1",
+      "provider": "libbz2-1.0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpng16.so.16",
+      "sha256": "eac265b3506df0d9110dd9143e1d0503e2daabafe1d98b23fac8ca17b71d1f6b",
+      "provider": "libpng16-16t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "liblz4.so.1",
+      "sha256": "40bffd0a098387368b16b992abd5f7cf43c0fa2f05cabe5a6d483719554adfda",
+      "provider": "liblz4-1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgcrypt.so.20",
+      "sha256": "6ad6d7007ee1ad8319eb18ba9a512cf09dda49396a303774c68b47477020bad4",
+      "provider": "libgcrypt20:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libicuuc.so.73",
+      "sha256": "b76380b2c15c8ff8b3c94576ac98b40d34fc0a091db4a89324d72e271c7699f0",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libicudata.so.73",
+      "sha256": "4f182a855296cf96d39f75c9028b12765a78fe6afff3d3781d633110525b7a8b",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcap.so.2",
+      "sha256": "6ac6abc86ac891c6e13486470e26f1d939f47fda9e6b5d5508a7f5ec881adc84",
+      "provider": "libcap2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libbsd.so.0",
+      "sha256": "e86cd4f0019f42c2ba5e60602e0edc8694d2948377d98c3654d0f6bddb5254bb",
+      "provider": "libbsd0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "liblzma.so.5",
+      "sha256": "696e868dd0700a19a6d65fc01608ec2d70d3cb91f65710e89180cd2e688f30cb",
+      "provider": "liblzma5:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXau.so.6",
+      "sha256": "8040da3f8516c1acfe39f04ff022480cdb273705ba5e7a4ca70bbdb1527cd67a",
+      "provider": "libxau6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Gui.so.6",
+      "sha256": "c1797794be8cfd5e64e324c5068ff9f32bd54fda21af1a637c087550ebae73a0",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libglib-2.0.so.0",
+      "sha256": "42467d0dbcc0a6c9e0a31f05a5944095504ce98f093c3fe0825f0a1533fa8207",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libfreetype.so.6",
+      "sha256": "c14c53c5baff12afafb610c6312fb879e9bb77e80dd42e27504d52d6d8bcd059",
+      "provider": "libfreetype6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxkbcommon.so.0",
+      "sha256": "3eb6c7315985803a7c72cb81aa3293b763e6cfc907b70b7b2f641c2827cd90f9",
+      "provider": "libxkbcommon0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libbrotlidec.so.1",
+      "sha256": "64d8a5019d4c294b89fde1193343ea324bbd8603652554e5545f0a01595fa2c5",
+      "provider": "libbrotli1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6DBus.so.6",
+      "sha256": "548e934455d147fe9c2f9e78a345a4458bcfad846c0d1e7fe0a80d71b0a04e15",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Core.so.6",
+      "sha256": "23651543e0ff970f1d21b2abc1250221f0dd854fe68e3027462925532afbe22b",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libX11.so.6",
+      "sha256": "c5b5d782bd9cab3420a62df88f5c991507edf3331a89f98464ddbc538c37b879",
+      "provider": "libx11-6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgpg-error.so.0",
+      "sha256": "6cb18a007bfcb623029f4528a36b46578fea7dc34c2b505b8e6e0d99e6348cd1",
+      "provider": "libgpg-error0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libzstd.so.1",
+      "sha256": "0a2128bc10841fb29e76d08d945864dfb0b6a66da5df6df5d8299197439e54bb",
+      "provider": "libzstd1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libbrotlicommon.so.1",
+      "sha256": "a91ead095d2c80520c55a89057bbe10b031a075340442e63f44b310f93883a1b",
+      "provider": "libbrotli1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libmd.so.0",
+      "sha256": "423e18586b6ea740f4465afd64f7a9a4cb7264ed979c8e7256f9085af5345fef",
+      "provider": "libmd0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpcre2-8.so.0",
+      "sha256": "e00576d71d81d3ba0cfa4903c835a44a8723aac96f72f79ff75200b4cff9071b",
+      "provider": "libpcre2-8-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libfontconfig.so.1",
+      "sha256": "a94b4059b27766f563894c8f7e61762b6f6b2e25c59ef36b730164d4b75c6c98",
+      "provider": "libfontconfig1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgthread-2.0.so.0",
+      "sha256": "ada85713638e7c43fd56d0af8786dbc438e88b7ea345d5f943f1790954d17e8a",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libsystemd.so.0",
+      "sha256": "bdf59c828b547bcdbe7b3576c0810d9d9d2e982d8b61b365812542da6a4c4a99",
+      "provider": "libsystemd0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXdmcp.so.6",
+      "sha256": "667d97d6da16016400ab10de9f83ef4ab209ceb6adf68ff9650225ec13e723b0",
+      "provider": "libxdmcp6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libdbus-1.so.3",
+      "sha256": "a6ae7b4ef48562b40d7b9ba8efd2e49f6528b7cc6364bea382dcee4b473b5413",
+      "provider": "libdbus-1-3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libicui18n.so.73",
+      "sha256": "a18e48266e59efff3ec872d9dc5cc99b776e180b8ede57269d354e6bc6595778",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Network.so.6",
+      "sha256": "bdf6d5cedfda840257bdc3e7393f159c250b51124969d4eae388f3c79912e646",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Pdf.so.6",
+      "sha256": "782708b66cfd40d77ed412d9378e7462d5f885e0c8965cbfb59a21084c7b7fd8",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libkrb5.so.3",
+      "sha256": "9615a2841f0783c410eec7fae005a951282551cfedd377737ad8431c8c8cde64",
+      "provider": "libkrb5-3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libk5crypto.so.3",
+      "sha256": "73bc9d72c0c684d6149a3c38f96aab891d178375415c05954fdda587685936f5",
+      "provider": "libk5crypto3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libkeyutils.so.1",
+      "sha256": "f48214417757f18793ed6e180cc14ee1d6f04252a518fc7270e8ca1d0b4260fe",
+      "provider": "libkeyutils1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcom_err.so.2",
+      "sha256": "022943b3b11c860b049bce41342f1c2594941b7b401d95dfdf235521099fee08",
+      "provider": "libcom-err2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libkrb5support.so.0",
+      "sha256": "0aa43578471faecbd642ed2ee6ab92b6682a2b676644193e956fc59d18ca24bb",
+      "provider": "libkrb5support0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgssapi_krb5.so.2",
+      "sha256": "6c1b81696044d79a47d6f0f494ee60aaf641c525c46a11da0c6e4a041a782d3c",
+      "provider": "libgssapi-krb5-2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6WaylandClient.so.6",
+      "sha256": "a2628e71258b5fda3bc4fd920541a34298137fd2d46f447e65cc0d52e0bf4f64",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libffi.so.8",
+      "sha256": "00f593fe192f2851b8ce23b25cec2488d769beb5a8f63e8c9e563071e1075153",
+      "provider": "libffi8:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6OpenGL.so.6",
+      "sha256": "7a529f90ab931734fa6a05bc7dce2ef23ee206c073f7f42b0838fb68ae999ec6",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Svg.so.6",
+      "sha256": "6cc863209dc92d29e2698cc59f61064976b25c3e24fd36c34973a4e880d78e8d",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6EglFSDeviceIntegration.so.6",
+      "sha256": "928f596db3959e048c1114579ac4939921f4ad4c8341b2a31960c1309acf779e",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-render-util.so.0",
+      "sha256": "637b518e674812ce9dc03ad4fbdfa58fe34d789190f144e9d58ea3726d50dfa6",
+      "provider": "libxcb-render-util0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6XcbQpa.so.6",
+      "sha256": "0e582e1461f9fe9fa208d83ff09edab901dcd3ba2702e047f458f72f00f9a9f5",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-icccm.so.4",
+      "sha256": "3373d6518194012d73658443165450232f0dcb08bf126d09da67cbe0ec4c29df",
+      "provider": "libxcb-icccm4:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-keysyms.so.1",
+      "sha256": "f131860e51ff109c1255c91a05ebf2c2a3f612939e35b00df24f63483521a568",
+      "provider": "libxcb-keysyms1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-render.so.0",
+      "sha256": "35fdef7a90d7f44a0ad9cb259c9ee22f04a48cb064ceb1fc7d17be815acab327",
+      "provider": "libxcb-render0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-xfixes.so.0",
+      "sha256": "e59ef497333a6ede2096a0bd9eeb6ec4023374c16d3a8d7511d1251fb7f9b9df",
+      "provider": "libxcb-xfixes0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-shm.so.0",
+      "sha256": "ad78a7b22409685ca82e54346c2b9465d697f303e69e74a9c1693bb206e319df",
+      "provider": "libxcb-shm0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-sync.so.1",
+      "sha256": "27c2d6dddde34146904c3c64cfcc885a14a351636d6611877368a48e29355c39",
+      "provider": "libxcb-sync1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-xkb.so.1",
+      "sha256": "f6b3ca63ff23f3e82d122af4622aaebed49c58614e2f840568a0bb4c9048436c",
+      "provider": "libxcb-xkb1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxkbcommon-x11.so.0",
+      "sha256": "109a5c2095ab6bcc36f751d3c0deb3b066ecbfb664a36904b6ca212f987a408a",
+      "provider": "libxkbcommon-x11-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-util.so.1",
+      "sha256": "53a59cf786fc63d7e5968392fc70098e8d922b311015b7ccd711c44ca352bd39",
+      "provider": "libxcb-util1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-randr.so.0",
+      "sha256": "9fa6b0ec4af163a86bc9a9ded3309a5979155fb5ef2d311fdda7fff0e9eee01a",
+      "provider": "libxcb-randr0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-shape.so.0",
+      "sha256": "370c60dd84cfe5f8517866b573ccbaf2b3fd97bd980f427f3bbb3dbc9288369e",
+      "provider": "libxcb-shape0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libX11-xcb.so.1",
+      "sha256": "966fc171a949852a606efdf44d255f6f91b35c16328f5405c1b24743b6708ea7",
+      "provider": "libx11-xcb1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-image.so.0",
+      "sha256": "bc618150f945e862397c575d642e55ff79937b4060d3aa1d7665bde34a0e4b27",
+      "provider": "libxcb-image0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libxcb-glx.so.0",
+      "sha256": "7537790510f7a4a14cc54785761dffb1c6fc0058fc379f9cdb0ff26bafee3ff1",
+      "provider": "libxcb-glx0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libdatrie.so.1",
+      "sha256": "507f33edbbc19b80637d6d66f8e3f62fac097d0b4e9ee6f6f23f535ecea26a61",
+      "provider": "libdatrie1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXrandr.so.2",
+      "sha256": "bc6120a734d52e7f5e3611334e9f3cff0b3ce1b129bb20b6412ce8f0f62c049d",
+      "provider": "libxrandr2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXcomposite.so.1",
+      "sha256": "675c78d8d5b088a59ad4f8eb15419d0842b17caca3317a5e9f68573171ec5d61",
+      "provider": "libxcomposite1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXinerama.so.1",
+      "sha256": "dceff724f4f74c420116fa6a11ece62894af4fc0e74a2254c923ccc215e1a041",
+      "provider": "libxinerama1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libthai.so.0",
+      "sha256": "1a72e318418dc0ee6014401de9d9976516fe127358c07c305e1198b9814e2b31",
+      "provider": "libthai0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXi.so.6",
+      "sha256": "a51348c921ce1a35123fa7c99dc59bfd3e815be6829874fe15ae55172901d3e4",
+      "provider": "libxi6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgdk-3.so.0",
+      "sha256": "0b52fb8111e4baf38d469d1fa0b0c49f166faa41bbcde1494221232302829dea",
+      "provider": "libgtk-3-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libatk-bridge-2.0.so.0",
+      "sha256": "366fcd2f2cd9a77767855a7c25b00ffce57e6b55109a2bf800872f0337a28415",
+      "provider": "libatk-bridge2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libatspi.so.0",
+      "sha256": "4af877d2d235b7eaab015abe6d81b82c82fe506a5d71403b9bbdfcbce99e8141",
+      "provider": "libatspi2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgio-2.0.so.0",
+      "sha256": "d8c4cf698e9b8790584cc5ede813a86ec4f041c0d58daa452b72431572685a87",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgmodule-2.0.so.0",
+      "sha256": "f8445c01952fd3ff0bb4f17f73be821af3e4b9b61546ff517392e9baeb8f2126",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libselinux.so.1",
+      "sha256": "0ec0843463f90e227b0e138e1f379774f50b5514bd7f5dbd4c8a87aca0aa6670",
+      "provider": "libselinux1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpangoft2-1.0.so.0",
+      "sha256": "cfcd528cfb737212719b3273b433b7fe35b6528acbb08c2223a486449314d629",
+      "provider": "libpangoft2-1.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libblkid.so.1",
+      "sha256": "9c3860ffab5422410ff9e073d3e82267f00bc68ff1248cbb191640ee2ff045bc",
+      "provider": "libblkid1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXext.so.6",
+      "sha256": "2907e6a996465de5b32a0dd10534d4416b87f1dee5670aaa7b19301a1fc93f44",
+      "provider": "libxext6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXrender.so.1",
+      "sha256": "250977e0e004b6c0556144c3e683487063b4582dc83d205196ec3aa65d54e2c6",
+      "provider": "libxrender1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgtk-3.so.0",
+      "sha256": "0611fd19d1354a39a7cfafceffa3bdf4289d4c497c7f69ff337f86e99cf37d93",
+      "provider": "libgtk-3-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcairo-gobject.so.2",
+      "sha256": "61b4b6cb475c8c2c4622fd1618981d466b716b11903255b68975830fa20d982c",
+      "provider": "libcairo-gobject2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libjpeg.so.8",
+      "sha256": "ac09f2cd6f8a3b8e3cb123999ce275f9bcbe31c6cf9e20212c8f297772591d15",
+      "provider": "libjpeg-turbo8:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpixman-1.so.0",
+      "sha256": "73aa0daeedb7228754d798b194e2ff69c8b82a689b9aa4f1d8ab32a8763b0cc5",
+      "provider": "libpixman-1-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgdk_pixbuf-2.0.so.0",
+      "sha256": "f9f51980f9d8978507c3637fa5d4e89f9910d01d74c91905f27158efca27279d",
+      "provider": "libgdk-pixbuf-2.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXfixes.so.3",
+      "sha256": "89e5897f438456013d2297850a7558cd28c9ad1f6978447197568949fb6a0fd9",
+      "provider": "libxfixes3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpango-1.0.so.0",
+      "sha256": "44fbb30ec8f9b2621095bad0d27cc15cec39245133124a44e8abc45193cbb493",
+      "provider": "libpango-1.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libcairo.so.2",
+      "sha256": "3144bd5935aee427d6c191b6b6d0ebf9010fb6320295a7f73edd276bc6993f2d",
+      "provider": "libcairo2:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libepoxy.so.0",
+      "sha256": "5fc7dd1ea433bfe5f1fd9854e66246bdb44e0cbf148707121c5f4c99fe11be29",
+      "provider": "libepoxy0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXdamage.so.1",
+      "sha256": "6ff910fbde851ede163b9066671e1740e374df414591015d90770b99d5b3de4a",
+      "provider": "libxdamage1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgraphite2.so.3",
+      "sha256": "fcfaf843b25b58b88319ced52f826fc8213a661f3693c916f88641eddffe05b8",
+      "provider": "libgraphite2-3:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libmount.so.1",
+      "sha256": "7472255ae5799059b37ddd544788f5665dbd3e1cb78259f52180293039efc2a5",
+      "provider": "libmount1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libharfbuzz.so.0",
+      "sha256": "4562cfcfd18935324ba3ac74a944898b867ab87a56e925ab3e351ba773f1513e",
+      "provider": "libharfbuzz0b:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libgobject-2.0.so.0",
+      "sha256": "99bf0727e0ca4faf12ab09b753b3d03294562c29c559b970c4dad435f9ec2bc6",
+      "provider": "libglib2.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libfribidi.so.0",
+      "sha256": "550020af7ff4f77e3f05500e71051b676ee76f530479c2a836dfe899fcaf8395",
+      "provider": "libfribidi0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libXcursor.so.1",
+      "sha256": "09bd5941a53ee7fb06898fa066709cf098df8e33a45042e065d2f8461d92672c",
+      "provider": "libxcursor1:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libatk-1.0.so.0",
+      "sha256": "d312f3dbed8f19037bf4d8581f0e41ddfe53796dc7abbc9b7f253495d472a923",
+      "provider": "libatk1.0-0t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libpangocairo-1.0.so.0",
+      "sha256": "229b50cdc7e7675000815e18338189db6f03fd564baaa4d0f257dbbe34f14652",
+      "provider": "libpangocairo-1.0-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6WlShellIntegration.so.6",
+      "sha256": "23e047a07ec4fb78c5640f1493cea17b8c05a9d01cc7cfc874b6cd60fdfc0f0b",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libjack.so.0",
+      "sha256": "7fb2c6394e6d6ce1fec715e6ba8d24c6555ff045f8ccaead10bc6efbed4ad7e6",
+      "provider": "libjack-jackd2-0:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libdb-5.3.so",
+      "sha256": "1812047c39ea3c26ee5b2b585abbafc18cd158dfcd84e5368c998cc6178e815b",
+      "provider": "libdb5.3t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libasound.so.2",
+      "sha256": "ff4c69ef420f2d0ab92c813d2222d097c6a7eafe3b13952aed069e2bb0204f55",
+      "provider": "libasound2t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libtinfo.so.6",
+      "sha256": "e6089d7bb95eee5b545f3770dd69095b0bca47d26701cad145af429561d16306",
+      "provider": "libtinfo6:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "libreadline.so.8",
+      "sha256": "0a079f958147699f7bb5bf228406a5d878dc2387fe9cdc5cce6f3e35e20380fc",
+      "provider": "libreadline8t64:amd64",
+      "kind": "BINARY"
+    },
+    {
+      "path": "numpy.libs/libgfortran-83c28eba-468e71e5.so.5.0.0",
+      "sha256": "a6a368328d02a5d8a149746f13f6268f8cc9192df5c18777b25c3c9b5ef52160",
+      "provider": "wheel:numpy.libs",
+      "kind": "BINARY"
+    },
+    {
+      "path": "numpy.libs/libquadmath-2284e583-a9307bba.so.0.0.0",
+      "sha256": "6bc3069003caec1f075be3c51ae8355332f081fa9465910c4b5724e7fe7d8ad4",
+      "provider": "wheel:numpy.libs",
+      "kind": "BINARY"
+    },
+    {
+      "path": "numpy.libs/libscipy_openblas64_-f48b354e.so",
+      "sha256": "432e1c1739731468ba305771af96773939e43016643e2d630f58cb45b6670e96",
+      "provider": "wheel:numpy.libs",
+      "kind": "BINARY"
+    },
+    {
+      "path": "PyQt6/Qt6/lib/libQt6Widgets.so.6",
+      "sha256": "0cb5f5ab05e519487b0900a4592351a54420fe703a29bb929e06220a2fc2b616",
+      "provider": "wheel:PyQt6",
+      "kind": "BINARY"
+    }
+  ],
+  "native": [
+    {
+      "path": "_internal/llama/llama-source.tar.gz",
+      "sha256": "2207863e5c205c49d585569ae49de64290f9e7d78df818aca66fc4d00f66fd4a"
+    },
+    {
+      "path": "_internal/llama/voxd-audio.patch",
+      "sha256": "8edfbf5d7e2ce55c54c97aa42a12449ee42768f4238dff835108e6b0ecdbc70c"
+    },
+    {
+      "path": "_internal/llama/BUILD.txt",
+      "sha256": "dd03eea2f0f0a29bb7aeb54116f9256467078436770ed1cfeca9744f1456882a"
+    },
+    {
+      "path": "_internal/llama/llama-server",
+      "sha256": "3b60a0327ad6e33efdd1a52cb183e41e3771e902884caea25887004fe809be6e"
+    },
+    {
+      "path": "licenses/ydotool-source.tar.gz",
+      "sha256": "38d53b0ec60372624958e0c403e708395c4cf99005000cb6db3c4386b390bc99"
+    },
+    {
+      "path": "libexec/ydotool",
+      "sha256": "766aa96f59a475931fce7e292d4e692b2d34a98d0f3ea9158131d957576a80a4"
+    },
+    {
+      "path": "libexec/ydotoold",
+      "sha256": "05868832fb58e69e4944cb3082e0afb1cb0fa9ece780626cb365d9782bb39da7"
+    }
+  ],
+  "executable": {
+    "path": "thoughtloud",
+    "sha256": "cca527f91ab7948b40f7d350ed7b8cc225c297d98613ef7fbc5b227be0c7b351"
+  },
+  "archives": [
+    {
+      "component": "alsa-lib",
+      "version": "1.2.11-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11-1ubuntu0.3.debian.tar.xz",
+      "file": "alsa-lib_1.2.11-1ubuntu0.3.debian.tar.xz",
+      "sha256": "a304e5ac97abb30d1b6020bd4cffa324aeae7451ea4e37b58a6730799c849e66",
+      "size": 34836,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11-1ubuntu0.3.dsc"
+    },
+    {
+      "component": "alsa-lib",
+      "version": "1.2.11-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11-1ubuntu0.3.dsc",
+      "file": "alsa-lib_1.2.11-1ubuntu0.3.dsc",
+      "sha256": "0d259dcaefe6a5579e60da930d665480cfdb026278dc7440dfea9bbd4a8f8645",
+      "size": 3034,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=alsa-lib&version=1.2.11-1ubuntu0.3&exact_match=true"
+    },
+    {
+      "component": "alsa-lib",
+      "version": "1.2.11-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11.orig.tar.bz2",
+      "file": "alsa-lib_1.2.11.orig.tar.bz2",
+      "sha256": "9f3f2f69b995f9ad37359072fbc69a3a88bfba081fc83e9be30e14662795bb4d",
+      "size": 1107150,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11-1ubuntu0.3.dsc"
+    },
+    {
+      "component": "alsa-lib",
+      "version": "1.2.11-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11.orig.tar.bz2.asc",
+      "file": "alsa-lib_1.2.11.orig.tar.bz2.asc",
+      "sha256": "d9c93a9d8fd4c1ce0f90ebda7570c32612bfd3a6572579e87b0ef29c81b9c584",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/alsa-lib/1.2.11-1ubuntu0.3/alsa-lib_1.2.11-1ubuntu0.3.dsc"
+    },
+    {
+      "component": "altgraph",
+      "version": "0.17.5",
+      "url": "https://files.pythonhosted.org/packages/7e/f8/97fdf103f38fed6792a1601dbc16cc8aac56e7459a9fff08c812d8ae177a/altgraph-0.17.5.tar.gz",
+      "file": "altgraph-0.17.5.tar.gz",
+      "sha256": "c87b395dd12fabde9c99573a9749d67da8d29ef9de0125c7f536699b4a9bc9e7",
+      "size": 48428,
+      "provenance": "https://pypi.org/pypi/altgraph/0.17.5/json"
+    },
+    {
+      "component": "at-spi2-core",
+      "version": "2.52.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/at-spi2-core/2.52.0-1build1/at-spi2-core_2.52.0-1build1.debian.tar.xz",
+      "file": "at-spi2-core_2.52.0-1build1.debian.tar.xz",
+      "sha256": "20bda0a6815fb1e7c6ca286a02b4b70aaa706f304664aad30bd88a4ee163b91c",
+      "size": 19940,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/at-spi2-core/2.52.0-1build1/at-spi2-core_2.52.0-1build1.dsc"
+    },
+    {
+      "component": "at-spi2-core",
+      "version": "2.52.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/at-spi2-core/2.52.0-1build1/at-spi2-core_2.52.0-1build1.dsc",
+      "file": "at-spi2-core_2.52.0-1build1.dsc",
+      "sha256": "16b82af63769eefb96343366f34545f2af2de5c3661c83293f50969de7fa450a",
+      "size": 3906,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=at-spi2-core&version=2.52.0-1build1&exact_match=true"
+    },
+    {
+      "component": "at-spi2-core",
+      "version": "2.52.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/at-spi2-core/2.52.0-1build1/at-spi2-core_2.52.0.orig.tar.xz",
+      "file": "at-spi2-core_2.52.0.orig.tar.xz",
+      "sha256": "0ac3fc8320c8d01fa147c272ba7fa03806389c6b03d3c406d0823e30e35ff5ab",
+      "size": 574684,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/at-spi2-core/2.52.0-1build1/at-spi2-core_2.52.0-1build1.dsc"
+    },
+    {
+      "component": "brotli",
+      "version": "1.1.0-2build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/brotli/1.1.0-2build2/brotli_1.1.0-2build2.debian.tar.xz",
+      "file": "brotli_1.1.0-2build2.debian.tar.xz",
+      "sha256": "96603222d7b6edb3253a846852972b6bde5b86814907d5540249e6950980a943",
+      "size": 5644,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/brotli/1.1.0-2build2/brotli_1.1.0-2build2.dsc"
+    },
+    {
+      "component": "brotli",
+      "version": "1.1.0-2build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/brotli/1.1.0-2build2/brotli_1.1.0-2build2.dsc",
+      "file": "brotli_1.1.0-2build2.dsc",
+      "sha256": "c58421959677a80d942924685007e8d5b5d1160fd7f61a1f0a9062bf08835856",
+      "size": 2401,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=brotli&version=1.1.0-2build2&exact_match=true"
+    },
+    {
+      "component": "brotli",
+      "version": "1.1.0-2build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/brotli/1.1.0-2build2/brotli_1.1.0.orig.tar.gz",
+      "file": "brotli_1.1.0.orig.tar.gz",
+      "sha256": "10973f4b4199eafa1d5735ef661ddb2ec2f97319ee9fd1824d4aabe08cff5265",
+      "size": 512036,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/brotli/1.1.0-2build2/brotli_1.1.0-2build2.dsc"
+    },
+    {
+      "component": "bzip2",
+      "version": "1.0.8-5.1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/bzip2/1.0.8-5.1ubuntu0.1/bzip2_1.0.8-5.1ubuntu0.1.debian.tar.bz2",
+      "file": "bzip2_1.0.8-5.1ubuntu0.1.debian.tar.bz2",
+      "sha256": "77c61e0490ff7cf49aa8ffe62e117e85b3af08e14341c4b851f8d7ec757fe099",
+      "size": 27529,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/bzip2/1.0.8-5.1ubuntu0.1/bzip2_1.0.8-5.1ubuntu0.1.dsc"
+    },
+    {
+      "component": "bzip2",
+      "version": "1.0.8-5.1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/bzip2/1.0.8-5.1ubuntu0.1/bzip2_1.0.8-5.1ubuntu0.1.dsc",
+      "file": "bzip2_1.0.8-5.1ubuntu0.1.dsc",
+      "sha256": "87d782671790af480ab3c3b258885ad2c239e41772e0116ceda6446c493f9dd4",
+      "size": 1699,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=bzip2&version=1.0.8-5.1ubuntu0.1&exact_match=true"
+    },
+    {
+      "component": "bzip2",
+      "version": "1.0.8-5.1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/bzip2/1.0.8-5.1ubuntu0.1/bzip2_1.0.8.orig.tar.gz",
+      "file": "bzip2_1.0.8.orig.tar.gz",
+      "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+      "size": 810029,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/bzip2/1.0.8-5.1ubuntu0.1/bzip2_1.0.8-5.1ubuntu0.1.dsc"
+    },
+    {
+      "component": "cairo",
+      "version": "1.18.0-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/cairo/1.18.0-3build1/cairo_1.18.0-3build1.debian.tar.xz",
+      "file": "cairo_1.18.0-3build1.debian.tar.xz",
+      "sha256": "0f5853ec9851bdbedfb4a45221baa0fae44e3bf7ed1492826e1b8459b610355c",
+      "size": 29880,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/cairo/1.18.0-3build1/cairo_1.18.0-3build1.dsc"
+    },
+    {
+      "component": "cairo",
+      "version": "1.18.0-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/cairo/1.18.0-3build1/cairo_1.18.0-3build1.dsc",
+      "file": "cairo_1.18.0-3build1.dsc",
+      "sha256": "873d57c66682a2bd419a696c4d47df5f27888c6fab022ce88e885c3b394d5b75",
+      "size": 2780,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=cairo&version=1.18.0-3build1&exact_match=true"
+    },
+    {
+      "component": "cairo",
+      "version": "1.18.0-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/cairo/1.18.0-3build1/cairo_1.18.0.orig.tar.xz",
+      "file": "cairo_1.18.0.orig.tar.xz",
+      "sha256": "243a0736b978a33dee29f9cca7521733b78a65b5418206fef7bd1c3d4cf10b64",
+      "size": 33761148,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/cairo/1.18.0-3build1/cairo_1.18.0-3build1.dsc"
+    },
+    {
+      "component": "certifi",
+      "version": "2026.7.22",
+      "url": "https://files.pythonhosted.org/packages/a3/c2/24167ea9858356b47a87a50d39908bfdb72ceeefe0041586e704e5376b3a/certifi-2026.7.22.tar.gz",
+      "file": "certifi-2026.7.22.tar.gz",
+      "sha256": "741e2c3b351ddf169a738da9f2c048608ff7f2c5cc02f1ebc6b118bb090d5d55",
+      "size": 138112,
+      "provenance": "https://pypi.org/pypi/certifi/2026.7.22/json"
+    },
+    {
+      "component": "cffi",
+      "version": "2.1.1",
+      "url": "https://files.pythonhosted.org/packages/9e/ef/008a1939e372c06329a3fce4279c02f328488f3526744906eeec3da7ad5f/cffi-2.1.1.tar.gz",
+      "file": "cffi-2.1.1.tar.gz",
+      "sha256": "dd31f52ea1086513bb9df30f8fcee9b8918323ae067a3d5b78bc826a000712be",
+      "size": 530807,
+      "provenance": "https://pypi.org/pypi/cffi/2.1.1/json"
+    },
+    {
+      "component": "charset-normalizer",
+      "version": "3.5.1",
+      "url": "https://files.pythonhosted.org/packages/e5/3f/143b048436775b0f76ac3eec145c019e8173ccc2885c8f20319b996d5e83/charset_normalizer-3.5.1.tar.gz",
+      "file": "charset_normalizer-3.5.1.tar.gz",
+      "sha256": "6117b84ea48435e5356dc737f5121485c30920ba43375fa7b434fd753df0eac3",
+      "size": 171764,
+      "provenance": "https://pypi.org/pypi/charset-normalizer/3.5.1/json"
+    },
+    {
+      "component": "db5.3",
+      "version": "5.3.28+dfsg2-7",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/db5.3/5.3.28+dfsg2-7/db5.3_5.3.28+dfsg2-7.debian.tar.xz",
+      "file": "db5.3_5.3.28+dfsg2-7.debian.tar.xz",
+      "sha256": "9cee8969e1f440ec8aa2fbacd3a5819907829e0e7e7f1f746dccaa2c93fbf3f2",
+      "size": 35232,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/db5.3/5.3.28+dfsg2-7/db5.3_5.3.28+dfsg2-7.dsc"
+    },
+    {
+      "component": "db5.3",
+      "version": "5.3.28+dfsg2-7",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/db5.3/5.3.28+dfsg2-7/db5.3_5.3.28+dfsg2-7.dsc",
+      "file": "db5.3_5.3.28+dfsg2-7.dsc",
+      "sha256": "f7313fb306b5bf7ad6a428bffb581e649318859df139e35dd47c3d1f733803b2",
+      "size": 2374,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=db5.3&version=5.3.28%2Bdfsg2-7&exact_match=true"
+    },
+    {
+      "component": "db5.3",
+      "version": "5.3.28+dfsg2-7",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/db5.3/5.3.28+dfsg2-7/db5.3_5.3.28+dfsg2.orig.tar.xz",
+      "file": "db5.3_5.3.28+dfsg2.orig.tar.xz",
+      "sha256": "ad41b507415dec8316e828b2230242af2251d2c86eefa3c7aa9ef47c5239ef33",
+      "size": 21287688,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/db5.3/5.3.28+dfsg2-7/db5.3_5.3.28+dfsg2-7.dsc"
+    },
+    {
+      "component": "dbus",
+      "version": "1.14.10-4ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10-4ubuntu4.1.debian.tar.xz",
+      "file": "dbus_1.14.10-4ubuntu4.1.debian.tar.xz",
+      "sha256": "c28e0e4840bf3c3f3cbdacae9b7228bb4694dd234f325535942dde76af3c322e",
+      "size": 69668,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10-4ubuntu4.1.dsc"
+    },
+    {
+      "component": "dbus",
+      "version": "1.14.10-4ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10-4ubuntu4.1.dsc",
+      "file": "dbus_1.14.10-4ubuntu4.1.dsc",
+      "sha256": "3d9037176550657a3584f7640027a6d970c85b0cd158a2be7e8051aab1349edb",
+      "size": 3746,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=dbus&version=1.14.10-4ubuntu4.1&exact_match=true"
+    },
+    {
+      "component": "dbus",
+      "version": "1.14.10-4ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10.orig.tar.xz",
+      "file": "dbus_1.14.10.orig.tar.xz",
+      "sha256": "ba1f21d2bd9d339da2d4aa8780c09df32fea87998b73da24f49ab9df1e36a50f",
+      "size": 1372328,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10-4ubuntu4.1.dsc"
+    },
+    {
+      "component": "dbus",
+      "version": "1.14.10-4ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10.orig.tar.xz.asc",
+      "file": "dbus_1.14.10.orig.tar.xz.asc",
+      "sha256": "5f292cd0603c3d736026ed3f4d1c1937847981669c1f0a389083518f013e1081",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/dbus/1.14.10-4ubuntu4.1/dbus_1.14.10-4ubuntu4.1.dsc"
+    },
+    {
+      "component": "dbus-next",
+      "version": "0.2.3",
+      "url": "https://files.pythonhosted.org/packages/ce/45/6a40fbe886d60a8c26f480e7d12535502b5ba123814b3b9a0b002ebca198/dbus_next-0.2.3.tar.gz",
+      "file": "dbus_next-0.2.3.tar.gz",
+      "sha256": "f4eae26909332ada528c0a3549dda8d4f088f9b365153952a408e28023a626a5",
+      "size": 71112,
+      "provenance": "https://pypi.org/pypi/dbus-next/0.2.3/json"
+    },
+    {
+      "component": "e2fsprogs",
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.debian.tar.xz",
+      "file": "e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.debian.tar.xz",
+      "sha256": "26b381ec175ff52d1cc2fd1b217f84b9e1d7d33a58dcbaf8942115dd27a03f84",
+      "size": 90580,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc"
+    },
+    {
+      "component": "e2fsprogs",
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc",
+      "file": "e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc",
+      "sha256": "215fe7b95c246894654c59a01514dfdc16ec17a0dcb09dc7a7c1ec1246ed4964",
+      "size": 3294,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=e2fsprogs&version=1.47.0-2.4~exp1ubuntu4.1&exact_match=true"
+    },
+    {
+      "component": "e2fsprogs",
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0.orig.tar.gz",
+      "file": "e2fsprogs_1.47.0.orig.tar.gz",
+      "sha256": "6667afde56eef0c6af26684974400e4d2288ea49e9441bf5e6229195d51a3578",
+      "size": 9637717,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc"
+    },
+    {
+      "component": "e2fsprogs",
+      "version": "1.47.0-2.4~exp1ubuntu4.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0.orig.tar.gz.asc",
+      "file": "e2fsprogs_1.47.0.orig.tar.gz.asc",
+      "sha256": "704928204a52ddaa0ac8ef549c1bfba3c38e66c361d3853c8a4c38e6082b90f1",
+      "size": 488,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/e2fsprogs/1.47.0-2.4~exp1ubuntu4.1/e2fsprogs_1.47.0-2.4~exp1ubuntu4.1.dsc"
+    },
+    {
+      "component": "expat",
+      "version": "2.6.1-2ubuntu0.4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/expat/2.6.1-2ubuntu0.4/expat_2.6.1-2ubuntu0.4.debian.tar.xz",
+      "file": "expat_2.6.1-2ubuntu0.4.debian.tar.xz",
+      "sha256": "8a24bd6c87fe292a2f00a2df71f7d2bbe3713fa63b1952c8552cdac4288d10fd",
+      "size": 31092,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/expat/2.6.1-2ubuntu0.4/expat_2.6.1-2ubuntu0.4.dsc"
+    },
+    {
+      "component": "expat",
+      "version": "2.6.1-2ubuntu0.4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/expat/2.6.1-2ubuntu0.4/expat_2.6.1-2ubuntu0.4.dsc",
+      "file": "expat_2.6.1-2ubuntu0.4.dsc",
+      "sha256": "a25d3fde103454ad5d34d4770bd5adb60bb5872da775df74cad193b5c4de1dff",
+      "size": 1945,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=expat&version=2.6.1-2ubuntu0.4&exact_match=true"
+    },
+    {
+      "component": "expat",
+      "version": "2.6.1-2ubuntu0.4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/expat/2.6.1-2ubuntu0.4/expat_2.6.1.orig.tar.gz",
+      "file": "expat_2.6.1.orig.tar.gz",
+      "sha256": "14113ed69357172a0bf5a268793c8b5b01afc77c7a2e5fb8dd0b06cb87c02c4a",
+      "size": 8414649,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/expat/2.6.1-2ubuntu0.4/expat_2.6.1-2ubuntu0.4.dsc"
+    },
+    {
+      "component": "fontconfig",
+      "version": "2.15.0-1.1ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fontconfig/2.15.0-1.1ubuntu2/fontconfig_2.15.0-1.1ubuntu2.debian.tar.xz",
+      "file": "fontconfig_2.15.0-1.1ubuntu2.debian.tar.xz",
+      "sha256": "29ebacc2cd8f2d336150b3895feea8bb35e4340f7a34dfb37d915be76fb36b91",
+      "size": 30556,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fontconfig/2.15.0-1.1ubuntu2/fontconfig_2.15.0-1.1ubuntu2.dsc"
+    },
+    {
+      "component": "fontconfig",
+      "version": "2.15.0-1.1ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fontconfig/2.15.0-1.1ubuntu2/fontconfig_2.15.0-1.1ubuntu2.dsc",
+      "file": "fontconfig_2.15.0-1.1ubuntu2.dsc",
+      "sha256": "3bf8ffe75d6932ba542646c6816b769d49f90c673bbd4ebc728e0e9622bcce0f",
+      "size": 2817,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=fontconfig&version=2.15.0-1.1ubuntu2&exact_match=true"
+    },
+    {
+      "component": "fontconfig",
+      "version": "2.15.0-1.1ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fontconfig/2.15.0-1.1ubuntu2/fontconfig_2.15.0.orig.tar.xz",
+      "file": "fontconfig_2.15.0.orig.tar.xz",
+      "sha256": "63a0658d0e06e0fa886106452b58ef04f21f58202ea02a94c39de0d3335d7c0e",
+      "size": 1447820,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fontconfig/2.15.0-1.1ubuntu2/fontconfig_2.15.0-1.1ubuntu2.dsc"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.debian.tar.xz",
+      "file": "freetype_2.13.2+dfsg-1ubuntu0.1.debian.tar.xz",
+      "sha256": "41371d9748c0e6f407c44c52c7fe5fbd4fbc2276a168ae528404731ae2e95b31",
+      "size": 44692,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc",
+      "file": "freetype_2.13.2+dfsg-1ubuntu0.1.dsc",
+      "sha256": "05368dead2fd8739fb2aa3a11e6ffd4376039b57536cc1c5cdadceb75496f385",
+      "size": 3606,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=freetype&version=2.13.2%2Bdfsg-1ubuntu0.1&exact_match=true"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg.orig-ft2demos.tar.xz",
+      "file": "freetype_2.13.2+dfsg.orig-ft2demos.tar.xz",
+      "sha256": "99ee2ed8b98bcfad17bc57c2d9699d764f20fe29ad304c69b8eb28834ca3b48e",
+      "size": 341140,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg.orig-ft2demos.tar.xz.asc",
+      "file": "freetype_2.13.2+dfsg.orig-ft2demos.tar.xz.asc",
+      "sha256": "e58ba462f7bdcdc5899f777d33453c1ce6f6e46b080047580f45c9fd9f2dc08c",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg.orig-ft2docs.tar.xz",
+      "file": "freetype_2.13.2+dfsg.orig-ft2docs.tar.xz",
+      "sha256": "685c25e1035a5076e5097186b3143b9c06878f3f9087d0a81e4d8538d5d15424",
+      "size": 2173920,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg.orig-ft2docs.tar.xz.asc",
+      "file": "freetype_2.13.2+dfsg.orig-ft2docs.tar.xz.asc",
+      "sha256": "d7e17c8a3bce50181530ebe06346f506cbfc92ecc5ca7cc395c7dbb24a71a5c0",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc"
+    },
+    {
+      "component": "freetype",
+      "version": "2.13.2+dfsg-1ubuntu0.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg.orig.tar.xz",
+      "file": "freetype_2.13.2+dfsg.orig.tar.xz",
+      "sha256": "48c78a4194adfcd15a4d089f3206dab8454c311f5577f3ef7eaef95f777f86e6",
+      "size": 2220368,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/freetype/2.13.2+dfsg-1ubuntu0.1/freetype_2.13.2+dfsg-1ubuntu0.1.dsc"
+    },
+    {
+      "component": "fribidi",
+      "version": "1.0.13-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fribidi/1.0.13-3build1/fribidi_1.0.13-3build1.debian.tar.xz",
+      "file": "fribidi_1.0.13-3build1.debian.tar.xz",
+      "sha256": "d6dd83149e92d0c335f56d5abebcad96591d291ad3d242efeeebcdab38dd20fc",
+      "size": 8992,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fribidi/1.0.13-3build1/fribidi_1.0.13-3build1.dsc"
+    },
+    {
+      "component": "fribidi",
+      "version": "1.0.13-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fribidi/1.0.13-3build1/fribidi_1.0.13-3build1.dsc",
+      "file": "fribidi_1.0.13-3build1.dsc",
+      "sha256": "2df939e37ac9c71ed8de3c1dd55641f069fd2ed1bfa162e2ce03c819084ddbd1",
+      "size": 2439,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=fribidi&version=1.0.13-3build1&exact_match=true"
+    },
+    {
+      "component": "fribidi",
+      "version": "1.0.13-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fribidi/1.0.13-3build1/fribidi_1.0.13.orig.tar.xz",
+      "file": "fribidi_1.0.13.orig.tar.xz",
+      "sha256": "7fa16c80c81bd622f7b198d31356da139cc318a63fc7761217af4130903f54a2",
+      "size": 1170100,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/fribidi/1.0.13-3build1/fribidi_1.0.13-3build1.dsc"
+    },
+    {
+      "component": "gcc-14",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gcc-14/14.2.0-4ubuntu2~24.04.1/gcc-14_14.2.0-4ubuntu2~24.04.1.debian.tar.xz",
+      "file": "gcc-14_14.2.0-4ubuntu2~24.04.1.debian.tar.xz",
+      "sha256": "cfece214c2fb790ef5f3baffb9a53e40618e7ae12d053610b251e94d77d08ade",
+      "size": 1950432,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gcc-14/14.2.0-4ubuntu2~24.04.1/gcc-14_14.2.0-4ubuntu2~24.04.1.dsc"
+    },
+    {
+      "component": "gcc-14",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gcc-14/14.2.0-4ubuntu2~24.04.1/gcc-14_14.2.0-4ubuntu2~24.04.1.dsc",
+      "file": "gcc-14_14.2.0-4ubuntu2~24.04.1.dsc",
+      "sha256": "50950080874a6ec6780dd60c243e21d9cda9d736bb32bca98d16095d27cc01b5",
+      "size": 46930,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=gcc-14&version=14.2.0-4ubuntu2~24.04.1&exact_match=true"
+    },
+    {
+      "component": "gcc-14",
+      "version": "14.2.0-4ubuntu2~24.04.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gcc-14/14.2.0-4ubuntu2~24.04.1/gcc-14_14.2.0.orig.tar.gz",
+      "file": "gcc-14_14.2.0.orig.tar.gz",
+      "sha256": "768c314c11eeab56ccebb91eb42ec4a41122fa94f0d83400126401942622197b",
+      "size": 97158172,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gcc-14/14.2.0-4ubuntu2~24.04.1/gcc-14_14.2.0-4ubuntu2~24.04.1.dsc"
+    },
+    {
+      "component": "NumPy GCC runtimes (AlmaLinux)",
+      "version": "8.5.0-28.el8_10.alma.1",
+      "file": "gcc-8.5.0-28.el8_10.alma.1.src.rpm",
+      "url": "https://repo.almalinux.org/vault/8.10/BaseOS/Source/Packages/gcc-8.5.0-28.el8_10.alma.1.src.rpm",
+      "sha256": "c94dbbd2cd6d5d01a5a6822ea18f8ce34942c25a80e17b4682d547d5e652dbd0",
+      "size": 65715094,
+      "provenance": "packaging/licenses/NumPy-runtime-provenance.txt"
+    },
+    {
+      "component": "gdk-pixbuf",
+      "version": "2.42.10+dfsg-3ubuntu3.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gdk-pixbuf/2.42.10+dfsg-3ubuntu3.3/gdk-pixbuf_2.42.10+dfsg-3ubuntu3.3.debian.tar.xz",
+      "file": "gdk-pixbuf_2.42.10+dfsg-3ubuntu3.3.debian.tar.xz",
+      "sha256": "62966dc916fb4476b0d36ccdb53040845290a55f2f3efe2358ecb567c8295906",
+      "size": 29808,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gdk-pixbuf/2.42.10+dfsg-3ubuntu3.3/gdk-pixbuf_2.42.10+dfsg-3ubuntu3.3.dsc"
+    },
+    {
+      "component": "gdk-pixbuf",
+      "version": "2.42.10+dfsg-3ubuntu3.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gdk-pixbuf/2.42.10+dfsg-3ubuntu3.3/gdk-pixbuf_2.42.10+dfsg-3ubuntu3.3.dsc",
+      "file": "gdk-pixbuf_2.42.10+dfsg-3ubuntu3.3.dsc",
+      "sha256": "b86025ff9d9ff4e39ec4b1773f23648f18556d154867e28b2f8fc1e589be80d0",
+      "size": 3187,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=gdk-pixbuf&version=2.42.10%2Bdfsg-3ubuntu3.3&exact_match=true"
+    },
+    {
+      "component": "gdk-pixbuf",
+      "version": "2.42.10+dfsg-3ubuntu3.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gdk-pixbuf/2.42.10+dfsg-3ubuntu3.3/gdk-pixbuf_2.42.10+dfsg.orig.tar.xz",
+      "file": "gdk-pixbuf_2.42.10+dfsg.orig.tar.xz",
+      "sha256": "46663e445468e92f4a0ca876b02aed4f8758595ee3acfaa6ef3ba2b29e1c1930",
+      "size": 6439240,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gdk-pixbuf/2.42.10+dfsg-3ubuntu3.3/gdk-pixbuf_2.42.10+dfsg-3ubuntu3.3.dsc"
+    },
+    {
+      "component": "glib2.0",
+      "version": "2.80.0-6ubuntu3.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0-6ubuntu3.8.debian.tar.xz",
+      "file": "glib2.0_2.80.0-6ubuntu3.8.debian.tar.xz",
+      "sha256": "3ee18682434b0213fbc7f5892527f748810a657aba2353d660c5eb30ed1656f0",
+      "size": 166540,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0-6ubuntu3.8.dsc"
+    },
+    {
+      "component": "glib2.0",
+      "version": "2.80.0-6ubuntu3.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0-6ubuntu3.8.dsc",
+      "file": "glib2.0_2.80.0-6ubuntu3.8.dsc",
+      "sha256": "d44112b09956f61ffd5790a1a40e42558dca287052a945078cffff9b2490ee84",
+      "size": 4542,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=glib2.0&version=2.80.0-6ubuntu3.8&exact_match=true"
+    },
+    {
+      "component": "glib2.0",
+      "version": "2.80.0-6ubuntu3.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0.orig-unicode-data.tar.xz",
+      "file": "glib2.0_2.80.0.orig-unicode-data.tar.xz",
+      "sha256": "38680f78a0ae6258826418cb5096c19ae3566ba8fee0a2112a0ec40056e58729",
+      "size": 263364,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0-6ubuntu3.8.dsc"
+    },
+    {
+      "component": "glib2.0",
+      "version": "2.80.0-6ubuntu3.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0.orig.tar.xz",
+      "file": "glib2.0_2.80.0.orig.tar.xz",
+      "sha256": "8228a92f92a412160b139ae68b6345bd28f24434a7b5af150ebe21ff587a561d",
+      "size": 5510536,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/glib2.0/2.80.0-6ubuntu3.8/glib2.0_2.80.0-6ubuntu3.8.dsc"
+    },
+    {
+      "component": "graphite2",
+      "version": "1.3.14-2ubuntu0.24.04.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/graphite2/1.3.14-2ubuntu0.24.04.1/graphite2_1.3.14-2ubuntu0.24.04.1.debian.tar.xz",
+      "file": "graphite2_1.3.14-2ubuntu0.24.04.1.debian.tar.xz",
+      "sha256": "1a860887ab20f97acd841511d2318649cee3a31ad990a150f2999c36afa72693",
+      "size": 15004,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/graphite2/1.3.14-2ubuntu0.24.04.1/graphite2_1.3.14-2ubuntu0.24.04.1.dsc"
+    },
+    {
+      "component": "graphite2",
+      "version": "1.3.14-2ubuntu0.24.04.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/graphite2/1.3.14-2ubuntu0.24.04.1/graphite2_1.3.14-2ubuntu0.24.04.1.dsc",
+      "file": "graphite2_1.3.14-2ubuntu0.24.04.1.dsc",
+      "sha256": "c34a4358cdadcf881fe9794e13c27650f1c5de7bcd3aaf9a40a908047c4d44b4",
+      "size": 2682,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=graphite2&version=1.3.14-2ubuntu0.24.04.1&exact_match=true"
+    },
+    {
+      "component": "graphite2",
+      "version": "1.3.14-2ubuntu0.24.04.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/graphite2/1.3.14-2ubuntu0.24.04.1/graphite2_1.3.14.orig.tar.gz",
+      "file": "graphite2_1.3.14.orig.tar.gz",
+      "sha256": "7a3b342c5681921ce2e0c2496509d30b5b078399d5a7bd2358f95166d57d91df",
+      "size": 6629829,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/graphite2/1.3.14-2ubuntu0.24.04.1/graphite2_1.3.14-2ubuntu0.24.04.1.dsc"
+    },
+    {
+      "component": "gtk+3.0",
+      "version": "3.24.41-4ubuntu1.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gtk+3.0/3.24.41-4ubuntu1.3/gtk+3.0_3.24.41-4ubuntu1.3.debian.tar.xz",
+      "file": "gtk+3.0_3.24.41-4ubuntu1.3.debian.tar.xz",
+      "sha256": "1a82c70d722296f15af0a00a737a0c552580c6bf3f527f9ef7e66f192fe1831c",
+      "size": 3666360,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gtk+3.0/3.24.41-4ubuntu1.3/gtk+3.0_3.24.41-4ubuntu1.3.dsc"
+    },
+    {
+      "component": "gtk+3.0",
+      "version": "3.24.41-4ubuntu1.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gtk+3.0/3.24.41-4ubuntu1.3/gtk+3.0_3.24.41-4ubuntu1.3.dsc",
+      "file": "gtk+3.0_3.24.41-4ubuntu1.3.dsc",
+      "sha256": "b7ea9dda7ffd3f01f97d7ee673f130a82db5b346ade2d003e609e27886b35269",
+      "size": 4996,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=gtk%2B3.0&version=3.24.41-4ubuntu1.3&exact_match=true"
+    },
+    {
+      "component": "gtk+3.0",
+      "version": "3.24.41-4ubuntu1.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gtk+3.0/3.24.41-4ubuntu1.3/gtk+3.0_3.24.41.orig.tar.xz",
+      "file": "gtk+3.0_3.24.41.orig.tar.xz",
+      "sha256": "47da61487af3087a94bc49296fd025ca0bc02f96ef06c556e7c8988bd651b6fa",
+      "size": 13188312,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/gtk+3.0/3.24.41-4ubuntu1.3/gtk+3.0_3.24.41-4ubuntu1.3.dsc"
+    },
+    {
+      "component": "harfbuzz",
+      "version": "8.3.0-2build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/harfbuzz/8.3.0-2build2/harfbuzz_8.3.0-2build2.debian.tar.xz",
+      "file": "harfbuzz_8.3.0-2build2.debian.tar.xz",
+      "sha256": "cc8df8c8bf0301e1067c7a63a7f7384933935f13cdace4451aa3c8239fca40aa",
+      "size": 19928,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/harfbuzz/8.3.0-2build2/harfbuzz_8.3.0-2build2.dsc"
+    },
+    {
+      "component": "harfbuzz",
+      "version": "8.3.0-2build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/harfbuzz/8.3.0-2build2/harfbuzz_8.3.0-2build2.dsc",
+      "file": "harfbuzz_8.3.0-2build2.dsc",
+      "sha256": "ed14238fb748b9c822ebc80618df9e6018c3f5b919e4c11d6c4b965b90c9d6cb",
+      "size": 3032,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=harfbuzz&version=8.3.0-2build2&exact_match=true"
+    },
+    {
+      "component": "harfbuzz",
+      "version": "8.3.0-2build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/harfbuzz/8.3.0-2build2/harfbuzz_8.3.0.orig.tar.xz",
+      "file": "harfbuzz_8.3.0.orig.tar.xz",
+      "sha256": "109501eaeb8bde3eadb25fab4164e993fbace29c3d775bcaa1c1e58e2f15f847",
+      "size": 19002808,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/harfbuzz/8.3.0-2build2/harfbuzz_8.3.0-2build2.dsc"
+    },
+    {
+      "component": "idna",
+      "version": "3.19",
+      "url": "https://files.pythonhosted.org/packages/5f/f7/abb373e5757eaec4b922b92f97ec8d6d7e057cf06778247604fbc4e7c3f3/idna-3.19.tar.gz",
+      "file": "idna-3.19.tar.gz",
+      "sha256": "5e0811a4383b21dc5838069f801c4fb62113b7447663d2530d2bd6e77b49bf15",
+      "size": 215237,
+      "provenance": "https://pypi.org/pypi/idna/3.19/json"
+    },
+    {
+      "component": "jackd2",
+      "version": "1.9.21~dfsg-3ubuntu3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/jackd2/1.9.21~dfsg-3ubuntu3/jackd2_1.9.21~dfsg-3ubuntu3.debian.tar.xz",
+      "file": "jackd2_1.9.21~dfsg-3ubuntu3.debian.tar.xz",
+      "sha256": "b21963cb7d32c1fc249d705176c848cd5165834d34f4ee835688433865fe8f09",
+      "size": 65424,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/jackd2/1.9.21~dfsg-3ubuntu3/jackd2_1.9.21~dfsg-3ubuntu3.dsc"
+    },
+    {
+      "component": "jackd2",
+      "version": "1.9.21~dfsg-3ubuntu3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/jackd2/1.9.21~dfsg-3ubuntu3/jackd2_1.9.21~dfsg-3ubuntu3.dsc",
+      "file": "jackd2_1.9.21~dfsg-3ubuntu3.dsc",
+      "sha256": "1e6e1acb2e2950f5a0a1a1efd8c4ff5179e3cb37a913679caf79efb79ea1a8c1",
+      "size": 2668,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=jackd2&version=1.9.21~dfsg-3ubuntu3&exact_match=true"
+    },
+    {
+      "component": "jackd2",
+      "version": "1.9.21~dfsg-3ubuntu3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/jackd2/1.9.21~dfsg-3ubuntu3/jackd2_1.9.21~dfsg.orig.tar.gz",
+      "file": "jackd2_1.9.21~dfsg.orig.tar.gz",
+      "sha256": "d399bdb1ba3655a3e4e894821f288532b77afea060263b436bc53f690d3ef535",
+      "size": 1028528,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/jackd2/1.9.21~dfsg-3ubuntu3/jackd2_1.9.21~dfsg-3ubuntu3.dsc"
+    },
+    {
+      "component": "keyutils",
+      "version": "1.6.3-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/keyutils/1.6.3-3build1/keyutils_1.6.3-3build1.debian.tar.xz",
+      "file": "keyutils_1.6.3-3build1.debian.tar.xz",
+      "sha256": "71904f9f862c496333fd04c7af70c15b42198b90b41f460c501c80e86c3f1d3d",
+      "size": 13456,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/keyutils/1.6.3-3build1/keyutils_1.6.3-3build1.dsc"
+    },
+    {
+      "component": "keyutils",
+      "version": "1.6.3-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/keyutils/1.6.3-3build1/keyutils_1.6.3-3build1.dsc",
+      "file": "keyutils_1.6.3-3build1.dsc",
+      "sha256": "d81679165d93bfcadd5bf3fdca123ce0e4562e2ad9712aa2b9d8c2d1c701324d",
+      "size": 2211,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=keyutils&version=1.6.3-3build1&exact_match=true"
+    },
+    {
+      "component": "keyutils",
+      "version": "1.6.3-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/keyutils/1.6.3-3build1/keyutils_1.6.3.orig.tar.gz",
+      "file": "keyutils_1.6.3.orig.tar.gz",
+      "sha256": "a61d5706136ae4c05bd48f86186bcfdbd88dd8bd5107e3e195c924cfc1b39bb4",
+      "size": 137022,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/keyutils/1.6.3-3build1/keyutils_1.6.3-3build1.dsc"
+    },
+    {
+      "component": "krb5",
+      "version": "1.20.1-6ubuntu2.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/krb5/1.20.1-6ubuntu2.8/krb5_1.20.1-6ubuntu2.8.debian.tar.xz",
+      "file": "krb5_1.20.1-6ubuntu2.8.debian.tar.xz",
+      "sha256": "f8c90ef24a2a3c8396fa6c2f169017c03697c1468e243b34ab1e97141a903317",
+      "size": 130012,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/krb5/1.20.1-6ubuntu2.8/krb5_1.20.1-6ubuntu2.8.dsc"
+    },
+    {
+      "component": "krb5",
+      "version": "1.20.1-6ubuntu2.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/krb5/1.20.1-6ubuntu2.8/krb5_1.20.1-6ubuntu2.8.dsc",
+      "file": "krb5_1.20.1-6ubuntu2.8.dsc",
+      "sha256": "22fee326733aa493194a9f616378299c6dbc53de0b1577f309a7a08c1d4cf600",
+      "size": 3256,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=krb5&version=1.20.1-6ubuntu2.8&exact_match=true"
+    },
+    {
+      "component": "krb5",
+      "version": "1.20.1-6ubuntu2.8",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/krb5/1.20.1-6ubuntu2.8/krb5_1.20.1.orig.tar.gz",
+      "file": "krb5_1.20.1.orig.tar.gz",
+      "sha256": "704aed49b19eb5a7178b34b2873620ec299db08752d6a8574f95d41879ab8851",
+      "size": 8661660,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/krb5/1.20.1-6ubuntu2.8/krb5_1.20.1-6ubuntu2.8.dsc"
+    },
+    {
+      "component": "libbsd",
+      "version": "0.12.1-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1-1build1.1.debian.tar.xz",
+      "file": "libbsd_0.12.1-1build1.1.debian.tar.xz",
+      "sha256": "4086dc52ae53f0d7625a593c331460377868edc2a5606f4d8a341565aa94b2be",
+      "size": 18732,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1-1build1.1.dsc"
+    },
+    {
+      "component": "libbsd",
+      "version": "0.12.1-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1-1build1.1.dsc",
+      "file": "libbsd_0.12.1-1build1.1.dsc",
+      "sha256": "a44c2a70dbb9703c342ae49525507d22795b37308302c6167d72c3cbd3e76236",
+      "size": 2458,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libbsd&version=0.12.1-1build1.1&exact_match=true"
+    },
+    {
+      "component": "libbsd",
+      "version": "0.12.1-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1.orig.tar.xz",
+      "file": "libbsd_0.12.1.orig.tar.xz",
+      "sha256": "d7747f8ec1baa6ff5c096a9dd587c061233dec90da0f1aedd66d830f6db6996a",
+      "size": 444048,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1-1build1.1.dsc"
+    },
+    {
+      "component": "libbsd",
+      "version": "0.12.1-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1.orig.tar.xz.asc",
+      "file": "libbsd_0.12.1.orig.tar.xz.asc",
+      "sha256": "04a4b66da93ea3c761e15fcedd705a969b67597d0619c3ebc5fe3cf72d477f1f",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libbsd/0.12.1-1build1.1/libbsd_0.12.1-1build1.1.dsc"
+    },
+    {
+      "component": "libcap2",
+      "version": "1:2.66-5ubuntu2.4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libcap2/1:2.66-5ubuntu2.4/libcap2_2.66-5ubuntu2.4.debian.tar.xz",
+      "file": "libcap2_2.66-5ubuntu2.4.debian.tar.xz",
+      "sha256": "7eb46752c6b59984494d2f641a049b9d4b394b7d1fe067729ccbc413c5943136",
+      "size": 24724,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libcap2/1:2.66-5ubuntu2.4/libcap2_2.66-5ubuntu2.4.dsc"
+    },
+    {
+      "component": "libcap2",
+      "version": "1:2.66-5ubuntu2.4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libcap2/1:2.66-5ubuntu2.4/libcap2_2.66-5ubuntu2.4.dsc",
+      "file": "libcap2_2.66-5ubuntu2.4.dsc",
+      "sha256": "8178019803f285b92e52e82cf84b0a6fc18840041270b2c588db826b8277e3e0",
+      "size": 2319,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libcap2&version=1%3A2.66-5ubuntu2.4&exact_match=true"
+    },
+    {
+      "component": "libcap2",
+      "version": "1:2.66-5ubuntu2.4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libcap2/1:2.66-5ubuntu2.4/libcap2_2.66.orig.tar.xz",
+      "file": "libcap2_2.66.orig.tar.xz",
+      "sha256": "15c40ededb3003d70a283fe587a36b7d19c8b3b554e33f86129c059a4bb466b2",
+      "size": 181592,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libcap2/1:2.66-5ubuntu2.4/libcap2_2.66-5ubuntu2.4.dsc"
+    },
+    {
+      "component": "libdatrie",
+      "version": "0.2.13-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libdatrie/0.2.13-3build1/libdatrie_0.2.13-3build1.debian.tar.xz",
+      "file": "libdatrie_0.2.13-3build1.debian.tar.xz",
+      "sha256": "7e321906339b790e881700643bba7e4fa66accf61788d466a94eaba25e30637b",
+      "size": 9776,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libdatrie/0.2.13-3build1/libdatrie_0.2.13-3build1.dsc"
+    },
+    {
+      "component": "libdatrie",
+      "version": "0.2.13-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libdatrie/0.2.13-3build1/libdatrie_0.2.13-3build1.dsc",
+      "file": "libdatrie_0.2.13-3build1.dsc",
+      "sha256": "9d4bef261b1f1a5abd62c99ecdee5cd8b5dc09987b13d1ba1b66a73f1b1f0c6f",
+      "size": 2368,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libdatrie&version=0.2.13-3build1&exact_match=true"
+    },
+    {
+      "component": "libdatrie",
+      "version": "0.2.13-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libdatrie/0.2.13-3build1/libdatrie_0.2.13.orig.tar.xz",
+      "file": "libdatrie_0.2.13.orig.tar.xz",
+      "sha256": "12231bb2be2581a7f0fb9904092d24b0ed2a271a16835071ed97bed65267f4be",
+      "size": 314072,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libdatrie/0.2.13-3build1/libdatrie_0.2.13-3build1.dsc"
+    },
+    {
+      "component": "libepoxy",
+      "version": "1.5.10-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libepoxy/1.5.10-1build1/libepoxy_1.5.10-1build1.debian.tar.xz",
+      "file": "libepoxy_1.5.10-1build1.debian.tar.xz",
+      "sha256": "c02353ecfdbf86caeff5269d44200f46207ebb8248656f8c26ff6cbce4fcebd4",
+      "size": 17596,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libepoxy/1.5.10-1build1/libepoxy_1.5.10-1build1.dsc"
+    },
+    {
+      "component": "libepoxy",
+      "version": "1.5.10-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libepoxy/1.5.10-1build1/libepoxy_1.5.10-1build1.dsc",
+      "file": "libepoxy_1.5.10-1build1.dsc",
+      "sha256": "5569ae7a39c089ecc46296c57a2886b7e1b7219be0687fbc9ef9ae7997f21dae",
+      "size": 2227,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libepoxy&version=1.5.10-1build1&exact_match=true"
+    },
+    {
+      "component": "libepoxy",
+      "version": "1.5.10-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libepoxy/1.5.10-1build1/libepoxy_1.5.10.orig.tar.gz",
+      "file": "libepoxy_1.5.10.orig.tar.gz",
+      "sha256": "a7ced37f4102b745ac86d6a70a9da399cc139ff168ba6b8002b4d8d43c900c15",
+      "size": 332078,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libepoxy/1.5.10-1build1/libepoxy_1.5.10-1build1.dsc"
+    },
+    {
+      "component": "libffi",
+      "version": "3.4.6-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libffi/3.4.6-1build1/libffi_3.4.6-1build1.debian.tar.xz",
+      "file": "libffi_3.4.6-1build1.debian.tar.xz",
+      "sha256": "9d8712818b833baf002a2413552194b8770800cb20b802ba1d3714156eba14fe",
+      "size": 10736,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libffi/3.4.6-1build1/libffi_3.4.6-1build1.dsc"
+    },
+    {
+      "component": "libffi",
+      "version": "3.4.6-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libffi/3.4.6-1build1/libffi_3.4.6-1build1.dsc",
+      "file": "libffi_3.4.6-1build1.dsc",
+      "sha256": "a7a2c320c04149192a6dd78df8be28b2b27fd38e48d76f2ee6ba0c19ae0758f6",
+      "size": 2055,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libffi&version=3.4.6-1build1&exact_match=true"
+    },
+    {
+      "component": "libffi",
+      "version": "3.4.6-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libffi/3.4.6-1build1/libffi_3.4.6.orig.tar.gz",
+      "file": "libffi_3.4.6.orig.tar.gz",
+      "sha256": "9ac790464c1eb2f5ab5809e978a1683e9393131aede72d1b0a0703771d3c6cda",
+      "size": 598175,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libffi/3.4.6-1build1/libffi_3.4.6-1build1.dsc"
+    },
+    {
+      "component": "libgcrypt20",
+      "version": "1.10.3-2ubuntu0.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3-2ubuntu0.2.debian.tar.xz",
+      "file": "libgcrypt20_1.10.3-2ubuntu0.2.debian.tar.xz",
+      "sha256": "8298a57538f427d3c1112f2d86e374dd8223156e06b403f5c7945dd3d86f2050",
+      "size": 66364,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3-2ubuntu0.2.dsc"
+    },
+    {
+      "component": "libgcrypt20",
+      "version": "1.10.3-2ubuntu0.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3-2ubuntu0.2.dsc",
+      "file": "libgcrypt20_1.10.3-2ubuntu0.2.dsc",
+      "sha256": "688df10bc9c90b241926470d1f12a4d5092157263a6c1555996c53bcf40ca7d1",
+      "size": 2914,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libgcrypt20&version=1.10.3-2ubuntu0.2&exact_match=true"
+    },
+    {
+      "component": "libgcrypt20",
+      "version": "1.10.3-2ubuntu0.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3.orig.tar.bz2",
+      "file": "libgcrypt20_1.10.3.orig.tar.bz2",
+      "sha256": "8b0870897ac5ac67ded568dcfadf45969cfa8a6beb0fd60af2a9eadc2a3272aa",
+      "size": 3783827,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3-2ubuntu0.2.dsc"
+    },
+    {
+      "component": "libgcrypt20",
+      "version": "1.10.3-2ubuntu0.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3.orig.tar.bz2.asc",
+      "file": "libgcrypt20_1.10.3.orig.tar.bz2.asc",
+      "sha256": "f02a5f961b89c034a78decbb355ea5a8d9356df5a9636dec53ae548d7d814b14",
+      "size": 390,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgcrypt20/1.10.3-2ubuntu0.2/libgcrypt20_1.10.3-2ubuntu0.2.dsc"
+    },
+    {
+      "component": "libgpg-error",
+      "version": "1.47-3build2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47-3build2.1.debian.tar.xz",
+      "file": "libgpg-error_1.47-3build2.1.debian.tar.xz",
+      "sha256": "f02a079a6ddf9930659c3402820b6bd190687e8f1c223f340c965a9da74abcd5",
+      "size": 18776,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47-3build2.1.dsc"
+    },
+    {
+      "component": "libgpg-error",
+      "version": "1.47-3build2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47-3build2.1.dsc",
+      "file": "libgpg-error_1.47-3build2.1.dsc",
+      "sha256": "3c8abf463c9ade945fe2e9d87c4aa2bff0026964207b07e99432d9ef6d9436d8",
+      "size": 3007,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libgpg-error&version=1.47-3build2.1&exact_match=true"
+    },
+    {
+      "component": "libgpg-error",
+      "version": "1.47-3build2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47.orig.tar.bz2",
+      "file": "libgpg-error_1.47.orig.tar.bz2",
+      "sha256": "9e3c670966b96ecc746c28c2c419541e3bcb787d1a73930f5e5f5e1bcbbb9bdb",
+      "size": 1020862,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47-3build2.1.dsc"
+    },
+    {
+      "component": "libgpg-error",
+      "version": "1.47-3build2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47.orig.tar.bz2.asc",
+      "file": "libgpg-error_1.47.orig.tar.bz2.asc",
+      "sha256": "6ab547bf020761e1df80b08335773a91c345ff2c1344f15b1f7d195293ab21a5",
+      "size": 228,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libgpg-error/1.47-3build2.1/libgpg-error_1.47-3build2.1.dsc"
+    },
+    {
+      "component": "libjpeg-turbo",
+      "version": "2.1.5-2ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libjpeg-turbo/2.1.5-2ubuntu2/libjpeg-turbo_2.1.5-2ubuntu2.debian.tar.xz",
+      "file": "libjpeg-turbo_2.1.5-2ubuntu2.debian.tar.xz",
+      "sha256": "57be35d38b31a88aae42a1242126b22b75395e4d3225092f8cca74082605f6d4",
+      "size": 108492,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libjpeg-turbo/2.1.5-2ubuntu2/libjpeg-turbo_2.1.5-2ubuntu2.dsc"
+    },
+    {
+      "component": "libjpeg-turbo",
+      "version": "2.1.5-2ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libjpeg-turbo/2.1.5-2ubuntu2/libjpeg-turbo_2.1.5-2ubuntu2.dsc",
+      "file": "libjpeg-turbo_2.1.5-2ubuntu2.dsc",
+      "sha256": "7d17c0964d491cad7237491f28f1ee42d8335a57f9b1c01a5cd141bea418d3a2",
+      "size": 2535,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libjpeg-turbo&version=2.1.5-2ubuntu2&exact_match=true"
+    },
+    {
+      "component": "libjpeg-turbo",
+      "version": "2.1.5-2ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libjpeg-turbo/2.1.5-2ubuntu2/libjpeg-turbo_2.1.5.orig.tar.gz",
+      "file": "libjpeg-turbo_2.1.5.orig.tar.gz",
+      "sha256": "254f3642b04e309fee775123133c6464181addc150499561020312ec61c1bf7c",
+      "size": 2264471,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libjpeg-turbo/2.1.5-2ubuntu2/libjpeg-turbo_2.1.5-2ubuntu2.dsc"
+    },
+    {
+      "component": "libmd",
+      "version": "1.1.0-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0-2build1.1.debian.tar.xz",
+      "file": "libmd_1.1.0-2build1.1.debian.tar.xz",
+      "sha256": "ed337af7e336b7dbb6b246c339baa34c9e832bf614a44d06158238259df12307",
+      "size": 8448,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0-2build1.1.dsc"
+    },
+    {
+      "component": "libmd",
+      "version": "1.1.0-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0-2build1.1.dsc",
+      "file": "libmd_1.1.0-2build1.1.dsc",
+      "sha256": "11dfd22bba97a4c4ca6c09f34743ac6c72a34eb81344e3a1681c45e2d60ce239",
+      "size": 2391,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libmd&version=1.1.0-2build1.1&exact_match=true"
+    },
+    {
+      "component": "libmd",
+      "version": "1.1.0-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0.orig.tar.xz",
+      "file": "libmd_1.1.0.orig.tar.xz",
+      "sha256": "1bd6aa42275313af3141c7cf2e5b964e8b1fd488025caf2f971f43b00776b332",
+      "size": 271228,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0-2build1.1.dsc"
+    },
+    {
+      "component": "libmd",
+      "version": "1.1.0-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0.orig.tar.xz.asc",
+      "file": "libmd_1.1.0.orig.tar.xz.asc",
+      "sha256": "402fd3024e43ab975733d09e661804a58ca58697194e4b15216b1217cfe1dadb",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libmd/1.1.0-2build1.1/libmd_1.1.0-2build1.1.dsc"
+    },
+    {
+      "component": "libpng1.6",
+      "version": "1.6.43-5ubuntu0.6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libpng1.6/1.6.43-5ubuntu0.6/libpng1.6_1.6.43-5ubuntu0.6.debian.tar.xz",
+      "file": "libpng1.6_1.6.43-5ubuntu0.6.debian.tar.xz",
+      "sha256": "2410934848547a4c826e102b54e2abdf005fa4e0fbc4aa1e9fe3200638cd9328",
+      "size": 50432,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libpng1.6/1.6.43-5ubuntu0.6/libpng1.6_1.6.43-5ubuntu0.6.dsc"
+    },
+    {
+      "component": "libpng1.6",
+      "version": "1.6.43-5ubuntu0.6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libpng1.6/1.6.43-5ubuntu0.6/libpng1.6_1.6.43-5ubuntu0.6.dsc",
+      "file": "libpng1.6_1.6.43-5ubuntu0.6.dsc",
+      "sha256": "b5c3539ad4f9289480671a5a89aad2d9ad60c5eae79255460f1e929be1e272ad",
+      "size": 2384,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libpng1.6&version=1.6.43-5ubuntu0.6&exact_match=true"
+    },
+    {
+      "component": "libpng1.6",
+      "version": "1.6.43-5ubuntu0.6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libpng1.6/1.6.43-5ubuntu0.6/libpng1.6_1.6.43.orig.tar.gz",
+      "file": "libpng1.6_1.6.43.orig.tar.gz",
+      "sha256": "fecc95b46cf05e8e3fc8a414750e0ba5aad00d89e9fdf175e94ff041caf1a03a",
+      "size": 1554715,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libpng1.6/1.6.43-5ubuntu0.6/libpng1.6_1.6.43-5ubuntu0.6.dsc"
+    },
+    {
+      "component": "libselinux",
+      "version": "3.5-2ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5-2ubuntu2.1.debian.tar.xz",
+      "file": "libselinux_3.5-2ubuntu2.1.debian.tar.xz",
+      "sha256": "13e47e0983f59235e34f5abe07a2a0d1af3dd2d255962c6a50fac4698c3fe891",
+      "size": 38112,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5-2ubuntu2.1.dsc"
+    },
+    {
+      "component": "libselinux",
+      "version": "3.5-2ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5-2ubuntu2.1.dsc",
+      "file": "libselinux_3.5-2ubuntu2.1.dsc",
+      "sha256": "96134581a745ed85b3d5f1c24cdd88fa7d3e29548c0f80a683094ed886b7f150",
+      "size": 3098,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libselinux&version=3.5-2ubuntu2.1&exact_match=true"
+    },
+    {
+      "component": "libselinux",
+      "version": "3.5-2ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5.orig.tar.gz",
+      "file": "libselinux_3.5.orig.tar.gz",
+      "sha256": "9a3a3705ac13a2ccca2de6d652b6356fead10f36fb33115c185c5ccdf29eec19",
+      "size": 211453,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5-2ubuntu2.1.dsc"
+    },
+    {
+      "component": "libselinux",
+      "version": "3.5-2ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5.orig.tar.gz.asc",
+      "file": "libselinux_3.5.orig.tar.gz.asc",
+      "sha256": "fd37d441e0c08cabe9ac8f7815f52355bab2011549ec5792424fe18be9e1e015",
+      "size": 981,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libselinux/3.5-2ubuntu2.1/libselinux_3.5-2ubuntu2.1.dsc"
+    },
+    {
+      "component": "libthai",
+      "version": "0.1.29-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libthai/0.1.29-2build1/libthai_0.1.29-2build1.debian.tar.xz",
+      "file": "libthai_0.1.29-2build1.debian.tar.xz",
+      "sha256": "3538d2a717c5f9e329a2a9c3f62ae3b82d277b047d042df105a98d9417894357",
+      "size": 12744,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libthai/0.1.29-2build1/libthai_0.1.29-2build1.dsc"
+    },
+    {
+      "component": "libthai",
+      "version": "0.1.29-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libthai/0.1.29-2build1/libthai_0.1.29-2build1.dsc",
+      "file": "libthai_0.1.29-2build1.dsc",
+      "sha256": "a20705f03af7fca8f1bbed128e09020ed958f1bd092859e9133c6c600401a5e5",
+      "size": 2451,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libthai&version=0.1.29-2build1&exact_match=true"
+    },
+    {
+      "component": "libthai",
+      "version": "0.1.29-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libthai/0.1.29-2build1/libthai_0.1.29.orig.tar.xz",
+      "file": "libthai_0.1.29.orig.tar.xz",
+      "sha256": "fc80cc7dcb50e11302b417cebd24f2d30a8b987292e77e003267b9100d0f4bcd",
+      "size": 417728,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libthai/0.1.29-2build1/libthai_0.1.29-2build1.dsc"
+    },
+    {
+      "component": "libx11",
+      "version": "2:1.8.7-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7-1build1.diff.gz",
+      "file": "libx11_1.8.7-1build1.diff.gz",
+      "sha256": "f475e5203caa43e2881df9f0f25cd5a1c6dfb1ad77d9eb057e3dbe17a46e8563",
+      "size": 74380,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7-1build1.dsc"
+    },
+    {
+      "component": "libx11",
+      "version": "2:1.8.7-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7-1build1.dsc",
+      "file": "libx11_1.8.7-1build1.dsc",
+      "sha256": "bdf5b5bc66a20bbc6966ac1656c0257a4f5853ec1e01d73d448a8c2237f3dc7e",
+      "size": 2612,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libx11&version=2%3A1.8.7-1build1&exact_match=true"
+    },
+    {
+      "component": "libx11",
+      "version": "2:1.8.7-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7.orig.tar.gz",
+      "file": "libx11_1.8.7.orig.tar.gz",
+      "sha256": "793ebebf569f12c864b77401798d38814b51790fce206e01a431e5feb982e20b",
+      "size": 3185363,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7-1build1.dsc"
+    },
+    {
+      "component": "libx11",
+      "version": "2:1.8.7-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7.orig.tar.gz.asc",
+      "file": "libx11_1.8.7.orig.tar.gz.asc",
+      "sha256": "c1cba69555c89e503abac81ebf1113a756f2fafd72677e7862b40f12208e0260",
+      "size": 833,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libx11/2:1.8.7-1build1/libx11_1.8.7-1build1.dsc"
+    },
+    {
+      "component": "libxau",
+      "version": "1:1.0.9-1build6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9-1build6.diff.gz",
+      "file": "libxau_1.0.9-1build6.diff.gz",
+      "sha256": "6e68b5a0dd458b0736fb4e327ca96ea5d3a25ec6fe5bd65c8ef66f90006248bd",
+      "size": 10712,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9-1build6.dsc"
+    },
+    {
+      "component": "libxau",
+      "version": "1:1.0.9-1build6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9-1build6.dsc",
+      "file": "libxau_1.0.9-1build6.dsc",
+      "sha256": "b6a676b936d6c7c2c75b60b789066f0b92f741104d6dfacaaffb985800ba4e55",
+      "size": 2315,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxau&version=1%3A1.0.9-1build6&exact_match=true"
+    },
+    {
+      "component": "libxau",
+      "version": "1:1.0.9-1build6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9.orig.tar.gz",
+      "file": "libxau_1.0.9.orig.tar.gz",
+      "sha256": "1f123d8304b082ad63a9e89376400a3b1d4c29e67e3ea07b3f659cccca690eea",
+      "size": 394068,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9-1build6.dsc"
+    },
+    {
+      "component": "libxau",
+      "version": "1:1.0.9-1build6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9.orig.tar.gz.asc",
+      "file": "libxau_1.0.9.orig.tar.gz.asc",
+      "sha256": "af6104aaf3c5ede529e381237dd60f49640ec96593a84502fa493b86582b2f04",
+      "size": 801,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxau/1:1.0.9-1build6/libxau_1.0.9-1build6.dsc"
+    },
+    {
+      "component": "libxcb",
+      "version": "1.15-1ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcb/1.15-1ubuntu2/libxcb_1.15-1ubuntu2.diff.gz",
+      "file": "libxcb_1.15-1ubuntu2.diff.gz",
+      "sha256": "d45e55f604af83b47f621c97b49885f35b518909bb3b9f9c877cfd3daddfb5ee",
+      "size": 26975,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcb/1.15-1ubuntu2/libxcb_1.15-1ubuntu2.dsc"
+    },
+    {
+      "component": "libxcb",
+      "version": "1.15-1ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcb/1.15-1ubuntu2/libxcb_1.15-1ubuntu2.dsc",
+      "file": "libxcb_1.15-1ubuntu2.dsc",
+      "sha256": "aa994469e76b17847c1153d43cd37884adebbce5008ad221ef0e1e8ad840f8de",
+      "size": 5372,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxcb&version=1.15-1ubuntu2&exact_match=true"
+    },
+    {
+      "component": "libxcb",
+      "version": "1.15-1ubuntu2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcb/1.15-1ubuntu2/libxcb_1.15.orig.tar.gz",
+      "file": "libxcb_1.15.orig.tar.gz",
+      "sha256": "1cb65df8543a69ec0555ac696123ee386321dfac1964a3da39976c9a05ad724d",
+      "size": 650774,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcb/1.15-1ubuntu2/libxcb_1.15-1ubuntu2.dsc"
+    },
+    {
+      "component": "libxcomposite",
+      "version": "1:0.4.5-1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcomposite/1:0.4.5-1build3/libxcomposite_0.4.5-1build3.diff.gz",
+      "file": "libxcomposite_0.4.5-1build3.diff.gz",
+      "sha256": "a9310699c92296e861555384ab52911c36920cbd076eb704120fda5a2a0c2435",
+      "size": 7840,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcomposite/1:0.4.5-1build3/libxcomposite_0.4.5-1build3.dsc"
+    },
+    {
+      "component": "libxcomposite",
+      "version": "1:0.4.5-1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcomposite/1:0.4.5-1build3/libxcomposite_0.4.5-1build3.dsc",
+      "file": "libxcomposite_0.4.5-1build3.dsc",
+      "sha256": "ab25ebb6e0f160f5fc146822ac6af56bc8e9aa78a829f80fc9788e286f578f56",
+      "size": 2199,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxcomposite&version=1%3A0.4.5-1build3&exact_match=true"
+    },
+    {
+      "component": "libxcomposite",
+      "version": "1:0.4.5-1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcomposite/1:0.4.5-1build3/libxcomposite_0.4.5.orig.tar.gz",
+      "file": "libxcomposite_0.4.5.orig.tar.gz",
+      "sha256": "581c7fc0f41a99af38b1c36b9be64bc13ef3f60091cd3f01105bbc7c01617d6c",
+      "size": 386513,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcomposite/1:0.4.5-1build3/libxcomposite_0.4.5-1build3.dsc"
+    },
+    {
+      "component": "libxcursor",
+      "version": "1:1.2.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcursor/1:1.2.1-1build1/libxcursor_1.2.1-1build1.debian.tar.xz",
+      "file": "libxcursor_1.2.1-1build1.debian.tar.xz",
+      "sha256": "bc511593cf395948184efc6dd861a2864c3cd4a2c55bb7bc11b018bf8f2422fb",
+      "size": 9188,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcursor/1:1.2.1-1build1/libxcursor_1.2.1-1build1.dsc"
+    },
+    {
+      "component": "libxcursor",
+      "version": "1:1.2.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcursor/1:1.2.1-1build1/libxcursor_1.2.1-1build1.dsc",
+      "file": "libxcursor_1.2.1-1build1.dsc",
+      "sha256": "eddf2ff8bb61871ff00af5f31333b4e4ab9328ab5b220b269ed3348664cc8b2e",
+      "size": 2363,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxcursor&version=1%3A1.2.1-1build1&exact_match=true"
+    },
+    {
+      "component": "libxcursor",
+      "version": "1:1.2.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcursor/1:1.2.1-1build1/libxcursor_1.2.1.orig.tar.gz",
+      "file": "libxcursor_1.2.1.orig.tar.gz",
+      "sha256": "77f96b9ad0a3c422cfa826afabaf1e02b9bfbfc8908c5fa1a45094faad074b98",
+      "size": 415378,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxcursor/1:1.2.1-1build1/libxcursor_1.2.1-1build1.dsc"
+    },
+    {
+      "component": "libxdamage",
+      "version": "1:1.1.6-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdamage/1:1.1.6-1build1/libxdamage_1.1.6-1build1.debian.tar.xz",
+      "file": "libxdamage_1.1.6-1build1.debian.tar.xz",
+      "sha256": "ab55bdb36b2591a2e82889a5e3228bb4336d2fddacecbe090cf5ad2a2098a897",
+      "size": 6332,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdamage/1:1.1.6-1build1/libxdamage_1.1.6-1build1.dsc"
+    },
+    {
+      "component": "libxdamage",
+      "version": "1:1.1.6-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdamage/1:1.1.6-1build1/libxdamage_1.1.6-1build1.dsc",
+      "file": "libxdamage_1.1.6-1build1.dsc",
+      "sha256": "78c5c356893ca89fb5141e02c820a20cdd476f7f15955aa1a6efb67ce6600aaa",
+      "size": 2256,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxdamage&version=1%3A1.1.6-1build1&exact_match=true"
+    },
+    {
+      "component": "libxdamage",
+      "version": "1:1.1.6-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdamage/1:1.1.6-1build1/libxdamage_1.1.6.orig.tar.gz",
+      "file": "libxdamage_1.1.6.orig.tar.gz",
+      "sha256": "2afcc139eb6eb926ffe344494b1fc023da25def42874496e6e6d3aa8acef8595",
+      "size": 381548,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdamage/1:1.1.6-1build1/libxdamage_1.1.6-1build1.dsc"
+    },
+    {
+      "component": "libxdmcp",
+      "version": "1:1.1.3-0ubuntu6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdmcp/1:1.1.3-0ubuntu6/libxdmcp_1.1.3-0ubuntu6.diff.gz",
+      "file": "libxdmcp_1.1.3-0ubuntu6.diff.gz",
+      "sha256": "9a72f64460520fdc2125472557f30a4748107f98fe008a04b576dc8b93536bc8",
+      "size": 18400,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdmcp/1:1.1.3-0ubuntu6/libxdmcp_1.1.3-0ubuntu6.dsc"
+    },
+    {
+      "component": "libxdmcp",
+      "version": "1:1.1.3-0ubuntu6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdmcp/1:1.1.3-0ubuntu6/libxdmcp_1.1.3-0ubuntu6.dsc",
+      "file": "libxdmcp_1.1.3-0ubuntu6.dsc",
+      "sha256": "71d1e9513fb58807fb131a5a2327eaac801ac5789ce4292038c2fed6365f7f68",
+      "size": 2252,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxdmcp&version=1%3A1.1.3-0ubuntu6&exact_match=true"
+    },
+    {
+      "component": "libxdmcp",
+      "version": "1:1.1.3-0ubuntu6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdmcp/1:1.1.3-0ubuntu6/libxdmcp_1.1.3.orig.tar.gz",
+      "file": "libxdmcp_1.1.3.orig.tar.gz",
+      "sha256": "2ef9653d32e09d1bf1b837d0e0311024979653fe755ad3aaada8db1aa6ea180c",
+      "size": 429668,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxdmcp/1:1.1.3-0ubuntu6/libxdmcp_1.1.3-0ubuntu6.dsc"
+    },
+    {
+      "component": "libxext",
+      "version": "2:1.3.4-1build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxext/2:1.3.4-1build2/libxext_1.3.4-1build2.diff.gz",
+      "file": "libxext_1.3.4-1build2.diff.gz",
+      "sha256": "ed434b3facecdf2c1f9ff58578033da61e087d73d6ce2d84433871ee4fb22ba6",
+      "size": 12720,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxext/2:1.3.4-1build2/libxext_1.3.4-1build2.dsc"
+    },
+    {
+      "component": "libxext",
+      "version": "2:1.3.4-1build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxext/2:1.3.4-1build2/libxext_1.3.4-1build2.dsc",
+      "file": "libxext_1.3.4-1build2.dsc",
+      "sha256": "0d2faa231cb2d5750994e8d93c4973cf4c24f74d8f1912234a1a244952d5e627",
+      "size": 2250,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxext&version=2%3A1.3.4-1build2&exact_match=true"
+    },
+    {
+      "component": "libxext",
+      "version": "2:1.3.4-1build2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxext/2:1.3.4-1build2/libxext_1.3.4.orig.tar.gz",
+      "file": "libxext_1.3.4.orig.tar.gz",
+      "sha256": "8ef0789f282826661ff40a8eef22430378516ac580167da35cc948be9041aac1",
+      "size": 494434,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxext/2:1.3.4-1build2/libxext_1.3.4-1build2.dsc"
+    },
+    {
+      "component": "libxfixes",
+      "version": "1:6.0.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0-2build1.diff.gz",
+      "file": "libxfixes_6.0.0-2build1.diff.gz",
+      "sha256": "4afbdb618c6f60e95c4251a8c08e928b19c3a19316dc9801c1e51c5c0b7f7a49",
+      "size": 17437,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0-2build1.dsc"
+    },
+    {
+      "component": "libxfixes",
+      "version": "1:6.0.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0-2build1.dsc",
+      "file": "libxfixes_6.0.0-2build1.dsc",
+      "sha256": "85c831269a0513da54f1cd6a816a9d2fa75d4bb04159079618fb2ecc5ea2b7ab",
+      "size": 2372,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxfixes&version=1%3A6.0.0-2build1&exact_match=true"
+    },
+    {
+      "component": "libxfixes",
+      "version": "1:6.0.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0.orig.tar.gz",
+      "file": "libxfixes_6.0.0.orig.tar.gz",
+      "sha256": "82045da5625350838390c9440598b90d69c882c324ca92f73af9f0e992cb57c7",
+      "size": 387810,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0-2build1.dsc"
+    },
+    {
+      "component": "libxfixes",
+      "version": "1:6.0.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0.orig.tar.gz.asc",
+      "file": "libxfixes_6.0.0.orig.tar.gz.asc",
+      "sha256": "e5598f42aa32140936c7772ab4d99ba35ecb859c29adc1703bb51440e7a54928",
+      "size": 195,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxfixes/1:6.0.0-2build1/libxfixes_6.0.0-2build1.dsc"
+    },
+    {
+      "component": "libxi",
+      "version": "2:1.8.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1-1build1.diff.gz",
+      "file": "libxi_1.8.1-1build1.diff.gz",
+      "sha256": "271d0fc504c47738b36f82d2107ec2e3d03c250778f383d4652dc6a7fcaf1b2d",
+      "size": 25945,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1-1build1.dsc"
+    },
+    {
+      "component": "libxi",
+      "version": "2:1.8.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1-1build1.dsc",
+      "file": "libxi_1.8.1-1build1.dsc",
+      "sha256": "be66f78bc6bcd3038e31db9c880c18837bd90ad02860323a74b29e00cf69e2b6",
+      "size": 2418,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxi&version=2%3A1.8.1-1build1&exact_match=true"
+    },
+    {
+      "component": "libxi",
+      "version": "2:1.8.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1.orig.tar.gz",
+      "file": "libxi_1.8.1.orig.tar.gz",
+      "sha256": "3b5f47c223e4b63d7f7fe758886b8bf665b20a7edb6962c423892fd150e326ea",
+      "size": 610202,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1-1build1.dsc"
+    },
+    {
+      "component": "libxi",
+      "version": "2:1.8.1-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1.orig.tar.gz.asc",
+      "file": "libxi_1.8.1.orig.tar.gz.asc",
+      "sha256": "b5c9eeb7e50cd128d749aa74da9ad4114276b88cc9dd0c0463272d4d5e2ee92d",
+      "size": 195,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxi/2:1.8.1-1build1/libxi_1.8.1-1build1.dsc"
+    },
+    {
+      "component": "libxinerama",
+      "version": "2:1.1.4-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxinerama/2:1.1.4-3build1/libxinerama_1.1.4-3build1.diff.gz",
+      "file": "libxinerama_1.1.4-3build1.diff.gz",
+      "sha256": "c9a95ee62cef0075a491ae98718dfbc37b971d697910bcc097c89cf0c4170905",
+      "size": 8639,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxinerama/2:1.1.4-3build1/libxinerama_1.1.4-3build1.dsc"
+    },
+    {
+      "component": "libxinerama",
+      "version": "2:1.1.4-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxinerama/2:1.1.4-3build1/libxinerama_1.1.4-3build1.dsc",
+      "file": "libxinerama_1.1.4-3build1.dsc",
+      "sha256": "1b4280858eb9c44eb28fc17d785d4712c0255ae441de897fcd2d42eecb2f5049",
+      "size": 2220,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxinerama&version=2%3A1.1.4-3build1&exact_match=true"
+    },
+    {
+      "component": "libxinerama",
+      "version": "2:1.1.4-3build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxinerama/2:1.1.4-3build1/libxinerama_1.1.4.orig.tar.gz",
+      "file": "libxinerama_1.1.4.orig.tar.gz",
+      "sha256": "64de45e18cc76b8e703cb09b3c9d28bd16e3d05d5cd99f2d630de2d62c3acc18",
+      "size": 380740,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxinerama/2:1.1.4-3build1/libxinerama_1.1.4-3build1.dsc"
+    },
+    {
+      "component": "libxkbcommon",
+      "version": "1.6.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxkbcommon/1.6.0-1build1/libxkbcommon_1.6.0-1build1.debian.tar.xz",
+      "file": "libxkbcommon_1.6.0-1build1.debian.tar.xz",
+      "sha256": "f193f739748e1f6bf28eb27ea0997da93eb20dca3557ae426fefc8f210aa95bb",
+      "size": 8372,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxkbcommon/1.6.0-1build1/libxkbcommon_1.6.0-1build1.dsc"
+    },
+    {
+      "component": "libxkbcommon",
+      "version": "1.6.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxkbcommon/1.6.0-1build1/libxkbcommon_1.6.0-1build1.dsc",
+      "file": "libxkbcommon_1.6.0-1build1.dsc",
+      "sha256": "b8296cebd84ba35a1148fa10c505a5221aba7b8203349ba9997c76e50857c49a",
+      "size": 2857,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxkbcommon&version=1.6.0-1build1&exact_match=true"
+    },
+    {
+      "component": "libxkbcommon",
+      "version": "1.6.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxkbcommon/1.6.0-1build1/libxkbcommon_1.6.0.orig.tar.xz",
+      "file": "libxkbcommon_1.6.0.orig.tar.xz",
+      "sha256": "0edc14eccdd391514458bc5f5a4b99863ed2d651e4dd761a90abf4f46ef99c2b",
+      "size": 510456,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxkbcommon/1.6.0-1build1/libxkbcommon_1.6.0-1build1.dsc"
+    },
+    {
+      "component": "libxrandr",
+      "version": "2:1.5.2-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrandr/2:1.5.2-2build1/libxrandr_1.5.2-2build1.diff.gz",
+      "file": "libxrandr_1.5.2-2build1.diff.gz",
+      "sha256": "65e365ff8a3205d5532e9867045238dc6abbcdc146e063bafc7f614e730c1b7b",
+      "size": 15940,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrandr/2:1.5.2-2build1/libxrandr_1.5.2-2build1.dsc"
+    },
+    {
+      "component": "libxrandr",
+      "version": "2:1.5.2-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrandr/2:1.5.2-2build1/libxrandr_1.5.2-2build1.dsc",
+      "file": "libxrandr_1.5.2-2build1.dsc",
+      "sha256": "733b5be4c178c017181334e36d6649455c78222b2a146bb732a03598f8da6ffc",
+      "size": 2207,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxrandr&version=2%3A1.5.2-2build1&exact_match=true"
+    },
+    {
+      "component": "libxrandr",
+      "version": "2:1.5.2-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrandr/2:1.5.2-2build1/libxrandr_1.5.2.orig.tar.gz",
+      "file": "libxrandr_1.5.2.orig.tar.gz",
+      "sha256": "3f10813ab355e7a09f17e147d61b0ce090d898a5ea5b5519acd0ef68675dcf8e",
+      "size": 411714,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrandr/2:1.5.2-2build1/libxrandr_1.5.2-2build1.dsc"
+    },
+    {
+      "component": "libxrender",
+      "version": "1:0.9.10-1.1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrender/1:0.9.10-1.1build1/libxrender_0.9.10-1.1build1.diff.gz",
+      "file": "libxrender_0.9.10-1.1build1.diff.gz",
+      "sha256": "7a09639402d326f5c665c848286d26932ba3a1d104e41fb921500ca93895598b",
+      "size": 15274,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrender/1:0.9.10-1.1build1/libxrender_0.9.10-1.1build1.dsc"
+    },
+    {
+      "component": "libxrender",
+      "version": "1:0.9.10-1.1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrender/1:0.9.10-1.1build1/libxrender_0.9.10-1.1build1.dsc",
+      "file": "libxrender_0.9.10-1.1build1.dsc",
+      "sha256": "fbc2eb120a290e733e01420e6bed5f7158a822e94baa8952b10bdcf5ae55a15e",
+      "size": 2204,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libxrender&version=1%3A0.9.10-1.1build1&exact_match=true"
+    },
+    {
+      "component": "libxrender",
+      "version": "1:0.9.10-1.1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrender/1:0.9.10-1.1build1/libxrender_0.9.10.orig.tar.gz",
+      "file": "libxrender_0.9.10.orig.tar.gz",
+      "sha256": "770527cce42500790433df84ec3521e8bf095dfe5079454a92236494ab296adf",
+      "size": 373717,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libxrender/1:0.9.10-1.1build1/libxrender_0.9.10-1.1build1.dsc"
+    },
+    {
+      "component": "libzstd",
+      "version": "1.5.5+dfsg2-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libzstd/1.5.5+dfsg2-2build1.1/libzstd_1.5.5+dfsg2-2build1.1.debian.tar.xz",
+      "file": "libzstd_1.5.5+dfsg2-2build1.1.debian.tar.xz",
+      "sha256": "c1df6d2628b26d085259b8e7ac020eb060e4c1feca98d6103058eda5ded725bc",
+      "size": 21288,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libzstd/1.5.5+dfsg2-2build1.1/libzstd_1.5.5+dfsg2-2build1.1.dsc"
+    },
+    {
+      "component": "libzstd",
+      "version": "1.5.5+dfsg2-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libzstd/1.5.5+dfsg2-2build1.1/libzstd_1.5.5+dfsg2-2build1.1.dsc",
+      "file": "libzstd_1.5.5+dfsg2-2build1.1.dsc",
+      "sha256": "c190a5dff9e7c5b5b1399f0d701bb2c173bc7cbdf14d5e05970f5ac066c25570",
+      "size": 2485,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=libzstd&version=1.5.5%2Bdfsg2-2build1.1&exact_match=true"
+    },
+    {
+      "component": "libzstd",
+      "version": "1.5.5+dfsg2-2build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libzstd/1.5.5+dfsg2-2build1.1/libzstd_1.5.5+dfsg2.orig.tar.xz",
+      "file": "libzstd_1.5.5+dfsg2.orig.tar.xz",
+      "sha256": "d7cf3c10d416fd999cb8fcf7685d9268ba7bec8eb78121fc2d0d916fa393d22b",
+      "size": 1784164,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/libzstd/1.5.5+dfsg2-2build1.1/libzstd_1.5.5+dfsg2-2build1.1.dsc"
+    },
+    {
+      "component": "lz4",
+      "version": "1.9.4-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/lz4/1.9.4-1build1.1/lz4_1.9.4-1build1.1.debian.tar.xz",
+      "file": "lz4_1.9.4-1build1.1.debian.tar.xz",
+      "sha256": "9551b039576db7c87f38c3c847283877de65114cca06488accb9596a7c4f1ead",
+      "size": 8356,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/lz4/1.9.4-1build1.1/lz4_1.9.4-1build1.1.dsc"
+    },
+    {
+      "component": "lz4",
+      "version": "1.9.4-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/lz4/1.9.4-1build1.1/lz4_1.9.4-1build1.1.dsc",
+      "file": "lz4_1.9.4-1build1.1.dsc",
+      "sha256": "ba7b585b15d8b4c955dd68c7af5aa89901cfbb3fdb4f2607ccad51628857d669",
+      "size": 2061,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=lz4&version=1.9.4-1build1.1&exact_match=true"
+    },
+    {
+      "component": "lz4",
+      "version": "1.9.4-1build1.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/lz4/1.9.4-1build1.1/lz4_1.9.4.orig.tar.gz",
+      "file": "lz4_1.9.4.orig.tar.gz",
+      "sha256": "0b0e3aa07c8c063ddf40b082bdf7e37a1562bda40a0ff5272957f3e987e0e54b",
+      "size": 354063,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/lz4/1.9.4-1build1.1/lz4_1.9.4-1build1.1.dsc"
+    },
+    {
+      "component": "ncurses",
+      "version": "6.4+20240113-1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113-1ubuntu2.2.debian.tar.xz",
+      "file": "ncurses_6.4+20240113-1ubuntu2.2.debian.tar.xz",
+      "sha256": "c7bbb8483d7ec358fb925a370575d8ebef63d6e455edce140de2ca7b86cf98d1",
+      "size": 50532,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113-1ubuntu2.2.dsc"
+    },
+    {
+      "component": "ncurses",
+      "version": "6.4+20240113-1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113-1ubuntu2.2.dsc",
+      "file": "ncurses_6.4+20240113-1ubuntu2.2.dsc",
+      "sha256": "a7dea4604db5c8bc113eda2c4a7353f357618a74d96e404ae98655128e2f03ec",
+      "size": 3942,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=ncurses&version=6.4%2B20240113-1ubuntu2.2&exact_match=true"
+    },
+    {
+      "component": "ncurses",
+      "version": "6.4+20240113-1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113.orig.tar.gz",
+      "file": "ncurses_6.4+20240113.orig.tar.gz",
+      "sha256": "37a12a0f8ae2605012c9a164dd286b0cfa02b51b5055836d09eb3d597fc351b1",
+      "size": 3688489,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113-1ubuntu2.2.dsc"
+    },
+    {
+      "component": "ncurses",
+      "version": "6.4+20240113-1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113.orig.tar.gz.asc",
+      "file": "ncurses_6.4+20240113.orig.tar.gz.asc",
+      "sha256": "b70cfa4f155f61dfa7c085ad1e3f90c73132ad198764d7793a44cd7fdca51f1b",
+      "size": 729,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/ncurses/6.4+20240113-1ubuntu2.2/ncurses_6.4+20240113-1ubuntu2.2.dsc"
+    },
+    {
+      "component": "numpy",
+      "version": "2.5.3",
+      "url": "https://files.pythonhosted.org/packages/13/01/11703282db468b85f6f7b8c7f22d058de5970d5c7e60a3a8aaa313c3de36/numpy-2.5.3.tar.gz",
+      "file": "numpy-2.5.3.tar.gz",
+      "sha256": "df2d5874ff183595a4ba404edd04f6bd9b5505c1d7708573f6a6c17489a67563",
+      "size": 20791231,
+      "provenance": "https://pypi.org/pypi/numpy/2.5.3/json"
+    },
+    {
+      "component": "openssl",
+      "version": "3.0.13-0ubuntu3.15",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/openssl/3.0.13-0ubuntu3.15/openssl_3.0.13-0ubuntu3.15.debian.tar.xz",
+      "file": "openssl_3.0.13-0ubuntu3.15.debian.tar.xz",
+      "sha256": "a48bc18f3afd7030cd73712f180af343c4642e2d0ac65ac06fe1ec0ca7506077",
+      "size": 209648,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/openssl/3.0.13-0ubuntu3.15/openssl_3.0.13-0ubuntu3.15.dsc"
+    },
+    {
+      "component": "openssl",
+      "version": "3.0.13-0ubuntu3.15",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/openssl/3.0.13-0ubuntu3.15/openssl_3.0.13-0ubuntu3.15.dsc",
+      "file": "openssl_3.0.13-0ubuntu3.15.dsc",
+      "sha256": "ae1c9a23219f0617b866d765f750ebd3bac74d93b7a235e6e53289781a056f0a",
+      "size": 2516,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=openssl&version=3.0.13-0ubuntu3.15&exact_match=true"
+    },
+    {
+      "component": "openssl",
+      "version": "3.0.13-0ubuntu3.15",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/openssl/3.0.13-0ubuntu3.15/openssl_3.0.13.orig.tar.gz",
+      "file": "openssl_3.0.13.orig.tar.gz",
+      "sha256": "88525753f79d3bec27d2fa7c66aa0b92b3aa9498dafd93d7cfa4b3780cdae313",
+      "size": 15294843,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/openssl/3.0.13-0ubuntu3.15/openssl_3.0.13-0ubuntu3.15.dsc"
+    },
+    {
+      "component": "packaging",
+      "version": "26.3",
+      "url": "https://files.pythonhosted.org/packages/7d/fa/3944b40b07da9ce895c0e6303a5ab7d53da063554f534556b134a54d6093/packaging-26.3.tar.gz",
+      "file": "packaging-26.3.tar.gz",
+      "sha256": "94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79",
+      "size": 313412,
+      "provenance": "https://pypi.org/pypi/packaging/26.3/json"
+    },
+    {
+      "component": "pango1.0",
+      "version": "1.52.1+ds-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pango1.0/1.52.1+ds-1build1/pango1.0_1.52.1+ds-1build1.debian.tar.xz",
+      "file": "pango1.0_1.52.1+ds-1build1.debian.tar.xz",
+      "sha256": "688c01a1af76bfb861805bbd66cddeac6a968123b10e401877974a8d9b8ae236",
+      "size": 41748,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pango1.0/1.52.1+ds-1build1/pango1.0_1.52.1+ds-1build1.dsc"
+    },
+    {
+      "component": "pango1.0",
+      "version": "1.52.1+ds-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pango1.0/1.52.1+ds-1build1/pango1.0_1.52.1+ds-1build1.dsc",
+      "file": "pango1.0_1.52.1+ds-1build1.dsc",
+      "sha256": "faad8d9f21cdd77fb7c930f46506dc304fd66c49c6c5f9bb5d92a8bdc55ec744",
+      "size": 3654,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=pango1.0&version=1.52.1%2Bds-1build1&exact_match=true"
+    },
+    {
+      "component": "pango1.0",
+      "version": "1.52.1+ds-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pango1.0/1.52.1+ds-1build1/pango1.0_1.52.1+ds.orig.tar.xz",
+      "file": "pango1.0_1.52.1+ds.orig.tar.xz",
+      "sha256": "12d67d8182cbb2ae427406df9bab5ce2ff5619102bf2a0fc6331d80a9914b139",
+      "size": 1738052,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pango1.0/1.52.1+ds-1build1/pango1.0_1.52.1+ds-1build1.dsc"
+    },
+    {
+      "component": "pcre2",
+      "version": "10.42-4ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pcre2/10.42-4ubuntu2.1/pcre2_10.42-4ubuntu2.1.diff.gz",
+      "file": "pcre2_10.42-4ubuntu2.1.diff.gz",
+      "sha256": "29c5cb6ff392544bf48bd3ec2a98aa0da5297457fa4f4199a1c392ec3d41f19c",
+      "size": 8431,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pcre2/10.42-4ubuntu2.1/pcre2_10.42-4ubuntu2.1.dsc"
+    },
+    {
+      "component": "pcre2",
+      "version": "10.42-4ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pcre2/10.42-4ubuntu2.1/pcre2_10.42-4ubuntu2.1.dsc",
+      "file": "pcre2_10.42-4ubuntu2.1.dsc",
+      "sha256": "6272177be186d6f8ad16b668bb508b2e07645e05b5b8402d446492cb6d18104e",
+      "size": 2277,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=pcre2&version=10.42-4ubuntu2.1&exact_match=true"
+    },
+    {
+      "component": "pcre2",
+      "version": "10.42-4ubuntu2.1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pcre2/10.42-4ubuntu2.1/pcre2_10.42.orig.tar.gz",
+      "file": "pcre2_10.42.orig.tar.gz",
+      "sha256": "c33b418e3b936ee3153de2c61cc638e7e4fe3156022a5c77d0711bcbb9d64f1f",
+      "size": 2397194,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pcre2/10.42-4ubuntu2.1/pcre2_10.42-4ubuntu2.1.dsc"
+    },
+    {
+      "component": "pixman",
+      "version": "0.42.2-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pixman/0.42.2-1build1/pixman_0.42.2-1build1.diff.gz",
+      "file": "pixman_0.42.2-1build1.diff.gz",
+      "sha256": "fa53ab054cbf755ac80258f2b747b9b66c921f37e5e066bc7585058a6c58a1f9",
+      "size": 327276,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pixman/0.42.2-1build1/pixman_0.42.2-1build1.dsc"
+    },
+    {
+      "component": "pixman",
+      "version": "0.42.2-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pixman/0.42.2-1build1/pixman_0.42.2-1build1.dsc",
+      "file": "pixman_0.42.2-1build1.dsc",
+      "sha256": "15369200fce8d64216d6f1b7968c8172982b03b2d0caf2372225a7f55e8f78b8",
+      "size": 2153,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=pixman&version=0.42.2-1build1&exact_match=true"
+    },
+    {
+      "component": "pixman",
+      "version": "0.42.2-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pixman/0.42.2-1build1/pixman_0.42.2.orig.tar.gz",
+      "file": "pixman_0.42.2.orig.tar.gz",
+      "sha256": "ea1480efada2fd948bc75366f7c349e1c96d3297d09a3fe62626e38e234a625e",
+      "size": 959669,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/pixman/0.42.2-1build1/pixman_0.42.2-1build1.dsc"
+    },
+    {
+      "component": "platformdirs",
+      "version": "4.11.8",
+      "url": "https://files.pythonhosted.org/packages/53/18/f3bb8ef0d3b930692343da8aa4d3cbcd6749477c053959395ac81965a6e9/platformdirs-4.11.8.tar.gz",
+      "file": "platformdirs-4.11.8.tar.gz",
+      "sha256": "f23abafea7dd4276d1f29104b83598d7dcc567cafd07c9c951e66665645437fc",
+      "size": 37182,
+      "provenance": "https://pypi.org/pypi/platformdirs/4.11.8/json"
+    },
+    {
+      "component": "portaudio19",
+      "version": "19.6.0-1.2build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/portaudio19/19.6.0-1.2build3/portaudio19_19.6.0-1.2build3.debian.tar.xz",
+      "file": "portaudio19_19.6.0-1.2build3.debian.tar.xz",
+      "sha256": "9388d08a0270c7022966f6b27483ccf6010e08f96a9026a9d92b7e4bd2abbe49",
+      "size": 9436,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/portaudio19/19.6.0-1.2build3/portaudio19_19.6.0-1.2build3.dsc"
+    },
+    {
+      "component": "portaudio19",
+      "version": "19.6.0-1.2build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/portaudio19/19.6.0-1.2build3/portaudio19_19.6.0-1.2build3.dsc",
+      "file": "portaudio19_19.6.0-1.2build3.dsc",
+      "sha256": "8d0ee0098e7ccdee165721f383334fb20b115baabfb5297d8c7915ba2eb7a8b8",
+      "size": 2458,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=portaudio19&version=19.6.0-1.2build3&exact_match=true"
+    },
+    {
+      "component": "portaudio19",
+      "version": "19.6.0-1.2build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/portaudio19/19.6.0-1.2build3/portaudio19_19.6.0.orig.tar.gz",
+      "file": "portaudio19_19.6.0.orig.tar.gz",
+      "sha256": "f5a21d7dcd6ee84397446fa1fa1a0675bb2e8a4a6dceb4305a8404698d8d1513",
+      "size": 1450572,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/portaudio19/19.6.0-1.2build3/portaudio19_19.6.0-1.2build3.dsc"
+    },
+    {
+      "component": "protobuf",
+      "version": "7.36.1",
+      "url": "https://files.pythonhosted.org/packages/86/73/f66c748df06e7fe24e658eddd600d19c4b40bad836c97ce2d0ad9851fb6b/protobuf-7.36.1.tar.gz",
+      "file": "protobuf-7.36.1.tar.gz",
+      "sha256": "d0f6470f0ce2b84e3feaea2d4b816378b37ba4d4aa08a274305373de93e2d524",
+      "size": 512499,
+      "provenance": "https://pypi.org/pypi/protobuf/7.36.1/json"
+    },
+    {
+      "component": "pycparser",
+      "version": "3.0",
+      "url": "https://files.pythonhosted.org/packages/1b/7d/92392ff7815c21062bea51aa7b87d45576f649f16458d78b7cf94b9ab2e6/pycparser-3.0.tar.gz",
+      "file": "pycparser-3.0.tar.gz",
+      "sha256": "600f49d217304a5902ac3c37e1281c9fe94e4d0489de643a9504c5cdfdfc6b29",
+      "size": 103492,
+      "provenance": "https://pypi.org/pypi/pycparser/3.0/json"
+    },
+    {
+      "component": "pyinstaller",
+      "version": "6.22.2",
+      "url": "https://files.pythonhosted.org/packages/cc/2b/836d9def811c02522e0921d8b8cdf0c16b0545a216e97e71041758057859/pyinstaller-6.22.2.tar.gz",
+      "file": "pyinstaller-6.22.2.tar.gz",
+      "sha256": "89b65a3ad07d9dd5832253e37bc45f31872d10d7f9d5c9fd0fdd6088a83829dd",
+      "size": 4092631,
+      "provenance": "https://pypi.org/pypi/pyinstaller/6.22.2/json"
+    },
+    {
+      "component": "pyinstaller-hooks-contrib",
+      "version": "2026.7",
+      "url": "https://files.pythonhosted.org/packages/26/60/d881fa1ba8c160c18d8e6f782bb16ec4640c08bc08fc50f704c368ad4f9e/pyinstaller_hooks_contrib-2026.7.tar.gz",
+      "file": "pyinstaller_hooks_contrib-2026.7.tar.gz",
+      "sha256": "5fbcaacb22c4f4aac869a127dce283f67a4b4cfcc37d496f2446603e6d68aefa",
+      "size": 175992,
+      "provenance": "https://pypi.org/pypi/pyinstaller-hooks-contrib/2026.7/json"
+    },
+    {
+      "component": "pyperclip",
+      "version": "1.11.0",
+      "url": "https://files.pythonhosted.org/packages/e8/52/d87eba7cb129b81563019d1679026e7a112ef76855d6159d24754dbd2a51/pyperclip-1.11.0.tar.gz",
+      "file": "pyperclip-1.11.0.tar.gz",
+      "sha256": "244035963e4428530d9e3a6101a1ef97209c6825edab1567beac148ccc1db1b6",
+      "size": 12185,
+      "provenance": "https://pypi.org/pypi/pyperclip/1.11.0/json"
+    },
+    {
+      "component": "PyQt6",
+      "version": "6.11.0",
+      "url": "https://files.pythonhosted.org/packages/8b/47/b25c13eca5bebc6505394d0223e46d7ebf0c57dcac2ed908d7d19b18ab6b/pyqt6-6.11.0.tar.gz",
+      "file": "pyqt6-6.11.0.tar.gz",
+      "sha256": "45dd60aa69976de1918b5ced6b4e7b6a25abd2a919ecef5fd5826ecc76718889",
+      "size": 1087430,
+      "provenance": "https://pypi.org/pypi/PyQt6/6.11.0/json"
+    },
+    {
+      "component": "PyQt6-sip",
+      "version": "13.12.0",
+      "url": "https://files.pythonhosted.org/packages/d1/23/16c583dbb6b53e0494dfcf7d1a44778c82e324edda62326727b37f1a5b34/pyqt6_sip-13.12.0.tar.gz",
+      "file": "pyqt6_sip-13.12.0.tar.gz",
+      "sha256": "a7ad45c1e3cec3a2473d37ea9870b6c3baeccc560298623c8eb59265714c06e2",
+      "size": 93979,
+      "provenance": "https://pypi.org/pypi/PyQt6-sip/13.12.0/json"
+    },
+    {
+      "component": "python3.12",
+      "version": "3.12.3-1ubuntu0.17",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.3-1ubuntu0.17/python3.12_3.12.3-1ubuntu0.17.debian.tar.xz",
+      "file": "python3.12_3.12.3-1ubuntu0.17.debian.tar.xz",
+      "sha256": "17b15629cb10825924cf7b85055255080ec773133ae0f8b8ce5ea2eec90dd200",
+      "size": 302472,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.3-1ubuntu0.17/python3.12_3.12.3-1ubuntu0.17.dsc"
+    },
+    {
+      "component": "python3.12",
+      "version": "3.12.3-1ubuntu0.17",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.3-1ubuntu0.17/python3.12_3.12.3-1ubuntu0.17.dsc",
+      "file": "python3.12_3.12.3-1ubuntu0.17.dsc",
+      "sha256": "941700b999737d869b80c3b5a0adc0996a0fd760b982e18551bd2104da779384",
+      "size": 3916,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=python3.12&version=3.12.3-1ubuntu0.17&exact_match=true"
+    },
+    {
+      "component": "python3.12",
+      "version": "3.12.3-1ubuntu0.17",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.3-1ubuntu0.17/python3.12_3.12.3.orig.tar.xz",
+      "file": "python3.12_3.12.3.orig.tar.xz",
+      "sha256": "56bfef1fdfc1221ce6720e43a661e3eb41785dd914ce99698d8c7896af4bdaa1",
+      "size": 20625068,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.3-1ubuntu0.17/python3.12_3.12.3-1ubuntu0.17.dsc"
+    },
+    {
+      "component": "PyYAML",
+      "version": "6.0.3",
+      "url": "https://files.pythonhosted.org/packages/05/8e/961c0007c59b8dd7729d542c61a4d537767a59645b82a0b521206e1e25c2/pyyaml-6.0.3.tar.gz",
+      "file": "pyyaml-6.0.3.tar.gz",
+      "sha256": "d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f",
+      "size": 130960,
+      "provenance": "https://pypi.org/pypi/PyYAML/6.0.3/json"
+    },
+    {
+      "component": "Qt",
+      "version": "6.11.2",
+      "url": "https://download.qt.io/official_releases/qt/6.11/6.11.2/single/qt-everywhere-src-6.11.2.tar.xz",
+      "file": "qt-everywhere-src-6.11.2.tar.xz",
+      "sha256": "6dcfbca271d76a6502741a2c0dc6fc98ef7dd0b7b4cfd0abcebb285a86a26f33",
+      "provenance": "https://download.qt.io/official_releases/qt/6.11/6.11.2/single/qt-everywhere-src-6.11.2.tar.xz.sha256"
+    },
+    {
+      "component": "readline",
+      "version": "8.2-4build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/readline/8.2-4build1/readline_8.2-4build1.debian.tar.xz",
+      "file": "readline_8.2-4build1.debian.tar.xz",
+      "sha256": "d3b4bfa92d0026f5d3f5d2b21e2bf6d8ae163f9ccdebdcef20afde77901c7b70",
+      "size": 33816,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/readline/8.2-4build1/readline_8.2-4build1.dsc"
+    },
+    {
+      "component": "readline",
+      "version": "8.2-4build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/readline/8.2-4build1/readline_8.2-4build1.dsc",
+      "file": "readline_8.2-4build1.dsc",
+      "sha256": "442c688eb851652987a0b1a7f85d236c6fa445757f188bc275ec475d0fabf22f",
+      "size": 2926,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=readline&version=8.2-4build1&exact_match=true"
+    },
+    {
+      "component": "readline",
+      "version": "8.2-4build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/readline/8.2-4build1/readline_8.2.orig.tar.gz",
+      "file": "readline_8.2.orig.tar.gz",
+      "sha256": "3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35",
+      "size": 3043952,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/readline/8.2-4build1/readline_8.2-4build1.dsc"
+    },
+    {
+      "component": "requests",
+      "version": "2.34.2",
+      "url": "https://files.pythonhosted.org/packages/ac/c3/e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf/requests-2.34.2.tar.gz",
+      "file": "requests-2.34.2.tar.gz",
+      "sha256": "f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed",
+      "size": 142856,
+      "provenance": "https://pypi.org/pypi/requests/2.34.2/json"
+    },
+    {
+      "component": "sounddevice",
+      "version": "0.5.6",
+      "url": "https://files.pythonhosted.org/packages/ec/db/0c890e2d9aab9ba284021efc02e1d3aebfecab1b611762d7434602209bcf/sounddevice-0.5.6.tar.gz",
+      "file": "sounddevice-0.5.6.tar.gz",
+      "sha256": "8ec9fbfde2e32f020b167e348f3ab3bac6625a5f15af524d790108ac7147a410",
+      "size": 1120094,
+      "provenance": "https://pypi.org/pypi/sounddevice/0.5.6/json"
+    },
+    {
+      "component": "systemd",
+      "version": "255.4-1ubuntu8.17",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/systemd/255.4-1ubuntu8.17/systemd_255.4-1ubuntu8.17.debian.tar.xz",
+      "file": "systemd_255.4-1ubuntu8.17.debian.tar.xz",
+      "sha256": "4695ff34f83b1f7e6e02bf3cfac2e2a44ac76b6cfc5a38c0081bac6919d547bb",
+      "size": 272596,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/systemd/255.4-1ubuntu8.17/systemd_255.4-1ubuntu8.17.dsc"
+    },
+    {
+      "component": "systemd",
+      "version": "255.4-1ubuntu8.17",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/systemd/255.4-1ubuntu8.17/systemd_255.4-1ubuntu8.17.dsc",
+      "file": "systemd_255.4-1ubuntu8.17.dsc",
+      "sha256": "8e5f4e5a7b7ee457214be1efd1ea1d380186c38b146d8c98af5da0f625d3c396",
+      "size": 7324,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=systemd&version=255.4-1ubuntu8.17&exact_match=true"
+    },
+    {
+      "component": "systemd",
+      "version": "255.4-1ubuntu8.17",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/systemd/255.4-1ubuntu8.17/systemd_255.4.orig.tar.gz",
+      "file": "systemd_255.4.orig.tar.gz",
+      "sha256": "96e75bd08c57ad401677456fb88ef54a9f05bb1695693013bc6ecce839640fd5",
+      "size": 14952427,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/systemd/255.4-1ubuntu8.17/systemd_255.4-1ubuntu8.17.dsc"
+    },
+    {
+      "component": "urllib3",
+      "version": "2.7.0",
+      "url": "https://files.pythonhosted.org/packages/53/0c/06f8b233b8fd13b9e5ee11424ef85419ba0d8ba0b3138bf360be2ff56953/urllib3-2.7.0.tar.gz",
+      "file": "urllib3-2.7.0.tar.gz",
+      "sha256": "231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c",
+      "size": 433602,
+      "provenance": "https://pypi.org/pypi/urllib3/2.7.0/json"
+    },
+    {
+      "component": "util-linux",
+      "version": "2.39.3-9ubuntu6.6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/util-linux/2.39.3-9ubuntu6.6/util-linux_2.39.3-9ubuntu6.6.debian.tar.xz",
+      "file": "util-linux_2.39.3-9ubuntu6.6.debian.tar.xz",
+      "sha256": "d63476e26c149179ae8a19f4c701e27cf9235c3df2482714d369211683824e37",
+      "size": 155164,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/util-linux/2.39.3-9ubuntu6.6/util-linux_2.39.3-9ubuntu6.6.dsc"
+    },
+    {
+      "component": "util-linux",
+      "version": "2.39.3-9ubuntu6.6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/util-linux/2.39.3-9ubuntu6.6/util-linux_2.39.3-9ubuntu6.6.dsc",
+      "file": "util-linux_2.39.3-9ubuntu6.6.dsc",
+      "sha256": "b30cb22e05473810a48e14db8b5ea7786bb38aed7617dc89ad4f81cd7c6c3397",
+      "size": 4726,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=util-linux&version=2.39.3-9ubuntu6.6&exact_match=true"
+    },
+    {
+      "component": "util-linux",
+      "version": "2.39.3-9ubuntu6.6",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/util-linux/2.39.3-9ubuntu6.6/util-linux_2.39.3.orig.tar.xz",
+      "file": "util-linux_2.39.3.orig.tar.xz",
+      "sha256": "7b6605e48d1a49f43cc4b4cfc59f313d0dd5402fa40b96810bd572e167dfed0f",
+      "size": 8526168,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/util-linux/2.39.3-9ubuntu6.6/util-linux_2.39.3-9ubuntu6.6.dsc"
+    },
+    {
+      "component": "vulkan-loader",
+      "version": "1.3.275.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/vulkan-loader/1.3.275.0-1build1/vulkan-loader_1.3.275.0-1build1.debian.tar.xz",
+      "file": "vulkan-loader_1.3.275.0-1build1.debian.tar.xz",
+      "sha256": "16b22d9a95fb35ae1e9d9d89f26b4f27305f86700b20615c23618014ab184ac9",
+      "size": 9132,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/vulkan-loader/1.3.275.0-1build1/vulkan-loader_1.3.275.0-1build1.dsc"
+    },
+    {
+      "component": "vulkan-loader",
+      "version": "1.3.275.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/vulkan-loader/1.3.275.0-1build1/vulkan-loader_1.3.275.0-1build1.dsc",
+      "file": "vulkan-loader_1.3.275.0-1build1.dsc",
+      "sha256": "e158bda184efcdbb5a063dc2e008ec5ab943ea4f1825eb9cb86615a190df05e5",
+      "size": 2384,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=vulkan-loader&version=1.3.275.0-1build1&exact_match=true"
+    },
+    {
+      "component": "vulkan-loader",
+      "version": "1.3.275.0-1build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/vulkan-loader/1.3.275.0-1build1/vulkan-loader_1.3.275.0.orig.tar.xz",
+      "file": "vulkan-loader_1.3.275.0.orig.tar.xz",
+      "sha256": "5f95219fc189b4c09ce537d8ec1ea4b5861b087cd00b6d821f99aecf6e9dddce",
+      "size": 2642760,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/vulkan-loader/1.3.275.0-1build1/vulkan-loader_1.3.275.0-1build1.dsc"
+    },
+    {
+      "component": "xcb-util-image",
+      "version": "0.4.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-image/0.4.0-2build1/xcb-util-image_0.4.0-2build1.debian.tar.xz",
+      "file": "xcb-util-image_0.4.0-2build1.debian.tar.xz",
+      "sha256": "2eec540084e0e9509a9cc14f8c1571a6ee83d28b11d0922b6c61c13c1b148dc6",
+      "size": 4636,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-image/0.4.0-2build1/xcb-util-image_0.4.0-2build1.dsc"
+    },
+    {
+      "component": "xcb-util-image",
+      "version": "0.4.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-image/0.4.0-2build1/xcb-util-image_0.4.0-2build1.dsc",
+      "file": "xcb-util-image_0.4.0-2build1.dsc",
+      "sha256": "c5587344f6224bf70e7291dee95cb610b294ee1e8b7f3293d73d18cc7d8d247c",
+      "size": 2253,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xcb-util-image&version=0.4.0-2build1&exact_match=true"
+    },
+    {
+      "component": "xcb-util-image",
+      "version": "0.4.0-2build1",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-image/0.4.0-2build1/xcb-util-image_0.4.0.orig.tar.bz2",
+      "file": "xcb-util-image_0.4.0.orig.tar.bz2",
+      "sha256": "2db96a37d78831d643538dd1b595d7d712e04bdccf8896a5e18ce0f398ea2ffc",
+      "size": 327891,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-image/0.4.0-2build1/xcb-util-image_0.4.0-2build1.dsc"
+    },
+    {
+      "component": "xcb-util-keysyms",
+      "version": "0.4.0-1build4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-keysyms/0.4.0-1build4/xcb-util-keysyms_0.4.0-1build4.debian.tar.xz",
+      "file": "xcb-util-keysyms_0.4.0-1build4.debian.tar.xz",
+      "sha256": "f5e03d354d159448ba93129347e553b4f219faf9e2b521be5f577e8f84e69eff",
+      "size": 4512,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-keysyms/0.4.0-1build4/xcb-util-keysyms_0.4.0-1build4.dsc"
+    },
+    {
+      "component": "xcb-util-keysyms",
+      "version": "0.4.0-1build4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-keysyms/0.4.0-1build4/xcb-util-keysyms_0.4.0-1build4.dsc",
+      "file": "xcb-util-keysyms_0.4.0-1build4.dsc",
+      "sha256": "d164566b5bd3752176e14dc9b54477d334b348b927584e9dca79506cd511f935",
+      "size": 2315,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xcb-util-keysyms&version=0.4.0-1build4&exact_match=true"
+    },
+    {
+      "component": "xcb-util-keysyms",
+      "version": "0.4.0-1build4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-keysyms/0.4.0-1build4/xcb-util-keysyms_0.4.0.orig.tar.bz2",
+      "file": "xcb-util-keysyms_0.4.0.orig.tar.bz2",
+      "sha256": "0ef8490ff1dede52b7de533158547f8b454b241aa3e4dcca369507f66f216dd9",
+      "size": 289880,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-keysyms/0.4.0-1build4/xcb-util-keysyms_0.4.0-1build4.dsc"
+    },
+    {
+      "component": "xcb-util-renderutil",
+      "version": "0.3.9-1build4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-renderutil/0.3.9-1build4/xcb-util-renderutil_0.3.9-1build4.debian.tar.xz",
+      "file": "xcb-util-renderutil_0.3.9-1build4.debian.tar.xz",
+      "sha256": "2c0c9a568af20ca0ea46d1362b1f0dfff4f76cd93b4e2a03e2ce2ccf1a0c5875",
+      "size": 4568,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-renderutil/0.3.9-1build4/xcb-util-renderutil_0.3.9-1build4.dsc"
+    },
+    {
+      "component": "xcb-util-renderutil",
+      "version": "0.3.9-1build4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-renderutil/0.3.9-1build4/xcb-util-renderutil_0.3.9-1build4.dsc",
+      "file": "xcb-util-renderutil_0.3.9-1build4.dsc",
+      "sha256": "8680cd4eb848d5ed59b3110ee1331449c5cb4b7ec713fa150a9989f08b1432c2",
+      "size": 2388,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xcb-util-renderutil&version=0.3.9-1build4&exact_match=true"
+    },
+    {
+      "component": "xcb-util-renderutil",
+      "version": "0.3.9-1build4",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-renderutil/0.3.9-1build4/xcb-util-renderutil_0.3.9.orig.tar.bz2",
+      "file": "xcb-util-renderutil_0.3.9.orig.tar.bz2",
+      "sha256": "c6e97e48fb1286d6394dddb1c1732f00227c70bd1bedb7d1acabefdd340bea5b",
+      "size": 292898,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-renderutil/0.3.9-1build4/xcb-util-renderutil_0.3.9-1build4.dsc"
+    },
+    {
+      "component": "xcb-util-wm",
+      "version": "0.4.1-1.1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-wm/0.4.1-1.1build3/xcb-util-wm_0.4.1-1.1build3.debian.tar.xz",
+      "file": "xcb-util-wm_0.4.1-1.1build3.debian.tar.xz",
+      "sha256": "e652fae7c7b076be265112a189470a1cf7f7f713dc8fa434c5947ecf24ebd8bb",
+      "size": 4668,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-wm/0.4.1-1.1build3/xcb-util-wm_0.4.1-1.1build3.dsc"
+    },
+    {
+      "component": "xcb-util-wm",
+      "version": "0.4.1-1.1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-wm/0.4.1-1.1build3/xcb-util-wm_0.4.1-1.1build3.dsc",
+      "file": "xcb-util-wm_0.4.1-1.1build3.dsc",
+      "sha256": "5a31f8adbd2c0bbd34ccffe11e87b742d5ab7c008cf759a11d119e3a65140cea",
+      "size": 2428,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xcb-util-wm&version=0.4.1-1.1build3&exact_match=true"
+    },
+    {
+      "component": "xcb-util-wm",
+      "version": "0.4.1-1.1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-wm/0.4.1-1.1build3/xcb-util-wm_0.4.1.orig.tar.gz",
+      "file": "xcb-util-wm_0.4.1.orig.tar.gz",
+      "sha256": "038b39c4bdc04a792d62d163ba7908f4bb3373057208c07110be73c1b04b8334",
+      "size": 395835,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util-wm/0.4.1-1.1build3/xcb-util-wm_0.4.1-1.1build3.dsc"
+    },
+    {
+      "component": "xcb-util",
+      "version": "0.4.0-1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util/0.4.0-1build3/xcb-util_0.4.0-1build3.debian.tar.xz",
+      "file": "xcb-util_0.4.0-1build3.debian.tar.xz",
+      "sha256": "c03f4dfd8381c6e76bd861c81ade9884730398152656b53ae415379b0f08cfc4",
+      "size": 4628,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util/0.4.0-1build3/xcb-util_0.4.0-1build3.dsc"
+    },
+    {
+      "component": "xcb-util",
+      "version": "0.4.0-1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util/0.4.0-1build3/xcb-util_0.4.0-1build3.dsc",
+      "file": "xcb-util_0.4.0-1build3.dsc",
+      "sha256": "d4adb574e0bcad0c998e8ffb192e480c66645cecc9466338616233431030b302",
+      "size": 2217,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xcb-util&version=0.4.0-1build3&exact_match=true"
+    },
+    {
+      "component": "xcb-util",
+      "version": "0.4.0-1build3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util/0.4.0-1build3/xcb-util_0.4.0.orig.tar.gz",
+      "file": "xcb-util_0.4.0.orig.tar.gz",
+      "sha256": "0ed0934e2ef4ddff53fcc70fc64fb16fe766cd41ee00330312e20a985fd927a7",
+      "size": 362923,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xcb-util/0.4.0-1build3/xcb-util_0.4.0-1build3.dsc"
+    },
+    {
+      "component": "xz-utils",
+      "version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xz-utils/5.6.1+really5.4.5-1ubuntu0.3/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.debian.tar.xz",
+      "file": "xz-utils_5.6.1+really5.4.5-1ubuntu0.3.debian.tar.xz",
+      "sha256": "03f321901f6e1c56235cd7ae6a6784c104b1b1060ca3afa5a5806e345ee72e01",
+      "size": 31672,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xz-utils/5.6.1+really5.4.5-1ubuntu0.3/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc"
+    },
+    {
+      "component": "xz-utils",
+      "version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xz-utils/5.6.1+really5.4.5-1ubuntu0.3/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc",
+      "file": "xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc",
+      "sha256": "34c2be772533a5c31e881bc620cedaf9be3d315feb677f00e12c136c299d126a",
+      "size": 2505,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=xz-utils&version=5.6.1%2Breally5.4.5-1ubuntu0.3&exact_match=true"
+    },
+    {
+      "component": "xz-utils",
+      "version": "5.6.1+really5.4.5-1ubuntu0.3",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xz-utils/5.6.1+really5.4.5-1ubuntu0.3/xz-utils_5.6.1+really5.4.5.orig.tar.xz",
+      "file": "xz-utils_5.6.1+really5.4.5.orig.tar.xz",
+      "sha256": "da9dec6c12cf2ecf269c31ab65b5de18e8e52b96f35d5bcd08c12b43e6878803",
+      "size": 1680520,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/xz-utils/5.6.1+really5.4.5-1ubuntu0.3/xz-utils_5.6.1+really5.4.5-1ubuntu0.3.dsc"
+    },
+    {
+      "component": "zlib",
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/zlib/1:1.3.dfsg-3.1ubuntu2.2/zlib_1.3.dfsg-3.1ubuntu2.2.debian.tar.xz",
+      "file": "zlib_1.3.dfsg-3.1ubuntu2.2.debian.tar.xz",
+      "sha256": "de1c2d532ecb7caf99ccb905fb03c37fe0c8117fbdc79d05be4474b71e6398c2",
+      "size": 61316,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/zlib/1:1.3.dfsg-3.1ubuntu2.2/zlib_1.3.dfsg-3.1ubuntu2.2.dsc"
+    },
+    {
+      "component": "zlib",
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/zlib/1:1.3.dfsg-3.1ubuntu2.2/zlib_1.3.dfsg-3.1ubuntu2.2.dsc",
+      "file": "zlib_1.3.dfsg-3.1ubuntu2.2.dsc",
+      "sha256": "56a7cd029863cbddafce831e4e63cccfa84017f93617929cb7c02f80bb5a122a",
+      "size": 2987,
+      "provenance": "https://api.launchpad.net/1.0/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=zlib&version=1%3A1.3.dfsg-3.1ubuntu2.2&exact_match=true"
+    },
+    {
+      "component": "zlib",
+      "version": "1:1.3.dfsg-3.1ubuntu2.2",
+      "url": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/zlib/1:1.3.dfsg-3.1ubuntu2.2/zlib_1.3.dfsg.orig.tar.xz",
+      "file": "zlib_1.3.dfsg.orig.tar.xz",
+      "sha256": "5eea0322c1c21c75cad3b607ac1c43ff5c71e014b8ac4a34300b5e2b80d02e70",
+      "size": 1128572,
+      "provenance": "https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/zlib/1:1.3.dfsg-3.1ubuntu2.2/zlib_1.3.dfsg-3.1ubuntu2.2.dsc"
+    }
+  ],
+  "format": 1,
+  "notice_only": [
+    {
+      "component": "onnxruntime",
+      "version": "1.30.0",
+      "reason": "MIT binary redistribution with bundled third-party notices",
+      "source_reference": "https://github.com/microsoft/onnxruntime"
+    },
+    {
+      "component": "flatbuffers",
+      "version": "25.12.19",
+      "reason": "Apache-2.0; PyPI provides only a pure Python wheel with its source and license",
+      "source_reference": "https://github.com/google/flatbuffers"
+    }
+  ]
+}

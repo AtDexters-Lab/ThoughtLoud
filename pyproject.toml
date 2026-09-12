@@ -3,9 +3,9 @@ requires = ["hatchling>=1.24"]
 build-backend = "hatchling.build"
 
 [project]
-name = "voxd"
+name = "thoughtloud"
 version = "1.4.0"  # bump manually on releases
-description = "Linux voice typing through an OpenAI-compatible Gemma E4B service"
+description = "Think out loud, in your own words. Local Linux dictation with Gemma."
 authors = [{ name = "Jakov", email = "jakov.iv@proton.me" }]
 requires-python = ">=3.9"
 dependencies = [
@@ -16,7 +16,8 @@ dependencies = [
   "pyperclip>=1.8",
   "numpy>=1.26",
   "requests>=2.28.0",
-  "onnxruntime>=1.16.1"
+  "onnxruntime>=1.16.1",
+  "dbus-next>=0.2.3; sys_platform == 'linux'"
 ]
 
 
@@ -25,6 +26,7 @@ testpaths = ["tests"]
 norecursedirs = ["venv",".venv","build","dist"]
 
 [project.scripts]
+thoughtloud = "voxd.__main__:main"
 voxd = "voxd.__main__:main"
 
 [tool.hatch.build]
@@ -32,7 +34,8 @@ package-dir = "src"
 include = [
   "THIRD_PARTY_NOTICES.md",
   "src/voxd/**/*.py",
-  "src/voxd/assets/*.png",
+  "src/voxd/assets/thoughtloud*.svg",
+  "src/voxd/assets/thoughtloud*.png",
   "src/voxd/assets/*.onnx",
   "src/voxd/defaults/*.yaml",
 ]

@@ -241,3 +241,45 @@ def test_live_segment_stream_drains_final_item_before_closing():
 
     assert not consumer.is_alive()
     assert received == [(0, b"final audio", 16_000, False)]
+
+
+def test_explicit_microphone_does_not_fall_back_to_default(monkeypatch):
+    from voxd.core.recorder import AudioRecorder
+    recorder = AudioRecorder(input_device="USB mic")
+    devices = []
+    def fail(device, _rate):
+        devices.append(device)
+        raise RuntimeError("disconnected")
+    monkeypatch.setattr(recorder, "_open_stream", fail)
+    with pytest.raises(RuntimeError, match="selected audio input"):
+        recorder.start_recording()
+    assert set(devices) == {"USB mic"}
+
+
+def test_pinned_stream_failure_does_not_open_unrelated_input(monkeypatch):
+    from voxd.core.recorder import AudioRecorder
+    calls = []
+    def fail(**kwargs):
+        calls.append(kwargs)
+        raise RuntimeError("source disconnected")
+    recorder = AudioRecorder(stream_factory=fail)
+    with pytest.raises(RuntimeError, match="selected audio input"):
+        recorder.start_recording()
+    assert calls
+    assert {call.get("device") for call in calls} == {"pulse"}
+
+
+def test_default_capture_uses_portaudio_default_if_pulse_bridge_absent(monkeypatch):
+    from voxd.core.recorder import AudioRecorder
+    recorder = AudioRecorder()
+    original = recorder._open_stream
+    devices = []
+    def open_stream(device, rate):
+        devices.append(device)
+        if device == "pulse":
+            raise RuntimeError("no pulse plugin")
+        return original(device, rate)
+    monkeypatch.setattr(recorder, "_open_stream", open_stream)
+    recorder.start_recording()
+    recorder.stop_recording()
+    assert devices[-1] is None

@@ -1,15 +1,13 @@
 [Unit]
-Description=VOXD tray mode (user)
+Description=ThoughtLoud tray mode (user)
 After=default.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/voxd --tray
+ExecStart=/usr/bin/thoughtloud --tray
 Restart=on-failure
 RestartSec=2s
-Environment=YDOTOOL_SOCKET=%h/.ydotool_socket
 Environment=PYTHONUNBUFFERED=1
 
 [Install]
 WantedBy=default.target
-

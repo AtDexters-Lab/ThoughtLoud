@@ -105,7 +105,7 @@ class YdotoolTyper:
             return True
         try:
             subprocess.run(
-                ["systemctl", "--user", "start", "ydotoold.service"],
+                ["systemctl", "--user", "start", os.environ.get("VOXD_YDOTOOL_SERVICE", "ydotoold.service")],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 timeout=5,

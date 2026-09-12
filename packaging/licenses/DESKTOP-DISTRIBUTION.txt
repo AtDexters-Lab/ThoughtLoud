@@ -1,0 +1,19 @@
+ThoughtLoud Linux desktop distribution
+
+The application and portable core source files retain their MIT license.
+The combined desktop application includes PyQt6 under GPL-3.0-only and is
+distributed under the GNU General Public License version 3 conditions.
+The MIT grants on the original application files remain available.
+
+Qt libraries are dynamically linked and carry LGPL/GPL and third-party terms.
+You may modify the software and replace these libraries. ThoughtLoud imposes
+no restriction on reverse engineering needed to debug such modifications.
+
+The separately executed ydotool helper is AGPL-3.0-or-later. Its corresponding
+source is supplied with the binary. Other components retain their own terms.
+
+Matching application and dependency source archives accompany the binary
+release. See the bundled docs/licensing.md for source collection, rebuild and
+library replacement instructions, and THIRD_PARTY_NOTICES.md for attribution.
+The included license texts govern the respective components. This notice does
+not remove any rights granted by those licenses.

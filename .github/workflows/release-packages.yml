@@ -1,121 +1,116 @@
-name: Release packages
+name: ThoughtLoud release packages
 
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Git tag to release (e.g., v1.4.1). Leave empty or set to 'latest' to use the latest v* tag."
-        required: false
-        default: "latest"
+        description: "Exact reviewed v* tag to build and publish"
+        required: true
       prerelease:
         description: "Mark as prerelease"
-        required: false
-        default: "false"
+        type: boolean
+        default: true
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
-    name: Build packages (${{ matrix.arch }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        arch: [amd64, arm64]
-
+    name: Linux x86_64 bundle and packages
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # fetch all history and tags so we can resolve 'latest'
-
-      - name: Compute version/tag
+          fetch-depth: 0
+      - name: Resolve the requested tag
         id: meta
-        shell: bash
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
         run: |
           set -euo pipefail
-          INPUT_TAG="${{ github.event.inputs.tag }}"
-          if [[ -z "${INPUT_TAG}" || "${INPUT_TAG}" == "latest" ]]; then
-            # Find latest SemVer-ish tag starting with 'v'
-            TAG=$(git tag --list 'v*' | sort -V | tail -n1)
-            if [[ -z "$TAG" ]]; then
-              echo "::error::No tags found matching 'v*'. Push a tag like v1.4.1 or specify a tag manually.";
-              exit 1
-            fi
-          else
-            TAG="${INPUT_TAG}"
-          fi
-          # Validate tag exists
-          if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
-            echo "::error::Tag not found: $TAG";
-            git tag --list | sort -V | tail -n 20 | sed 's/^/hint: /'
-            exit 1
-          fi
-          CLEAN="${TAG#v}"
-          echo "version=$CLEAN" >> $GITHUB_OUTPUT
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-
-      - name: Setup Go (for nfpm)
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-
-      - name: Install nfpm
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([.-][A-Za-z0-9.-]+)?$ ]]
+          git rev-parse --verify "refs/tags/$RELEASE_TAG"
+          git checkout --detach "refs/tags/$RELEASE_TAG"
+          echo "version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
+      - name: Install builder and desktop libraries
         run: |
-          go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest
-          echo "$HOME/go/bin" >> $GITHUB_PATH
-
-      - name: Prepare dist dir
-        run: mkdir -p dist
-
-      - name: Update pyproject.toml with release version
+          sudo apt-get update
+          sudo apt-get install -y python3.12-venv python3.12-dev build-essential cmake libvulkan-dev glslc libportaudio2 libxcb-cursor0 libegl1 libgl1 libxkbcommon-x11-0
+          /usr/bin/python3.12 -m venv .venv-build
+          .venv-build/bin/python -m pip install --require-hashes -r packaging/requirements-build.txt
+          .venv-build/bin/python -m pip install pytest
+      - name: Verify version and source tests
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+          QT_QPA_PLATFORM: offscreen
+          PYTHONPATH: src
+        run: |
+          .venv-build/bin/python -c 'import os,tomllib; assert tomllib.load(open("pyproject.toml","rb"))["project"]["version"] == os.environ["VERSION"]'
+          .venv-build/bin/python -m pytest -q
+      - name: Build pinned native helpers
+        run: |
+          git clone https://github.com/AtomicBot-ai/atomic-llama-cpp-turboquant.git build/llama-source
+          git -C build/llama-source checkout --detach 0a635dcd92ba66c75fccfef91c3e106f4668f367
+          runtime/linux/build.sh build/llama-source build/llama-linux
+          git clone https://github.com/ReimuNotMoe/ydotool.git build/ydotool-source
+          git -C build/ydotool-source checkout --detach 57ba7d0af525e82da2de0e275d169477f293b197
+          packaging/build_ydotool.sh build/ydotool-source build/ydotool-package
+      - name: Build complete application bundle
+        run: |
+          VOXD_LLAMA_RUNTIME="$PWD/build/llama-linux/bin" VOXD_YDOTOOL_RUNTIME="$PWD/build/ydotool-package" packaging/build_bundle.sh
+      - name: Collect matching dependency sources
         env:
           VERSION: ${{ steps.meta.outputs.version }}
         run: |
-          sed -i "s/^version = .*/version = \"$VERSION\"/" pyproject.toml
-          echo "Updated pyproject.toml version to $VERSION"
-          grep "^version = " pyproject.toml
-
-      - name: Build packages
+          mkdir -p dist/packages
+          .venv-build/bin/python packaging/collect_sources.py lock
+          .venv-build/bin/python packaging/collect_sources.py fetch
+          .venv-build/bin/python packaging/collect_sources.py package --output "dist/packages/thoughtloud-$VERSION-dependency-sources.tar"
+      - name: Install pinned nFPM
+        run: |
+          mkdir -p build/tools
+          curl -fL --retry 3 https://github.com/goreleaser/nfpm/releases/download/v2.47.0/nfpm_2.47.0_Linux_x86_64.tar.gz -o build/tools/nfpm.tar.gz
+          echo '0660ca602b2d2d2ae4781a06c692b3eeb9d437ffea05b831d76e41f4a3188783  build/tools/nfpm.tar.gz' | sha256sum -c -
+          tar -xzf build/tools/nfpm.tar.gz -C build/tools nfpm
+      - name: Build install packages and matching app source
         env:
           VERSION: ${{ steps.meta.outputs.version }}
-          ARCH: ${{ matrix.arch }}
+          ARCH: amd64
         run: |
-          nfpm pkg --packager deb       -f packaging/nfpm.yaml --target dist/
-          nfpm pkg --packager rpm       -f packaging/nfpm.yaml --target dist/
-          nfpm pkg --packager archlinux -f packaging/nfpm.yaml --target dist/
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+          mkdir -p dist/packages
+          build/tools/nfpm pkg --packager deb -f packaging/nfpm.yaml --target dist/packages/
+          build/tools/nfpm pkg --packager rpm -f packaging/nfpm.yaml --target dist/packages/
+          # Preserve the reviewed commit, with only the manifest generated for
+          # this builder substituted into its source snapshot.
+          git diff --exit-code HEAD -- . ':!packaging/source-lock.json'
+          source_dir="build/app-source/thoughtloud-$VERSION"
+          mkdir -p "$source_dir"
+          git archive HEAD | tar -x -C "$source_dir"
+          cp packaging/source-lock.json "$source_dir/packaging/source-lock.json"
+          SOURCE_DIR="$source_dir" .venv-build/bin/python -c 'import hashlib,json,os,pathlib,subprocess; p=pathlib.Path(os.environ["SOURCE_DIR"]); lock=p/"packaging/source-lock.json"; (p/"RELEASE_PROVENANCE.json").write_text(json.dumps({"commit":subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip(),"generated_files":{"packaging/source-lock.json":hashlib.sha256(lock.read_bytes()).hexdigest()},"note":"Application files match the reviewed commit; source-lock.json records the actual build providers."},indent=2)+"\n")'
+          tar -czf "dist/packages/thoughtloud-$VERSION-source.tar.gz" -C build/app-source "thoughtloud-$VERSION"
+          cd dist/packages
+          sha256sum thoughtloud-* thoughtloud_* > SHA256SUMS
+      - uses: actions/upload-artifact@v4
         with:
-          name: voxd-${{ steps.meta.outputs.version }}-${{ matrix.arch }}
-          path: dist/*
-
-    outputs:
-      version: ${{ steps.meta.outputs.version }}
-      tag: ${{ steps.meta.outputs.tag }}
+          name: linux-amd64
+          path: dist/packages/*
 
   release:
-    name: Create GitHub Release and upload assets
-    runs-on: ubuntu-latest
+    name: Publish reviewed release
     needs: build
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: write
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
-          path: dist
-
-      - name: Create/Update Release
-        id: create_release
-        uses: softprops/action-gh-release@v2
+          name: linux-amd64
+          path: dist/packages
+      - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.build.outputs.tag }}
-          name: VOXD ${{ needs.build.outputs.tag }}
-          prerelease: ${{ github.event.inputs.prerelease == 'true' }}
-          files: |
-            dist/**
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
+          tag_name: ${{ inputs.tag }}
+          name: ThoughtLoud ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          files: dist/packages/*

@@ -1,3 +1,18 @@
+ThoughtLoud artwork
+===================
+
+The original `src/voxd/assets/thoughtloud*.svg` artwork and its
+`thoughtloud*.png` renders are licensed under the MIT license in LICENSE.
+They are independent artwork, not derivatives of the VOXD logo. Recreate
+the PNG renders with `packaging/render_icons.py` using the locked build
+environment; the SVG files remain the editable originals.
+
+Historical upstream artwork
+===========================
+
+The following original terms apply only to the retained VOXD PNG assets.
+Those assets are excluded from ThoughtLoud wheels and desktop packages.
+
 Copyright (c) 2025 Jakov Ivkovic. All Rights Reserved.
 
 Scope: The VOXD wordmark and logo files in `src/voxd/assets/`.
@@ -13,5 +28,4 @@ You may not:
 
 Trademark: VOXD and the VOXD logo are trademarks of Jakov Ivkovic. This license does
 not grant trademark rights beyond the permissions above.
-
 

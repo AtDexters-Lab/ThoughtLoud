@@ -1,36 +1,41 @@
-name: voxd
+name: thoughtloud
 arch: ${ARCH}
 version: ${VERSION}
 release: "1"
 section: utils
 priority: optional
-license: MIT
-maintainer: "Jakov Ivkovic <jakov.iv@proton.me>"
-homepage: "https://github.com/jakovius/voxd"
-description: "VOXD - Gemma E4B voice typing on Linux"
-vendor: "VOXD"
+license: "MIT AND GPL-3.0-only AND LGPL-3.0-only AND AGPL-3.0-or-later"
+maintainer: "AtDexters-Lab"
+homepage: "https://github.com/AtDexters-Lab/voxd"
+description: "ThoughtLoud - long, natural local dictation on Linux"
+vendor: "ThoughtLoud"
+replaces:
+  - voxd
+conflicts:
+  - voxd
 
 contents:
-  - src: ./src
-    dst: /opt/voxd/src
-  - src: pyproject.toml
-    dst: /opt/voxd/pyproject.toml
+  - src: ./dist/thoughtloud/
+    dst: /opt/voxd
+    type: tree
+  - src: packaging/thoughtloud.wrapper
+    dst: /usr/bin/thoughtloud
     file_info:
-      mode: 0644
-  - src: THIRD_PARTY_NOTICES.md
-    dst: /opt/voxd/THIRD_PARTY_NOTICES.md
-    file_info:
-      mode: 0644
-  - src: packaging/voxd.wrapper
+      mode: 0755
+  - src: packaging/thoughtloud.wrapper
     dst: /usr/bin/voxd
     file_info:
       mode: 0755
+  - src: packaging/thoughtloud.desktop
+    dst: /usr/share/applications/voxd-tray.desktop
+  - src: src/voxd/assets/thoughtloud.svg
+    dst: /usr/share/icons/hicolor/scalable/apps/thoughtloud.svg
   - src: packaging/99-uinput.rules
-    dst: /etc/udev/rules.d/99-uinput.rules
+    dst: /etc/udev/rules.d/70-voxd-uinput.rules
     file_info:
       mode: 0644
   - src: packaging/ydotoold.service
-    dst: /usr/lib/systemd/user/ydotoold.service
+    dst: /usr/lib/systemd/user/voxd-ydotoold.service
     file_info:
       mode: 0644
   - src: packaging/voxd-tray.service
@@ -40,46 +45,47 @@ contents:
 overrides:
   deb:
     depends:
-      - ydotool
-      - ydotoold
       - wl-clipboard
-      - python3-platformdirs
-      - python3-venv
+      - pulseaudio-utils
       - libportaudio2
-      - python3-numpy
-      - python3-requests
-      - python3-yaml
-      - python3-pyperclip
-      - python3-pyqt6
+      - libxcb-cursor0
+      - libegl1
+      - libgl1
+      - libvulkan1
+      - libssl3t64
+      - libgomp1
+      - libstdc++6
+      - libc6 (>= 2.39)
     recommends:
       - pipewire-pulse | pulseaudio
   rpm:
     depends:
-      - ydotool
       - wl-clipboard
-      - python3-platformdirs
-      - python3-virtualenv
+      - pulseaudio-utils
       - portaudio
-      - python3-numpy
-      - python3-requests
-      - python3-PyYAML
-      - python3-pyperclip
+      - xcb-util-cursor
+      - libglvnd-egl
+      - libglvnd-glx
+      - vulkan-loader
+      - openssl-libs
+      - libgomp
+      - libstdc++
+      - glibc >= 2.39
     suggests:
-      - python3-qt6
       - pipewire-pulseaudio
   archlinux:
     depends:
       - wl-clipboard
-      - python-platformdirs
-      - python-virtualenv
+      - libpulse
       - portaudio
-      - python-numpy
-      - python-requests
-      - python-yaml
-      - python-pyperclip
-      - python-pyqt6
-      - ydotool
+      - xcb-util-cursor
+      - libglvnd
 
 scripts:
   postinstall: packaging/postinstall.sh
   postremove: packaging/postremove.sh
+
+deb:
+  compression: zstd
+rpm:
+  compression: zstd

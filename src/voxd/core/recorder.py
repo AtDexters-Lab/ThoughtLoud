@@ -112,6 +112,7 @@ class AudioRecorder:
         segment_seconds: float | None = None,
         segment_queue_size: int = 8,
         segmenter_factory: Callable[[], VadSegmenter] | None = None,
+        stream_factory: Callable | None = None,
     ):
         if segment_seconds is not None and segment_seconds <= 0:
             raise ValueError("segment_seconds must be positive")
@@ -130,6 +131,7 @@ class AudioRecorder:
         )
         self.segment_queue_size = int(segment_queue_size)
         self._segmenter_factory = segmenter_factory
+        self._stream_factory = stream_factory
         self.temp_dir = DATA_DIR / "temp"
         self.temp_dir.mkdir(parents=True, mode=0o700, exist_ok=True)
         self.temp_dir.chmod(0o700)
@@ -154,40 +156,31 @@ class AudioRecorder:
         self._open_new_chunk()
 
         preferred = self.input_device or ("pulse" if self.prefer_pulse else None)
-
-        try:
-            self._start_stream(preferred, self.fs)
-            self.is_recording = True
-            return
-        except Exception as exc:
-            verr(
-                f"[recorder] Opening input at {self.fs} Hz failed ({exc}); "
-                "trying the device default"
-            )
-
-        fallback_fs = self._default_sample_rate(preferred)
-        self.fs = fallback_fs
-        self._chunk_target_frames = self.chunk_seconds * self.fs
-        self._discard_chunks()
-        self._reset_segment_stream()
-        self._open_new_chunk()
-
-        candidates = []
-        if preferred != "pulse":
-            candidates.append("pulse")
-        candidates.append(None)
+        # Pinned/explicit inputs never fall back to another microphone. If the
+        # default Pulse bridge is absent, PortAudio's default is still usable;
+        # no positive mute verdict was made for that unpinned capture path.
+        devices = [preferred]
+        if not self.input_device and self._stream_factory is None and preferred is not None:
+            devices.append(None)
         last_error = None
-        for device in candidates:
-            try:
-                self._start_stream(device, self.fs)
-                self.is_recording = True
-                return
-            except Exception as exc:
-                last_error = exc
-
+        for device in devices:
+            rates = [self.fs, self._default_sample_rate(device)]
+            for sample_rate in dict.fromkeys(rates):
+                if sample_rate != self.fs:
+                    self.fs = sample_rate
+                    self._chunk_target_frames = self.chunk_seconds * self.fs
+                    self._discard_chunks()
+                    self._reset_segment_stream()
+                    self._open_new_chunk()
+                try:
+                    self._start_stream(device, self.fs)
+                    self.is_recording = True
+                    return
+                except Exception as exc:
+                    last_error = exc
         self.is_recording = False
         self._discard_chunks()
-        raise RuntimeError(f"could not open an audio input stream: {last_error}")
+        raise RuntimeError(f"could not open the selected audio input stream: {last_error}")
 
     def _start_stream(self, device, sample_rate) -> None:
         stream = self._open_stream(device, sample_rate)
@@ -209,7 +202,7 @@ class AudioRecorder:
         }
         if device:
             kwargs["device"] = device
-        return sd.InputStream(**kwargs)
+        return (self._stream_factory or sd.InputStream)(**kwargs)
 
     def _default_sample_rate(self, device) -> int:
         try:

@@ -98,6 +98,17 @@ under the user's VOXD data and config directories:
 - `~/.config/voxd/igpu-runtime/`
 - Docker container `voxd-gemma-igpu`
 
+The installer identifies the Radeon 780M by its PCI vendor/device IDs
+(`1002:1900`) and requires its matching `/dev/dri/by-path/pci-...-render` symlink.
+It stores that stable path through an `igpu-render` symlink in the owned runtime
+configuration directory, and maps only that device to `/dev/dri/renderD128`
+inside the container. The alias avoids Docker CLI's colon-separated device
+syntax; it continues to resolve the same PCI device when host `renderD` numbers
+change after a reboot. Missing or mismatched PCI links stop installation before
+any resources are created. If more than one matching GPU exists, `RENDER_NODE`
+selects among them; it cannot select a different GPU model. Existing containers
+retain their original device mapping until explicitly replaced.
+
 The installer sends a short WAV through the same `input_audio` request shape as
 VOXD and requires the response to report non-zero MTP drafts. It then sends the
 same deterministic text request twice on the already-loaded multimodal server,

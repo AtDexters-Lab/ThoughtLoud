@@ -1,0 +1,51 @@
+NumPy 2.5.3 Linux CPython 3.12 wheel: embedded GCC runtime provenance
+
+The wheel's license includes libgfortran (GPLv3 with the GCC runtime exception),
+but the separately shipped library itself still needs corresponding source.
+libquadmath is LGPL-2.1-or-later; its license is included alongside this note.
+
+Both runtime libraries were matched to AlmaLinux 8.10 binary packages
+8.5.0-28.el8_10.alma.1. Auditwheel renames libraries and changes ELF loader
+metadata. The GNU build IDs and SHA-256 of the executable .text section match
+the original signed AlmaLinux RPM files exactly:
+
+libgfortran.so.5.0.0
+  Build ID: 04dbe32dceb80654422140fb7641f732065999c8
+  .text SHA-256: fd69c1360c73d6aa595bbe03bf9d11725de31f9f658fdd74ae11a8114fb0a784
+  Wheel file: numpy.libs/libgfortran-83c28eba-468e71e5.so.5.0.0
+  Wheel SHA-256: a6a368328d02a5d8a149746f13f6268f8cc9192df5c18777b25c3c9b5ef52160
+  RPM: libgfortran-8.5.0-28.el8_10.alma.1.x86_64.rpm
+  RPM SHA-256: 9a32e0f526dff21a2cc891d0bbc174ce6f1c70d6e232f806e962907ae575aba5
+
+libquadmath.so.0.0.0
+  Build ID: c1c5f8d61f17e5579c4e85718845b74e4b94116c
+  .text SHA-256: 4425e7ca4dfe60074f61032f0f97cff167434f95c213057b269580de2002f140
+  Wheel file: numpy.libs/libquadmath-2284e583-a9307bba.so.0.0.0
+  Wheel SHA-256: 6bc3069003caec1f075be3c51ae8355332f081fa9465910c4b5724e7fe7d8ad4
+  RPM: libquadmath-8.5.0-28.el8_10.alma.1.x86_64.rpm
+  RPM SHA-256: e50ce3215fc8c5fcabb60664fe4933dc84db9f7b27d304e3168fafacb6016a9e
+
+The original binaries are published at:
+https://repo.almalinux.org/almalinux/8.10/BaseOS/x86_64/os/Packages/
+
+Their RPM headers identify this exact source RPM, included in the attachment:
+https://repo.almalinux.org/vault/8.10/BaseOS/Source/Packages/gcc-8.5.0-28.el8_10.alma.1.src.rpm
+  SHA-256: c94dbbd2cd6d5d01a5a6822ea18f8ce34942c25a80e17b4682d547d5e652dbd0
+  Size: 65715094 bytes
+
+Both binary RPMs and the source RPM passed rpm -Kv signature and payload
+verification on 2026-09-12 against AlmaLinux's public key (key ID ced7258b)
+obtained from https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux.
+No package was installed; verification used an isolated temporary RPM database.
+The key file SHA-256 was:
+2cbe597b108cefbf571d8d430d238d0a7a6575eebf6c80649be5e10c323e7023
+
+The source RPM contains upstream source, patches and the RPM spec build recipe.
+Extract it with rpm2cpio and cpio into a private directory, or rebuild it with
+rpmbuild --rebuild in an AlmaLinux 8.10 build environment with its BuildRequires.
+NumPy's sdist contains the wheel build scripts. Rebuild the wheel and application
+to regenerate loader metadata for changed libraries; do not assume that copying
+a differently named library will satisfy the wheel's recorded ELF dependencies.
+
+The collector rejects changes to these wheel-library hashes rather than silently
+reusing this source attribution for another NumPy wheel or architecture.

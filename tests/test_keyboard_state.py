@@ -254,19 +254,21 @@ def _discovery(monkeypatch, tmp_path, *, count=1, identity=(0x06, 0x2333, 0x6666
     return opened, closed
 
 
-def test_discovery_opens_only_identified_virtual_device_read_only(monkeypatch, tmp_path):
+@pytest.mark.parametrize("socket_name", [".ydotool_socket", ".voxd_ydotool_socket"])
+def test_discovery_opens_only_identified_virtual_device_read_only(monkeypatch, tmp_path, socket_name):
     opened, closed = _discovery(monkeypatch, tmp_path)
-    monitor = keyboard.KeyboardState.open(tmp_path / ".ydotool_socket")
+    monitor = keyboard.KeyboardState.open(tmp_path / socket_name)
     assert opened == [(Path("/dev/input/event0"), keyboard.os.O_RDONLY | keyboard.os.O_NONBLOCK)]
     monitor.close()
     assert closed == [12]
 
 
 @pytest.mark.parametrize("count", [0, 2])
-def test_discovery_refuses_missing_or_ambiguous_devices(monkeypatch, tmp_path, count):
+@pytest.mark.parametrize("socket_name", [".ydotool_socket", ".voxd_ydotool_socket"])
+def test_discovery_refuses_missing_or_ambiguous_devices(monkeypatch, tmp_path, count, socket_name):
     opened, _ = _discovery(monkeypatch, tmp_path, count=count)
     with pytest.raises(OSError, match="one identifiable"):
-        keyboard.KeyboardState.open(tmp_path / ".ydotool_socket")
+        keyboard.KeyboardState.open(tmp_path / socket_name)
     assert opened == []
 
 

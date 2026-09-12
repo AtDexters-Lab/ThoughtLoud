@@ -1,144 +1,152 @@
-# VOXD
+# ThoughtLoud
 
-VOXD is a small Linux tray app for speech typing. It records until you stop,
-transcribes through a local OpenAI-compatible Gemma E4B service, and inserts the
-result as genuine keyboard input with `ydotool`.
+**Think out loud. In your own words.**
 
-It deliberately has one runtime path: tray → recorder → Silero VAD → E4B →
-clipboard recovery copy → `ydotool`. There is no Whisper model manager,
-post-processing layer, or paste-based insertion.
+ThoughtLoud is a Linux app for long, natural dictation: explaining an idea, working
+through a coding problem, or speaking a detailed prompt to an AI tool. Take your
+time and speak in comfortable native or code-switched speech. Press your shortcut
+to start, press it again to stop, and the complete transcript is typed into the
+focused application.
 
-## What it supports
+## Linux package candidates
 
-- Hindi in Latin/Roman script (Hinglish), English, and mixed speech
-- punctuation inferred from pauses and intonation
-- recordings of arbitrary practical length
-- E4B's sub-30-second input limit through sequential, non-overlapping segments
-  cut near 10 seconds at the lowest local Silero speech probability
-- complete text insertion into terminals and coding tools through real key events
-- optional private FLAC recording history with transcript and model metadata
-- failure recovery: source audio is kept if transcription fails, and VOXD tries
-  to copy the final transcript before typing
+Linux is the release target. The current packages target **x86_64 Linux**, using
+Ubuntu 24.04 as the build baseline, and support Vulkan GPU acceleration. The
+native runtime selects a compatible CPU backend at startup, using AVX2 or newer
+optimizations when supported. AVX2 is not a hard requirement; the bundled Qt
+requires an SSE4.2/POPCNT-capable CPU (the x86-64-v2 baseline). `.deb` and `.rpm`
+recipes bundle Python, Qt, transcription
+dependencies, and the native inference runtime. Users do not need to install
+Python or manage a virtualenv.
 
-Recording is streamed to bounded on-disk chunks, so speech duration is not capped
-by memory. A single background worker transcribes each completed E4B segment in
-order while recording continues. Each boundary is selected between 8 and 12
-seconds using one 96 ms local probability window. Stop closes and transcribes the
-final partial segment, directly concatenates non-empty segment text, and only then
-types the complete result. A window without Silero-detected speech is still sent to
-Gemma so quiet speech cannot be discarded, but previous-text context is withheld
-and an empty transcription is allowed.
+The candidate has been exercised on Ubuntu 24.04 GNOME Wayland in QEMU/KVM,
+including a fresh model download, a desktop shortcut and dictation into an editor.
+Fedora 44 RPM installation/startup and a Radeon 780M Vulkan audio run have separate
+smoke evidence. Package installation and user-data preservation were also
+verified on Ubuntu and Fedora.
+Physical microphone/headset and KDE portal checks remain open.
+See the current [release evidence and remaining checks](docs/linux-release.md).
 
-Live segments use a bounded in-memory queue. If the endpoint fails or falls too
-far behind, microphone capture and the full recording continue unaffected; after
-Stop, VOXD feeds the stitched WAV through the same VAD segmenter and sequential
-transcription path. Archived FLAC audio therefore remains complete regardless of
-live decode.
+Install a locally built candidate with your package manager:
 
-## Requirements
+```bash
+# Ubuntu candidate
+sudo apt install ./thoughtloud_*_amd64.deb
 
-- Linux with PipeWire/PulseAudio or another PortAudio input
-- Python 3.9+
-- `ydotool`, `ydotoold`, and a working user `ydotoold.service`
-- `ffmpeg` when FLAC recording history is enabled (WAV is retained if unavailable)
-- ONNX Runtime (installed automatically by the source/package setup)
-- an OpenAI-compatible E4B endpoint, defaulting to `http://localhost:9292`
+# Fedora candidate
+sudo dnf install ./thoughtloud-*.x86_64.rpm
+```
 
-The endpoint must accept audio content at `/v1/chat/completions` using the
-OpenAI-style `input_audio` message shape.
+Open **ThoughtLoud** from the application menu. It opens a small setup/settings window;
+normal dictation runs from the tray or your shortcut. The settings window is also
+available with `thoughtloud --settings`, including on desktops without a tray.
+First-run setup prepares the bundled typing service in your desktop session;
+its status and retry control are shown in the window.
 
-For the validated Radeon 780M Q8 setup, see [`runtime/igpu`](runtime/igpu). It
-runs a separate MTP-enabled llama-swap endpoint with an 8K context and
-five-minute idle unload; VOXD remains an ordinary OpenAI-compatible client.
+1. **Run the transcription model on this computer** is selected for fresh installs. Choose CPU or Vulkan,
+   and download the local models (about **9.2 GB**). Download progress,
+   cancellation, retry, and file verification are built in. An existing
+   compatible Gemma endpoint can be used instead.
+2. Optionally describe **How do you like to talk?** For example: “I mix Marathi
+   and English, often using software engineering terms.” Leave it empty for a
+   neutral language preference.
+3. Use **Configure hotkey with desktop**, then save settings. When the desktop
+   does not provide the shortcut portal, the window explains how to create a
+   custom keyboard shortcut and shows its exact command.
+4. Focus an editor, terminal, or chat. Press the shortcut, start speaking once
+   recording begins, and press it again to stop. Keep the intended destination
+   focused until insertion finishes.
 
-## Source install
+The local runtime uses Gemma E4B Q8 weights with an F16 audio projector. CPU and
+Vulkan are separate profiles. The current managed package omits the MTP assistant;
+the [validated iGPU runtime](runtime/igpu/README.md) includes it and enables MTP.
+These are different runtime configurations. Vulkan needs a compatible host driver. Allow disk space for the download and recordings,
+and enough memory for the model and inference. The CPU desktop test used a
+14 GiB VM; the native server peaked at about 9.2 GiB RSS, excluding the desktop
+and application. This is an observed working setup, not a minimum-memory claim.
+Accelerator changes take effect
+after restarting the app.
+
+## Speech and microphone behavior
+
+- Speech preferences are context for transcription, rather than translation or
+  rewriting instructions. Output remains **printable ASCII**, with
+  transliteration where needed. Language quality needs examples; configurable
+  preferences do not imply every language is validated.
+- Each recording uses the current system-default microphone. The app does not
+  unmute it or change its volume. A confirmed muted input blocks recording and
+  shows an alert to unmute and retry. When mute status cannot be determined,
+  recording proceeds; silence alone is not treated as proof of mute.
+- Long recordings are decoded in order while you speak. If live decoding fails,
+  the complete recording is replayed after Stop. Only the complete result is
+  inserted.
+- Final text is copied to the clipboard for recovery and inserted through
+  `ydotool` key events. Clipboard failure does not block typing. Empty speech
+  produces no insertion.
+
+## Runtime and troubleshooting
+
+The package includes its own `ydotool`/`ydotoold` helpers. The host supplies a
+systemd user session, Linux audio stack, clipboard helpers, PortAudio, and Qt's
+system libraries; dependencies are listed in [packaging](packaging/README.md).
+Text insertion needs the user daemon and active-session access to `/dev/uinput`.
+Optional FLAC history uses `ffmpeg`;
+without it, the recording remains WAV.
+
+For local mode, the app owns a loopback server, keeps it available through the
+complete dictation, and unloads it after five idle minutes. Downloads happen
+only through setup. With an existing endpoint, the app uses that service without
+starting, stopping, or replacing it. The [validated iGPU/MTP setup](runtime/igpu)
+remains available for existing installations.
+
+Useful diagnostics:
+
+```bash
+thoughtloud --diagnose
+systemctl --user status voxd-ydotoold.service
+thoughtloud --settings
+```
+
+Settings are stored in
+`~/.config/voxd/config.yaml` and local models in
+`~/.local/share/voxd/models/` (or their XDG equivalents). Local runtime errors
+include the path to `managed-runtime.log` in that model directory. The settings
+window can check microphone status and send synthetic silence to an existing
+endpoint without recording or typing microphone audio.
+
+Recording history is off by default. Enable it with
+`thoughtloud --archive-recordings true`. History is private to the current user and
+capped by `recording_archive_max_mb` (default 5120). Audio and transcript metadata
+are stored under `~/.local/share/voxd/recordings/`; failed compression retains WAV.
+
+## Develop and contribute
+
+For a source checkout, use Python 3.12, a compatible modern ydotool client/daemon
+(the package pins 1.0.4), and the Linux prerequisites above:
 
 ```bash
 ./setup.sh
+.venv/bin/thoughtloud --settings
 ```
 
-Then start the tray:
+Fresh source installs also select local mode. Build the
+[native Linux runtime](runtime/linux/README.md) and set `VOXD_LLAMA_RUNTIME` to
+its output directory, or disable local mode in settings and supply an existing
+compatible Gemma audio endpoint.
 
-```bash
-.venv/bin/voxd --tray
-```
+The [architecture guide](docs/architecture.md) documents the UI-independent
+dictation session, injectable platform operations, Gemma backend, and preserved
+transcription behaviors. Start with the
+[file-transcription example](examples/transcribe_file.py) for backend use without Qt.
 
-Bind a desktop shortcut to toggle recording:
+**Community macOS, Windows, and Android ports and builds are welcome.** Include
+the platform's microphone, shortcut, text-insertion, permissions, lifecycle and
+runtime packaging, plus installation instructions and checks on that platform.
+Linux remains the project's official release and validation scope.
 
-```bash
-/absolute/path/to/voxd/.venv/bin/voxd --trigger-record
-```
-
-Start speaking after the tray shows Recording. Trigger again to stop; VOXD waits
-for the complete transcription and then types it into the focused application.
-
-## Configuration
-
-The user config is `~/.config/voxd/config.yaml`. Important defaults:
-
-```yaml
-gemma_server_url: http://localhost:9292
-gemma_model: gemma-e4b
-gemma_segment_seconds: 10
-gemma_timeout: 300
-record_chunk_seconds: 300
-recording_archive_enabled: false
-recording_archive_max_mb: 5120
-typing_delay: 0
-typing_word_delay: 10
-typing_start_delay: 0.15
-```
-
-On current ydotool builds, `typing_delay` controls the delay between characters
-inside a word, while `typing_word_delay` adds a short pause between word runs.
-VOXD sends each bounded text chunk in one process, so word pacing does not add a
-process launch per word. Older ydotool builds retain the compatible stdin typing
-path and ignore `typing_word_delay`.
-
-With a modern ydotool and read access to its uniquely identified virtual input
-device, VOXD observes key press/release events while typing. Healthy chunks run
-without a cleanup pause. A key held for 250 ms triggers stopping the typing
-process, releasing the affected keys, and reporting an incomplete insertion; the
-complete transcript remains on the clipboard when the recovery copy succeeded.
-One bounded quiet-state check runs after the final chunk. This checks keyboard
-state, not whether the target application inserted every character correctly.
-
-Monitoring is limited to the default `~/.ydotool_socket` and assumes VOXD is the
-only active typing client on that virtual device. It never monitors physical
-keyboards. Custom sockets, legacy clients, ambiguous devices, or unavailable
-device access retain compatibility cleanup. If observation is lost during typing,
-insertion stops and compatibility key release is attempted; recovery is reported
-as unverified. No input permissions are changed.
-
-`record_chunk_seconds` controls on-disk chunk rotation, not maximum speech length.
-The E4B service should stay warm for low latency; VOXD does not own or restart it.
-
-Enable private benchmark history explicitly:
-
-```bash
-voxd --archive-recordings true
-```
-
-Audio is archived under `~/.local/share/voxd/recordings/` as FLAC with a JSON
-sidecar containing the transcript, raw segments, per-segment request modes, the
-complete VAD/request/grammar protocol, and model metadata.
-The archive is private to the current user and capped by
-`recording_archive_max_mb`. Compression failure retains the source WAV instead.
-
-Useful commands:
-
-```bash
-voxd --diagnose
-voxd --autostart true
-voxd --autostart false
-voxd --archive-recordings true
-voxd --archive-recordings false
-voxd --version
-```
-
-If typing fails, verify `ydotool` and its socket:
-
-```bash
-systemctl --user status ydotoold.service
-voxd --diagnose
-```
+Build instructions are in [packaging/README.md](packaging/README.md). The
+[distribution guide](docs/licensing.md) explains the desktop bundle licenses and
+matching source downloads. See
+[LICENSE](LICENSE), [third-party notices](THIRD_PARTY_NOTICES.md),
+[artwork terms](ASSETS_LICENSE), and [upstream trademark policy](TRADEMARKS.md)
+before redistributing a derivative.

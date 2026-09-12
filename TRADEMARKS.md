@@ -1,4 +1,10 @@
-# VOXD Trademark Policy
+# Upstream trademark notice
+
+The original VOXD policy below is retained for upstream attribution and the
+historical artwork. ThoughtLoud uses its own name and artwork and does not
+claim endorsement by the VOXD author.
+
+## VOXD Trademark Policy
 
 VOXD™ and the VOXD logo are trademarks of Jakov Ivkovic.
 
@@ -12,5 +18,4 @@ Not permitted without written permission:
 - Use the VOXD logo as branding for another product or service.
 
 For permissions or questions, contact: jakov.iv@proton.me
-
 

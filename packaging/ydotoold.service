@@ -1,9 +1,9 @@
 [Unit]
-Description=ydotool user daemon
+Description=ThoughtLoud keyboard input daemon
 After=default.target
 
 [Service]
-ExecStart=/usr/bin/ydotoold --socket-path=%h/.ydotool_socket --socket-own=%U:%G
+ExecStart=/opt/voxd/libexec/ydotoold --socket-path=%h/.voxd_ydotool_socket --socket-own=%U:%G
 Restart=on-failure
 RestartSec=1s
 

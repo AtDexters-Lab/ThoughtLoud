@@ -35,7 +35,10 @@ class KeyboardState:
     @classmethod
     def open(cls, socket_path: Path) -> KeyboardState:
         # Device names cannot associate arbitrary custom sockets with daemons.
-        if socket_path != Path.home() / ".ydotool_socket":
+        if socket_path not in {
+            Path.home() / ".ydotool_socket",
+            Path.home() / ".voxd_ydotool_socket",
+        }:
             raise OSError("custom ydotool socket has no verified input-device mapping")
         candidates = []
         for entry in Path("/sys/class/input").glob("event*"):

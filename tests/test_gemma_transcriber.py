@@ -404,12 +404,43 @@ def test_default_prompt_is_scoped_computer_dictation_context():
     from voxd.core.gemma_transcriber import DEFAULT_PROMPT
 
     assert "ASCII Latin letters (A-Z and a-z)" in DEFAULT_PROMPT
-    assert "Never output Devanagari or any other Indic script" in DEFAULT_PROMPT
-    assert "transliterate every Hindi word into natural Roman Hinglish" in DEFAULT_PROMPT
+    assert "Transliterate speech into Latin letters when necessary" in DEFAULT_PROMPT
+    assert "Hindi" not in DEFAULT_PROMPT
+    assert "Hinglish" not in DEFAULT_PROMPT
     assert "live voice dictation on a computer" in DEFAULT_PROMPT
     assert "Do not answer the speaker" in DEFAULT_PROMPT
     assert "transcribe the spoken words literally" in DEFAULT_PROMPT
     assert "If the audio contains no intelligible speech, output nothing" in DEFAULT_PROMPT
+
+
+def test_speech_preference_is_an_optional_quoted_hint():
+    import json
+    from voxd.core.gemma_transcriber import DEFAULT_PROMPT, compose_prompt
+
+    preference = 'I speak Marathi and English.\nTerminology: "Qt", पुणे'
+    assert compose_prompt() == DEFAULT_PROMPT
+    assert compose_prompt(" \n ") == DEFAULT_PROMPT
+    assert compose_prompt(preference).startswith(DEFAULT_PROMPT + "\n")
+    assert "does not replace the transcription requirements" in compose_prompt(preference)
+    assert compose_prompt(preference).endswith(json.dumps(preference, ensure_ascii=True))
+
+
+def test_preference_prompt_is_shared_by_initial_and_context_requests():
+    from voxd.core.gemma_transcriber import GemmaAudioTranscriber, compose_prompt
+
+    session = _Session(["first words", "second words"])
+    transcriber = GemmaAudioTranscriber(
+        speech_preferences="I mix Marathi and English.",
+        session=session,
+    )
+    wav = _silence_wav_bytes(duration_seconds=1)
+    transcriber.transcribe_segments([(0, wav, True), (1, wav, True)])
+
+    prompt = compose_prompt("I mix Marathi and English.")
+    assert transcriber.prompt == prompt
+    assert session.calls[0][1]["messages"][0]["content"][0]["text"] == prompt
+    assert session.calls[1][1]["messages"][0] == {"role": "system", "content": prompt}
+    assert transcriber.protocol_metadata()["prompt"] == prompt
 
 
 def test_protocol_metadata_describes_the_vad_and_direct_append_pipeline():

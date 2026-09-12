@@ -89,3 +89,13 @@ def test_trigger_client_reports_delivery_failure(monkeypatch):
     )
 
     assert ipc_client.send_trigger() is False
+
+
+def test_settings_client_uses_distinct_command(monkeypatch):
+    import voxd.utils.ipc_client as ipc_client
+    sent = []
+    sock = _FakeSocket(ipc_client._socket_path())
+    sock.sendall = sent.append
+    monkeypatch.setattr(ipc_client.socket, "socket", lambda *_args: sock)
+    assert ipc_client.send_settings()
+    assert sent == [b"show_settings"]

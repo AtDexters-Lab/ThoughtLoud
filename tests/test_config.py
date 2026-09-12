@@ -1,4 +1,5 @@
 import yaml
+import pytest
 
 
 def test_gemma_transcription_defaults():
@@ -13,7 +14,59 @@ def test_gemma_transcription_defaults():
     assert cfg.typing_word_delay == 10
     assert cfg.recording_archive_enabled is False
     assert cfg.recording_archive_max_mb == 5120
+    assert cfg.speech_preferences == ""
+    assert cfg.managed_runtime_enabled is True
     assert "gemma_transcription_prompt" not in cfg.data
+
+
+def test_get_config_template_keeps_new_install_language_neutral():
+    from voxd.core.config import CONFIG_PATH, get_config
+
+    cfg = get_config()
+
+    assert cfg.speech_preferences == ""
+    assert yaml.safe_load(CONFIG_PATH.read_text())["speech_preferences"] == ""
+    assert cfg.managed_runtime_enabled is True
+
+
+def test_existing_config_missing_preference_migrates_and_drops_mic_autoset():
+    from voxd.core.config import AppConfig, CONFIG_PATH, LEGACY_SPEECH_PREFERENCES
+
+    CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG_PATH.write_text("typing_delay: 3\nmic_autoset_enabled: true\nmic_autoset_level: 0.45\n")
+
+    cfg = AppConfig()
+    saved = yaml.safe_load(CONFIG_PATH.read_text())
+
+    assert cfg.speech_preferences == LEGACY_SPEECH_PREFERENCES
+    assert cfg.managed_runtime_enabled is False
+    assert saved["managed_runtime_enabled"] is False
+    assert saved["speech_preferences"] == LEGACY_SPEECH_PREFERENCES
+    assert cfg.typing_delay == 3
+    assert "mic_autoset_enabled" not in saved
+    assert "mic_autoset_level" not in saved
+    assert AppConfig().speech_preferences == LEGACY_SPEECH_PREFERENCES
+
+
+@pytest.mark.parametrize("preference", ["", "  ", "I mix Marathi and English.\nNames: पुणे"])
+def test_explicit_speech_preference_round_trips_exactly(preference):
+    from voxd.core.config import AppConfig, CONFIG_PATH
+
+    cfg = AppConfig()
+    cfg.set("speech_preferences", preference)
+    cfg.save()
+
+    assert AppConfig().speech_preferences == preference
+    assert yaml.safe_load(CONFIG_PATH.read_text())["speech_preferences"] == preference
+
+
+def test_invalid_speech_preference_is_neutral():
+    from voxd.core.config import AppConfig
+
+    cfg = AppConfig()
+    cfg.set("speech_preferences", ["Marathi", "English"])
+
+    assert cfg.speech_preferences == ""
 
 
 def test_load_drops_unknown_keys_from_saved_config():

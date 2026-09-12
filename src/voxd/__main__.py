@@ -6,9 +6,21 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 from voxd.core.config import AppConfig
+from voxd.branding import APP_NAME, ICON_NAME, autostart_path, command_text, migrate_generated_launchers
+
+
+def _configure_bundled_paths() -> None:
+    """Use package-owned input helpers even when launched without the wrapper."""
+    if not getattr(sys, "frozen", False):
+        return
+    helpers = str(Path(sys.executable).resolve().parent / "libexec")
+    os.environ["PATH"] = helpers + os.pathsep + os.environ.get("PATH", "")
+    os.environ.setdefault("VOXD_YDOTOOL_SERVICE", "voxd-ydotoold.service")
+    os.environ.setdefault("YDOTOOL_SOCKET", str(Path.home() / ".voxd_ydotool_socket"))
 
 
 def _parse_bool(value: str) -> bool:
@@ -21,80 +33,58 @@ def _parse_bool(value: str) -> bool:
 
 
 def _get_version() -> str:
-    try:
-        return importlib.metadata.version("voxd")
-    except importlib.metadata.PackageNotFoundError:
-        pyproject = Path(__file__).parents[2] / "pyproject.toml"
-        if pyproject.exists():
-            for line in pyproject.read_text(encoding="utf-8").splitlines():
-                if line.startswith("version = "):
-                    return line.split('"', 2)[1]
-        return "unknown"
-
-
-def _systemd_user_available() -> bool:
-    try:
-        result = subprocess.run(
-            ["systemctl", "--user", "--version"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
-        )
-        return result.returncode == 0
-    except OSError:
-        return False
+    for distribution in ("thoughtloud", "voxd"):
+        try:
+            return importlib.metadata.version(distribution)
+        except importlib.metadata.PackageNotFoundError:
+            pass
+    pyproject = Path(__file__).parents[2] / "pyproject.toml"
+    if pyproject.exists():
+        for line in pyproject.read_text(encoding="utf-8").splitlines():
+            if line.startswith("version = "):
+                return line.split('"', 2)[1]
+    return "unknown"
 
 
 def _voxd_command() -> str:
-    argv0 = Path(sys.argv[0])
-    if argv0.name == "voxd" and argv0.exists():
-        return str(argv0.resolve())
-    executable = shutil.which("voxd")
-    return executable or f"{sys.executable} -m voxd"
-
-
-def _ensure_voxd_tray_unit() -> None:
-    command = _voxd_command()
-    unit_dir = Path.home() / ".config/systemd/user"
-    unit_dir.mkdir(parents=True, exist_ok=True)
-    (unit_dir / "voxd-tray.service").write_text(
-        "[Unit]\n"
-        "Description=VOXD E4B tray\n"
-        "After=default.target\n\n"
-        "[Service]\n"
-        f"ExecStart={command} --tray\n"
-        "Restart=on-failure\n"
-        "RestartSec=2s\n"
-        "Environment=PYTHONUNBUFFERED=1\n"
-        "Environment=YDOTOOL_SOCKET=%h/.ydotool_socket\n\n"
-        "[Install]\n"
-        "WantedBy=default.target\n",
-        encoding="utf-8",
-    )
+    """Compatibility import for existing settings and integrations."""
+    return command_text()
 
 
 def _xdg_autostart_path() -> Path:
-    return Path.home() / ".config/autostart/voxd-tray.desktop"
+    return autostart_path()
 
 
 def _set_xdg_autostart(enabled: bool) -> bool:
     path = _xdg_autostart_path()
+    temporary = None
     try:
         if enabled:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(
-                "[Desktop Entry]\n"
-                "Type=Application\n"
-                "Name=VOXD\n"
-                f"Exec={_voxd_command()} --tray\n"
-                "X-GNOME-Autostart-enabled=true\n",
-                encoding="utf-8",
-            )
-        elif path.exists():
-            path.unlink()
+            with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+                                             prefix=".voxd-tray-", delete=False) as output:
+                temporary = Path(output.name)
+                output.write(
+                    "[Desktop Entry]\n"
+                    "Type=Application\n"
+                    f"Name={APP_NAME}\n"
+                    f"Icon={ICON_NAME}\n"
+                    f"Exec={_voxd_command()} --tray\n"
+                    "X-GNOME-Autostart-enabled=true\n"
+                )
+            temporary.replace(path)
+        else:
+            path.unlink(missing_ok=True)
         return True
-    except OSError:
+    except OSError as exc:
+        print(f"[autostart] Could not update {path}: {exc}", file=sys.stderr)
         return False
+    finally:
+        if temporary is not None:
+            try:
+                temporary.unlink(missing_ok=True)
+            except OSError:
+                pass
 
 
 def _handle_autostart(value: str) -> int:
@@ -103,34 +93,37 @@ def _handle_autostart(value: str) -> int:
     cfg.set("autostart", enabled)
     cfg.save()
 
-    if _systemd_user_available():
-        try:
-            _ensure_voxd_tray_unit()
-            subprocess.run(
-                ["systemctl", "--user", "daemon-reload"], check=False
-            )
-            action = "enable" if enabled else "disable"
-            subprocess.run(
-                ["systemctl", "--user", action, "--now", "voxd-tray.service"],
-                check=False,
-            )
-            check = "is-enabled" if enabled else "is-active"
-            result = subprocess.run(
-                ["systemctl", "--user", check, "voxd-tray.service"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                check=False,
-            )
-            if (enabled and result.returncode == 0) or (not enabled and result.returncode != 0):
-                _set_xdg_autostart(False)
-                print(f"[autostart] {'enabled' if enabled else 'disabled'}")
-                return 0
-        except OSError:
-            pass
+    return _apply_autostart(enabled)
 
-    ok = _set_xdg_autostart(enabled)
-    print(f"[autostart] {'enabled' if enabled else 'disabled'} (xdg={ok})")
-    return 0 if ok else 1
+
+def _apply_autostart(enabled: bool) -> int:
+    """Change login configuration without starting/stopping the running app."""
+    # Install the desktop-session route before retiring the old service route.
+    if not _set_xdg_autostart(enabled):
+        return 1
+    command = ["systemctl", "--user"]
+    options = dict(check=False, timeout=5, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    try:
+        legacy = subprocess.run(command + ["is-enabled", "voxd-tray.service"], **options)
+    except FileNotFoundError:
+        legacy = None  # Non-systemd desktops are supported.
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        print(f"[autostart] Could not check the previous login service: {exc}", file=sys.stderr)
+        return 1
+    if legacy is not None and legacy.returncode == 0:
+        try:
+            result = subprocess.run(command + ["disable", "voxd-tray.service"], **options)
+            if result.returncode != 0:
+                raise RuntimeError("systemctl disable failed")
+            result = subprocess.run(command + ["is-enabled", "voxd-tray.service"], **options)
+            if result.returncode == 0:
+                raise RuntimeError("the service is still enabled")
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+            print(f"[autostart] Incomplete: the previous voxd-tray.service login route "
+                  f"could not be disabled ({exc}). It may still start at login.", file=sys.stderr)
+            return 1
+    print(f"[autostart] {'enabled' if enabled else 'disabled'} (XDG desktop entry)")
+    return 0
 
 
 def _handle_recording_archive(value: str) -> int:
@@ -140,35 +133,6 @@ def _handle_recording_archive(value: str) -> int:
     cfg.save()
     print(f"[archive] {'enabled' if enabled else 'disabled'}")
     return 0
-
-
-def _mic_autoset_if_enabled(cfg: AppConfig) -> None:
-    if not cfg.mic_autoset_enabled:
-        return
-    level = max(0.0, min(1.0, float(cfg.mic_autoset_level)))
-    commands = []
-    if shutil.which("wpctl"):
-        commands = [
-            ["wpctl", "set-mute", "@DEFAULT_SOURCE@", "0"],
-            ["wpctl", "set-volume", "@DEFAULT_SOURCE@", f"{level:.2f}"],
-        ]
-    elif shutil.which("pactl"):
-        percent = f"{round(level * 100)}%"
-        commands = [
-            ["pactl", "set-source-mute", "@DEFAULT_SOURCE@", "0"],
-            ["pactl", "set-source-volume", "@DEFAULT_SOURCE@", percent],
-        ]
-    for command in commands:
-        try:
-            subprocess.run(
-                command,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=2,
-                check=False,
-            )
-        except (OSError, subprocess.TimeoutExpired):
-            return
 
 
 def _diagnose(cfg: AppConfig) -> int:
@@ -202,9 +166,11 @@ def _diagnose(cfg: AppConfig) -> int:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="VOXD E4B voice typing")
+    _configure_bundled_paths()
+    parser = argparse.ArgumentParser(prog="thoughtloud", description="ThoughtLoud — long, natural voice dictation")
     parser.add_argument("--tray", action="store_true", help="run the tray service (default)")
     parser.add_argument("--trigger-record", action="store_true", help="toggle recording in the tray")
+    parser.add_argument("--settings", action="store_true", help="open setup and settings")
     parser.add_argument("--setup", action="store_true", help="configure ydotool and desktop integration")
     parser.add_argument("--autostart", metavar="BOOL", help="enable or disable tray autostart")
     parser.add_argument(
@@ -233,15 +199,25 @@ def main() -> None:
         run_user_setup()
         return
 
+    if not args.diagnose:
+        migrate_generated_launchers()
+
+    if args.settings:
+        from voxd.utils.ipc_client import send_settings
+        if send_settings():
+            return
+
     cfg = AppConfig()
     if args.diagnose:
         raise SystemExit(_diagnose(cfg))
 
-    _mic_autoset_if_enabled(cfg)
-    print("VOXD tray: E4B transcription + ydotool typing", flush=True)
+    print("ThoughtLoud: E4B transcription + ydotool typing", flush=True)
     from voxd.tray.tray_main import main as tray_main
 
-    tray_main()
+    if args.settings:
+        tray_main(show_settings=True)
+    else:
+        tray_main()
 
 
 if __name__ == "__main__":

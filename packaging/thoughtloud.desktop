@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=ThoughtLoud
+Comment=Think out loud, in your own words
+Exec=thoughtloud --settings
+Icon=thoughtloud
+Terminal=false
+Categories=Utility;AudioVideo;
+StartupNotify=false

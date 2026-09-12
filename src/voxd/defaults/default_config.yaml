@@ -1,5 +1,11 @@
 verbosity: false
 autostart: false
+setup_completed: false
+hotkey_description: ""
+managed_runtime_enabled: true
+runtime_device: cpu
+# Optional description of your usual languages, code-switching, or terminology.
+speech_preferences: ""
 
 typing_delay: 0
 typing_word_delay: 10
@@ -11,8 +17,6 @@ audio_prefer_pulse: true
 audio_input_device: ""
 recording_archive_enabled: false
 recording_archive_max_mb: 5120
-mic_autoset_enabled: true
-mic_autoset_level: 0.45
 
 gemma_server_url: http://localhost:9292
 gemma_model: gemma-e4b

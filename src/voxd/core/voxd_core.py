@@ -1,215 +1,135 @@
 from __future__ import annotations
 
-import hashlib
-import json
-from threading import Thread
+from copy import deepcopy
+from threading import Event
 
 from PyQt6.QtCore import QThread, pyqtSignal
 
-from voxd.core.gemma_transcriber import GemmaAudioTranscriber, TranscriptionResult
+from voxd.core.gemma_transcriber import GemmaAudioTranscriber
+from voxd.core.session import DictationSession
+
+
+class _ManagedTranscriber:
+    """Wait for our server on the decode thread, after capture has started."""
+
+    def __init__(self, transcriber, lease, timeout):
+        self._transcriber = transcriber
+        self._lease = lease
+        self._timeout = timeout
+
+    def __getattr__(self, name):
+        return getattr(self._transcriber, name)
+
+    def warmup(self):
+        self._lease.wait_ready(timeout=self._timeout)
+        return self._transcriber.warmup()
+
+    def transcribe_segments(self, segments):
+        self._lease.wait_ready(timeout=self._timeout)
+        return self._transcriber.transcribe_segments(segments)
+
+    def transcribe(self, path):
+        self._lease.wait_ready(timeout=self._timeout)
+        return self._transcriber.transcribe(path)
 
 
 class CoreProcessThread(QThread):
-    """Own one record, transcribe, copy, and type cycle."""
+    """Qt/Linux wiring for the UI-independent dictation session."""
 
     finished = pyqtSignal(str)
     status_changed = pyqtSignal(str)
+    error = pyqtSignal(str)
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, *, recorder_factory=None, runtime=None):
         super().__init__()
-        self.cfg = cfg
-        self.should_stop = False
+        self.cfg = deepcopy(cfg)
+        self._runtime = runtime
+        self._recorder_factory = recorder_factory
+        self._stop_event = Event()
+        # Settings changes during recording apply to the next dictation only.
+        self._speech_preferences = getattr(cfg, "speech_preferences", "")
+
+    @property
+    def should_stop(self) -> bool:
+        return self._stop_event.is_set()
+
+    @should_stop.setter
+    def should_stop(self, value: bool) -> None:
+        if value:
+            self._stop_event.set()
+        else:
+            self._stop_event.clear()
 
     def stop_recording(self) -> None:
-        self.should_stop = True
+        self._stop_event.set()
 
     def run(self) -> None:
+        lease = None
+        transcript = ""
+        try:
+            if self._runtime is not None:
+                lease = self._runtime.acquire()
+            transcript = self._run_session(lease)
+        except Exception as exc:
+            self.error.emit(f"Could not start dictation: {exc}")
+        finally:
+            try:
+                if lease is not None:
+                    lease.release()
+            except Exception as exc:
+                self.error.emit(f"Could not release local inference: {exc}")
+            finally:
+                self.finished.emit(transcript)
+
+    def _run_session(self, lease) -> str:
         from voxd.core.archive import RecordingArchive
         from voxd.core.clipboard import ClipboardManager
         from voxd.core.recorder import AudioRecorder
         from voxd.core.typer import YdotoolTyper
 
-        transcript = ""
-        raw_transcript = ""
-        recording_path = None
-        dictation_error = None
-        transcription_result: TranscriptionResult | None = None
-        transcription_source = None
-        recorder = None
-        live_thread = None
-        live_state = {}
-        try:
+        cfg = self.cfg
+        server_url = lease.server_url if lease else cfg.gemma_server_url
+        model = "gemma-e4b" if lease else cfg.gemma_model
+        def create_transcriber():
             transcriber = GemmaAudioTranscriber(
-                server_url=self.cfg.gemma_server_url,
-                model=self.cfg.gemma_model,
-                segment_seconds=self.cfg.gemma_segment_seconds,
-                timeout=self.cfg.gemma_timeout,
-                max_tokens=self.cfg.gemma_max_tokens,
-                delete_input=not self.cfg.recording_archive_enabled,
+                server_url=server_url,
+                model=model,
+                speech_preferences=self._speech_preferences,
+                segment_seconds=cfg.gemma_segment_seconds,
+                timeout=cfg.gemma_timeout,
+                max_tokens=cfg.gemma_max_tokens,
+                delete_input=not cfg.recording_archive_enabled,
             )
-            recorder = AudioRecorder(
-                chunk_seconds=self.cfg.record_chunk_seconds,
-                input_device=self.cfg.audio_input_device,
-                prefer_pulse=self.cfg.audio_prefer_pulse,
-                segment_seconds=self.cfg.gemma_segment_seconds,
+            return _ManagedTranscriber(transcriber, lease, cfg.gemma_timeout) if lease else transcriber
+
+        recorder_factory = self._recorder_factory or AudioRecorder
+        session = DictationSession(
+            transcriber_factory=create_transcriber,
+            recorder_factory=lambda transcriber: recorder_factory(
+                chunk_seconds=cfg.record_chunk_seconds,
+                input_device=cfg.audio_input_device,
+                prefer_pulse=cfg.audio_prefer_pulse,
+                segment_seconds=cfg.gemma_segment_seconds,
                 segmenter_factory=transcriber.new_segmenter,
-            )
-            recorder.start_recording()
-            live_thread = Thread(
-                target=self._transcribe_live,
-                args=(transcriber, recorder, live_state),
-                name="voxd-gemma-live-transcription",
-                daemon=True,
-            )
-            live_thread.start()
-            while not self.should_stop:
-                self.msleep(100)
-
-            self.status_changed.emit("Transcribing")
-            recording_path = recorder.stop_recording(
-                preserve=self.cfg.recording_archive_enabled
-            )
-            if recording_path is None:
-                raise RuntimeError("recorder produced no audio file")
-            live_thread.join()
-            if "result" in live_state:
-                transcription_result = live_state["result"]
-                transcription_source = "live"
-                transcriber.cleanup_input(recording_path)
-            else:
-                live_error = live_state.get("error", "live transcription ended unexpectedly")
-                print(
-                    f"[core] Live transcription unavailable; replaying after Stop: {live_error}",
-                    flush=True,
-                )
-                transcription_result = transcriber.transcribe(recording_path)
-                transcription_source = "replay"
-            transcript = transcription_result.text
-            raw_transcript = transcription_result.raw_transcript
-            if transcript:
-                # Clipboard is recovery state only; the normal insertion path is
-                # always genuine ydotool input events.
-                clipboard_ready = False
-                try:
-                    ClipboardManager().copy(transcript)
-                    clipboard_ready = True
-                except Exception as exc:
-                    # Clipboard is a fallback, not a prerequisite for real typing.
-                    print(f"[core] Could not copy recovery text: {exc}", flush=True)
-
-                self.status_changed.emit("Typing")
-                try:
-                    YdotoolTyper(
-                        delay=self.cfg.typing_delay,
-                        word_delay=self.cfg.typing_word_delay,
-                        start_delay=self.cfg.typing_start_delay,
-                        cfg=self.cfg,
-                    ).type(transcript)
-                except Exception as exc:
-                    recovery = (
-                        "full transcript remains on clipboard"
-                        if clipboard_ready
-                        else "clipboard recovery was also unavailable"
-                    )
-                    print(f"[core] Typing failed; {recovery}: {exc}", flush=True)
-            else:
-                print("[core] No intelligible speech detected", flush=True)
-        except Exception as exc:
-            dictation_error = str(exc)
-            print(f"[core] Dictation failed: {exc}", flush=True)
-            if recorder is not None and recorder.is_recording:
-                try:
-                    recording_path = recorder.stop_recording(preserve=True)
-                except Exception:
-                    recording_path = recorder.last_temp_file
-            elif recorder is not None and recording_path is None:
-                # stop_recording can preserve a partial WAV and then raise for
-                # a capture/stream error before its return value is assigned.
-                recording_path = recorder.last_temp_file
-            if live_thread is not None:
-                live_thread.join()
-            transcript = ""
-        finally:
-            if (
-                self.cfg.recording_archive_enabled
-                and recording_path is not None
-                and recording_path.exists()
-            ):
-                try:
-                    protocol = transcriber.protocol_metadata()
-                    protocol_sha256 = hashlib.sha256(
-                        json.dumps(
-                            protocol,
-                            ensure_ascii=False,
-                            separators=(",", ":"),
-                            sort_keys=True,
-                        ).encode("utf-8")
-                    ).hexdigest()
-                    RecordingArchive(
-                        max_bytes=self.cfg.recording_archive_max_mb * 1024 * 1024
-                    ).store(
-                        recording_path,
-                        {
-                            "transcription": {
-                                "configured_model": self.cfg.gemma_model,
-                                "error": dictation_error,
-                                "model": (
-                                    transcription_result.resolved_model
-                                    if transcription_result is not None
-                                    else None
-                                ),
-                                "prompt": transcriber.prompt,
-                                "prompt_sha256": hashlib.sha256(
-                                    transcriber.prompt.encode("utf-8")
-                                ).hexdigest(),
-                                "protocol": protocol,
-                                "protocol_sha256": protocol_sha256,
-                                "segments": raw_transcript.splitlines(),
-                                "segment_modes": (
-                                    list(transcription_result.segment_modes)
-                                    if transcription_result is not None
-                                    else []
-                                ),
-                                "segment_seconds": self.cfg.gemma_segment_seconds,
-                                "server_url": self.cfg.gemma_server_url,
-                                "status": (
-                                    "failed"
-                                    if dictation_error
-                                    else "complete"
-                                    if transcript
-                                    else "no_speech"
-                                ),
-                                "source": transcription_source,
-                                "system_fingerprint": (
-                                    transcription_result.system_fingerprint
-                                    if transcription_result is not None
-                                    else None
-                                ),
-                                "text": transcript,
-                            }
-                        },
-                    )
-                except Exception as exc:
-                    print(
-                        f"[core] Could not finalize recording archive: {exc}",
-                        flush=True,
-                    )
-            self.finished.emit(transcript)
-
-    @staticmethod
-    def _warmup_model(transcriber) -> None:
-        try:
-            transcriber.warmup()
-        except Exception as exc:
-            print(
-                f"[core] Model warmup failed; continuing with normal transcription: {exc}",
-                flush=True,
-            )
-
-    @classmethod
-    def _transcribe_live(cls, transcriber, recorder, state) -> None:
-        cls._warmup_model(transcriber)
-        try:
-            state["result"] = transcriber.transcribe_segments(recorder.iter_segments())
-        except Exception as exc:
-            state["error"] = exc
+            ),
+            clipboard_factory=ClipboardManager,
+            typer_factory=lambda: YdotoolTyper(
+                delay=cfg.typing_delay,
+                word_delay=cfg.typing_word_delay,
+                start_delay=cfg.typing_start_delay,
+                cfg=cfg,
+            ),
+            archive_factory=lambda: RecordingArchive(
+                max_bytes=cfg.recording_archive_max_mb * 1024 * 1024
+            ),
+            preserve_audio=cfg.recording_archive_enabled,
+            transcription_metadata={
+                "configured_model": model,
+                "segment_seconds": cfg.gemma_segment_seconds,
+                "server_url": server_url,
+            },
+            status_callback=self.status_changed.emit,
+            error_callback=self.error.emit,
+            stop_event=self._stop_event,
+        )
+        return session.run()

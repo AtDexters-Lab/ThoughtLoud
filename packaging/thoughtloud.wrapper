@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="/opt/voxd/libexec:$PATH"
+export VOXD_YDOTOOL_SERVICE="${VOXD_YDOTOOL_SERVICE:-voxd-ydotoold.service}"
+export YDOTOOL_SOCKET="${YDOTOOL_SOCKET:-$HOME/.voxd_ydotool_socket}"
+exec /opt/voxd/thoughtloud "$@"

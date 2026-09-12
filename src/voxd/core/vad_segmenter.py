@@ -10,7 +10,7 @@ from typing import Callable, Iterator
 import numpy as np
 
 
-# VOXD's audio pipeline is local. Disable the official ONNX Runtime build's
+# ThoughtLoud's audio pipeline is local. Disable the official ONNX Runtime build's
 # telemetry before its first import, including creation of a persistent device ID.
 os.environ.setdefault("ORT_DISABLE_TELEMETRY", "1")
 
@@ -92,7 +92,7 @@ class _SileroOnnxPredictor:
             import onnxruntime as ort
         except ImportError as exc:
             raise VadSegmentationError(
-                "Silero VAD requires onnxruntime; reinstall VOXD dependencies"
+                "Silero VAD requires onnxruntime; reinstall ThoughtLoud dependencies"
             ) from exc
 
         if model_path is None:

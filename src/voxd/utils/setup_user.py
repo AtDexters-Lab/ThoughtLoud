@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
-import sys
-from importlib.resources import files
+import socket
+import time
+from dataclasses import dataclass
 from pathlib import Path
 
 from voxd.core.config import AppConfig, CONFIG_PATH
+from voxd.branding import install_desktop_entry
 
 
 def _run(command: list[str], *, timeout: int = 15) -> bool:
@@ -18,20 +21,39 @@ def _run(command: list[str], *, timeout: int = 15) -> bool:
         return False
 
 
+def _typing_service_name() -> str:
+    name = os.environ.get("VOXD_YDOTOOL_SERVICE", "ydotoold.service")
+    if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.@-]*\.service", name):
+        raise ValueError("Invalid typing service name.")
+    return name
+
+
+def _unit_arg(value: str) -> str:
+    return '"' + value.replace('\\', '\\\\').replace('"', '\\"').replace('%', '%%') + '"'
+
+
 def _install_user_ydotool_unit() -> bool:
-    if Path("/usr/lib/systemd/user/ydotoold.service").exists():
+    service = _typing_service_name()
+    if (Path("/usr/lib/systemd/user") / service).exists():
         return True
 
     daemon = shutil.which("ydotoold")
     if not daemon:
         return False
+    # ydotoold 0.1.8 ignores even --help and unconditionally opens a fixed /tmp
+    # socket. Inspect its capabilities without executing a potentially old daemon.
+    try:
+        if b"socket-path" not in Path(daemon).read_bytes():
+            return False
+    except OSError:
+        return False
 
     unit_dir = Path.home() / ".config/systemd/user"
     unit_dir.mkdir(parents=True, exist_ok=True)
-    command = daemon
-    if Path(daemon).name == "ydotoold":
-        command += " --socket-path=%h/.ydotool_socket --socket-own=%U:%G"
-    (unit_dir / "ydotoold.service").write_text(
+    command = _unit_arg(daemon)
+    socket_arg = _unit_arg(os.environ["YDOTOOL_SOCKET"]) if os.environ.get("YDOTOOL_SOCKET") else "%h/.ydotool_socket"
+    command += f" --socket-path={socket_arg} --socket-own=%U:%G"
+    (unit_dir / service).write_text(
         "[Unit]\n"
         "Description=ydotool user daemon\n"
         "After=default.target\n\n"
@@ -47,55 +69,56 @@ def _install_user_ydotool_unit() -> bool:
 
 
 def _install_desktop_entry() -> None:
-    icon_dir = Path.home() / ".local/share/icons/hicolor/256x256/apps"
-    icon_dir.mkdir(parents=True, exist_ok=True)
-    try:
-        icon = files("voxd").joinpath("assets", "voxd-1.png").read_bytes()
-        (icon_dir / "voxd.png").write_bytes(icon)
-    except (FileNotFoundError, OSError):
-        pass
+    install_desktop_entry()
 
-    apps_dir = Path.home() / ".local/share/applications"
-    apps_dir.mkdir(parents=True, exist_ok=True)
-    argv0 = Path(sys.argv[0])
-    if argv0.name == "voxd" and argv0.exists():
-        command = str(argv0.resolve())
-    else:
-        command = shutil.which("voxd") or "voxd"
-    (apps_dir / "voxd-tray.desktop").write_text(
-        "[Desktop Entry]\n"
-        "Type=Application\n"
-        "Name=VOXD\n"
-        "Comment=E4B voice typing\n"
-        f"Exec={command} --tray\n"
-        "Icon=voxd\n"
-        "Terminal=false\n"
-        "Categories=Utility;AudioVideo;\n",
-        encoding="utf-8",
-    )
+
+@dataclass(frozen=True)
+class SetupResult:
+    success: bool
+    message: str
+
+
+def _socket_ready(path: Path) -> bool:
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    try:
+        sock.settimeout(0.2)
+        sock.connect(str(path))
+        return True
+    except OSError:
+        return False
+    finally:
+        sock.close()
+
+
+def prepare_user_setup() -> SetupResult:
+    """Prepare the user's typing service without invoking the injector itself."""
+    _install_desktop_entry()
+    client = shutil.which("ydotool")
+    if not client:
+        return SetupResult(False, "Text insertion is unavailable: ydotool is missing. Reinstall the complete desktop package.")
+    if not _install_user_ydotool_unit():
+        return SetupResult(False, "A compatible ydotool daemon is missing. Install the complete desktop package; older 0.1.8 daemons cannot use the private socket.")
+    if not shutil.which("systemctl"):
+        return SetupResult(False, "Automatic typing setup needs a systemd user session. See the Linux installation guide for manual desktop setup.")
+    if not _run(["systemctl", "--user", "daemon-reload"], timeout=5):
+        return SetupResult(False, "Could not contact the systemd user session. Sign in to a desktop session and retry typing setup.")
+    if not _run(["systemctl", "--user", "enable", "--now", _typing_service_name()], timeout=10):
+        return SetupResult(False, "Typing service could not start. Check /dev/uinput access and the ydotoold user service, then retry setup.")
+    path = Path(os.environ.get("YDOTOOL_SOCKET", str(Path.home() / ".ydotool_socket")))
+    deadline = time.monotonic() + 2
+    while time.monotonic() < deadline:
+        if _socket_ready(path):
+            return SetupResult(True, "Typing service is running. Test actual insertion with a short dictation into an editor.")
+        time.sleep(0.1)
+    return SetupResult(False, "Typing service has no accessible private socket. Check /dev/uinput access, then retry setup.")
 
 
 def run_user_setup(verbose: bool = False) -> None:
-    """Create the small per-user runtime surface; never download ASR models."""
+    """Prepare desktop integration; model acquisition belongs to the setup UI."""
     cfg = AppConfig()
     cfg.save()
-    os.environ.setdefault("YDOTOOL_SOCKET", str(Path.home() / ".ydotool_socket"))
-
-    unit_available = _install_user_ydotool_unit()
-    daemon_started = False
-    if unit_available and shutil.which("systemctl"):
-        _run(["systemctl", "--user", "daemon-reload"])
-        daemon_started = _run(
-            ["systemctl", "--user", "enable", "--now", "ydotoold.service"]
-        )
-
-    _install_desktop_entry()
-
-    client = shutil.which("ydotool")
+    result = prepare_user_setup()
     print(f"[setup] config: {CONFIG_PATH}")
-    print(f"[setup] ydotool: {client or 'missing'}")
-    print(f"[setup] ydotoold: {'running' if daemon_started else 'not running'}")
-    if not client or not unit_available:
-        print("[setup] Install ydotool, then run: systemctl --user enable --now ydotoold.service")
+    print(f"[setup] {result.message}")
     if verbose:
         print(f"[setup] E4B endpoint: {cfg.gemma_server_url}")

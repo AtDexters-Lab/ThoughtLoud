@@ -29,7 +29,11 @@ also contains components with their own licenses:
 - ydotool 1.0.4, revision `57ba7d0af525e82da2de0e275d169477f293b197`:
   AGPL-3.0-or-later, with its license and corresponding unmodified source archive
   under `licenses/`. Build recipe: `packaging/build_ydotool.sh`.
-- The separately downloaded Gemma 4 E4B Q8 model and F16 projector use Apache-2.0.
+- The separately downloaded Gemma 4 E4B Q8 model, F16 projector and Q8 MTP
+  assistant use Apache-2.0. The assistant is Google DeepMind's Gemma 4 E4B
+  assistant, quantized by AtomicChat. Its pinned
+  [model card](https://huggingface.co/AtomicChat/gemma-4-E4B-it-assistant-GGUF/blob/69e1c34ad06437c136b935f6bf53ff80540c2361/README.md)
+  identifies the upstream model and license.
   Their pinned public revision, file sizes and SHA-256 digests are in
   `src/voxd/runtime/models.py`; the license is in `runtime/linux/LICENSE.gemma`.
 

@@ -16,7 +16,7 @@ from pathlib import Path
 
 import requests
 
-from .models import DownloadCancelled, ModelStore
+from .models import DownloadCancelled, ModelStore, MTP_ASSISTANT
 
 
 class RuntimeStartupError(RuntimeError):
@@ -115,7 +115,9 @@ class ManagedRuntime:
             raise ValueError("port must be an unprivileged or user-selected valid port")
         self.server_url = f"http://127.0.0.1:{port}"
         self.port = port
-        self.model_store = model_store if model_store is not None else ModelStore(model_dir)
+        self.model_store = model_store if model_store is not None else ModelStore(
+            model_dir, assistant=MTP_ASSISTANT if accelerator == "vulkan" else None,
+        )
         self.runtime_dir = runtime_dir
         self.accelerator = accelerator
         self.idle_seconds = idle_seconds
@@ -167,6 +169,11 @@ class ManagedRuntime:
                 "Reinstall the complete desktop package."
             )
         paths = self.model_store.model_paths
+        if self.accelerator == "vulkan" and paths.assistant is None:
+            raise RuntimeStartupError(
+                "The Vulkan acceleration model is missing. Open setup, select Vulkan "
+                "and download/verify the local models."
+            )
         args = [
             str(binary), "-m", str(paths.model), "--mmproj", str(paths.projector),
             "--alias", "gemma-e4b", "--host", "127.0.0.1", "--port", str(self.port),
@@ -174,10 +181,17 @@ class ManagedRuntime:
             "--cache-ram", "0", "--fit", "off", "-ctk", "f16", "-ctv", "f16",
         ]
         if self.accelerator == "vulkan":
-            args += ["--device", "Vulkan0", "-ngl", "99", "-fa", "on"]
+            args += [
+                "--device", "Vulkan0", "-ngl", "99", "-fa", "on",
+                "--mtp-head", str(paths.assistant), "--spec-type", "mtp",
+                "--draft-block-size", "3", "--device-draft", "Vulkan0", "-ngld", "99",
+            ]
         else:
-            args += ["--device", "none", "-ngl", "0"]
+            args += ["--device", "none", "-ngl", "0", "--no-mmproj-offload"]
         env = os.environ.copy()
+        if self.accelerator == "vulkan":
+            env["LLAMA_MTP_SKIP_STREAK_THRESHOLD"] = "0"
+            env["MTMD_BACKEND_DEVICE"] = "Vulkan0"
         original_libs = env.get("LD_LIBRARY_PATH_ORIG", "")
         env["LD_LIBRARY_PATH"] = str(directory) + (":" + original_libs if original_libs else "")
         self._close_log_locked()

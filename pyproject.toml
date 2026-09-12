@@ -29,6 +29,10 @@ norecursedirs = ["venv",".venv","build","dist"]
 thoughtloud = "voxd.__main__:main"
 voxd = "voxd.__main__:main"
 
+[project.urls]
+Homepage = "https://github.com/AtDexters-Lab/ThoughtLoud"
+Issues = "https://github.com/AtDexters-Lab/ThoughtLoud/issues"
+
 [tool.hatch.build]
 package-dir = "src"
 include = [

@@ -106,14 +106,18 @@ separate from the generic session API.
 
 ## Managed runtime
 
-The current Linux profile downloads two pinned, size/hash-verified files: Gemma
-E4B Q8 weights and an F16 audio projector, about 9.2 GB combined. Downloads happen
+The CPU profile downloads two pinned, size/hash-verified files: Gemma
+E4B Q8 weights and an F16 audio projector, about 9.2 GB combined. Vulkan adds
+a pinned 100 MB Q8 MTP assistant, reusing the target/projector receipts. Downloads happen
 in setup, support cancellation/retry, and restart interrupted transfers from byte
 zero. Partial files are never treated as installed models. The receipt validates
 unchanged file identity after hashing; setup can reverify existing files.
 
 `ManagedRuntime` starts only its own server on a random loopback port. CPU and
-Vulkan profiles use the same model files and keep MTP disabled. Readiness includes
+Vulkan share target/projector files. CPU disables projector GPU offload and MTP;
+Vulkan binds target, projector and assistant to Vulkan0 and enables MTP with three
+draft tokens and adaptive skip disabled. Settings switch the required model
+manifest with the accelerator and lock that choice during acquisition. Readiness includes
 a synthetic-audio request, and the five-minute idle timer cannot unload a server
 while a recording/replay holds a lease. Quitting closes the owned child. An
 existing configured endpoint is not stopped or modified.

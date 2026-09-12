@@ -5,15 +5,78 @@ code-switched dictation. A fresh user should install a package, configure a
 shortcut and optional speech preference, download/use the model, and dictate
 into an application without a developer environment or manual Python setup.
 
-This page records the implemented candidate, its actual validation and remaining
-publication/support boundaries. The implementation is checkpointed in Git;
-no tagged binary release has been published.
+This page records release validation and support boundaries. Earlier evidence
+below applies to its identified artifacts; retained candidates are not substitutes
+for testing the final published package.
 
-The latest candidate includes the workstation repairs and portable CPU dispatch
-described below and passes **329 tests**. Its rebuilt packages are recorded in
-the portable CPU section. Earlier package and VM evidence applies to the
-identified earlier artifacts; those packages and their matching source were
-retained separately before rebuilding.
+## Final release profile: 2026-09-12
+
+The user approved publishing tagged packages with matching source attachments and
+installing that exact release on the development workstation. The public repository
+is now [AtDexters-Lab/ThoughtLoud](https://github.com/AtDexters-Lab/ThoughtLoud).
+
+The explicit CPU/Vulkan choice remains. CPU is initially selected and uses only
+the target and projector, with projector GPU offload disabled. Vulkan selects
+Vulkan0 for target, projector and assistant and enables the validated MTP profile:
+three draft tokens and adaptive skip disabled. No automatic GPU selection policy
+or runtime change is applied to an existing external endpoint.
+
+Vulkan adds a 100,259,232-byte assistant from AtomicChat revision
+`69e1c34ad06437c136b935f6bf53ff80540c2361`, SHA-256
+`eb576734fe210b551d091761fe83ab701c8e01ff708015a51172a4c0b04459e3`.
+The current upstream main branch has a different export format. The pinned public
+artifact is required. CPU-to-Vulkan setup reuses verified target/projector files;
+profile controls are locked during a download, and the assistant follows the same
+hash validation, cancellation and retry rules as the other models.
+
+Final package validation before publication:
+
+- Full application suite: **340 tests passed**; native recipe checks: **4 passed**
+  after the build-description correction. Source verification covered **230 ELF
+  files and 241 matching source archives**. All dependency binary/provider
+  identities are unchanged from the portable candidate; application code and the
+  descriptive native `BUILD.txt` were updated.
+- Final DEB: `d54be99010bd12a8aa94cc472a30c91e3e7ca2cddaa06fb4b68a9b924003ec1f`.
+  Installed in the Ubuntu 24.04 GNOME Wayland VM configured as Nehalem, with
+  AVX, AVX2 and XSAVE absent. The saved Ctrl+Alt+Space desktop shortcut started
+  and stopped capture of 11.4 seconds of public speech. VAD, managed SSE4.2 CPU
+  inference and clipboard recovery passed; saved editor text exactly matched
+  the transcript plus the normal insertion suffix. The 173.8-second total is a
+  functional compatibility observation, not a CPU latency recommendation.
+- The same DEB survived an actual VM reboot: one tray instance, visible icon,
+  hidden settings window and working typing service. A post-reboot hotkey on a
+  muted virtual default source showed the expected warning, retained mute and
+  37% volume, and started neither capture nor inference. The VM was shut down.
+- Final RPM: `eb072e1dd5755653897af77c19ffd47282fa49637091373ed94d1931c8b1adab`.
+  Fresh Fedora 44 container installation resolved dependencies; `rpm -V`,
+  unprivileged offscreen settings/IPC startup and removal passed. The container
+  was removed. This does not establish Fedora desktop/audio behavior.
+- Both installed executable hashes match the final bundle:
+  `7d7317e6ca522335a81b542f7816230bf43a3a5918497101d397b40152d53693`.
+
+Local detailed evidence is under `build/validation/release-20260912/`.
+Managed Vulkan also passed through the actual `ManagedRuntime` lifecycle using
+only the Radeon 780M: verified model acquisition, synthetic-audio readiness,
+application warmup and two identical correct public-audio transcriptions. Each
+speech request produced 20 MTP drafts and accepted 13; the second request
+established repeated-request behavior. Target, projector and assistant used
+Vulkan0. The native child exited successfully, the isolated container was removed,
+and the production endpoint and model/runtime files were unchanged. Public
+assistant acquisition independently downloaded and verified the exact pinned
+100,259,232-byte file.
+
+The tag and its application-source attachment bind this reviewed source tree.
+The release publishes DEB, RPM, application source, complete dependency source
+and `SHA256SUMS` together. Workstation installation and actual physical microphone
+and host reboot verification are deployment steps after publication; the results
+above do not imply those steps have happened.
+The existing five-minute unload policy remains; this release does not claim to
+eliminate cold model-loading latency. Physical microphone and actual workstation
+reboot checks are separate from VM and prerecorded-audio evidence.
+
+The records below retain earlier checkpoints and their original validation
+boundaries. Their then-pending items are superseded by the final release evidence
+above where explicitly completed.
 
 ## Repository checkpoint: 2026-09-12
 

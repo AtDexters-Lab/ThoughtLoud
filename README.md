@@ -8,7 +8,7 @@ time and speak in comfortable native or code-switched speech. Press your shortcu
 to start, press it again to stop, and the complete transcript is typed into the
 focused application.
 
-## Linux package candidates
+## Install on Linux
 
 Linux is the release target. The current packages target **x86_64 Linux**, using
 Ubuntu 24.04 as the build baseline, and support Vulkan GPU acceleration. The
@@ -19,7 +19,7 @@ recipes bundle Python, Qt, transcription
 dependencies, and the native inference runtime. Users do not need to install
 Python or manage a virtualenv.
 
-The candidate has been exercised on Ubuntu 24.04 GNOME Wayland in QEMU/KVM,
+The application has been exercised on Ubuntu 24.04 GNOME Wayland in QEMU/KVM,
 including a fresh model download, a desktop shortcut and dictation into an editor.
 Fedora 44 RPM installation/startup and a Radeon 780M Vulkan audio run have separate
 smoke evidence. Package installation and user-data preservation were also
@@ -27,13 +27,18 @@ verified on Ubuntu and Fedora.
 Physical microphone/headset and KDE portal checks remain open.
 See the current [release evidence and remaining checks](docs/linux-release.md).
 
-Install a locally built candidate with your package manager:
+Download the `.deb` or `.rpm` and `SHA256SUMS` from
+[GitHub Releases](https://github.com/AtDexters-Lab/ThoughtLoud/releases).
+In the download directory, verify the package and install it:
 
 ```bash
-# Ubuntu candidate
+# Verify downloaded files (the checksum list also covers the source attachments)
+sha256sum --check --ignore-missing SHA256SUMS
+
+# Ubuntu 24.04
 sudo apt install ./thoughtloud_*_amd64.deb
 
-# Fedora candidate
+# Fedora
 sudo dnf install ./thoughtloud-*.x86_64.rpm
 ```
 
@@ -43,8 +48,10 @@ available with `thoughtloud --settings`, including on desktops without a tray.
 First-run setup prepares the bundled typing service in your desktop session;
 its status and retry control are shown in the window.
 
-1. **Run the transcription model on this computer** is selected for fresh installs. Choose CPU or Vulkan,
-   and download the local models (about **9.2 GB**). Download progress,
+1. **Run the transcription model on this computer** is selected for fresh installs.
+   CPU is initially selected; choose **Vulkan GPU** for acceleration with a compatible
+   driver. Download the local models (about **9.2 GB** for CPU, **9.3 GB** for Vulkan).
+   Download progress,
    cancellation, retry, and file verification are built in. An existing
    compatible Gemma endpoint can be used instead.
 2. Optionally describe **How do you like to talk?** For example: “I mix Marathi
@@ -57,10 +64,14 @@ its status and retry control are shown in the window.
    recording begins, and press it again to stop. Keep the intended destination
    focused until insertion finishes.
 
-The local runtime uses Gemma E4B Q8 weights with an F16 audio projector. CPU and
-Vulkan are separate profiles. The current managed package omits the MTP assistant;
-the [validated iGPU runtime](runtime/igpu/README.md) includes it and enables MTP.
-These are different runtime configurations. Vulkan needs a compatible host driver. Allow disk space for the download and recordings,
+The local runtime uses Gemma E4B Q8 weights with an F16 audio projector. Vulkan
+also uses the verified Q8 assistant for multi-token prediction (MTP), which speeds
+up decoding on the validated Radeon 780M setup. CPU uses the target and projector
+without MTP. Switching from CPU to Vulkan reuses those files and downloads only
+the approximately 100 MB assistant. Model revisions and checksums are pinned.
+Vulkan selects the runtime's first Vulkan device; on systems with multiple GPUs,
+use an explicitly configured endpoint if you need to control GPU selection.
+Allow disk space for the download and recordings,
 and enough memory for the model and inference. The CPU desktop test used a
 14 GiB VM; the native server peaked at about 9.2 GiB RSS, excluding the desktop
 and application. This is an observed working setup, not a minimum-memory claim.

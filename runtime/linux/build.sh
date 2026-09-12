@@ -59,6 +59,6 @@ Patch: voxd-audio.patch
 Build recipe: runtime/linux/build.sh
 Target: Linux x86_64; optional Vulkan
 CPU dispatch: portable x64 baseline plus optimized CPU plugins, selected by host features
-Profile: Gemma E4B Q8 + F16 audio projector, MTP disabled
+Profile: Gemma E4B Q8 + F16 audio projector; CPU without MTP, Vulkan with pinned Q8 MTP assistant
 EOF
 echo "Native runtime: ${build_dir}/bin"

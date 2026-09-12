@@ -10,7 +10,7 @@ import requests
 from voxd.runtime import (
     DownloadCancelled, ManagedRuntime, ModelDownloadError, ModelStore, RuntimeStartupError,
 )
-from voxd.runtime.models import ModelArtifact
+from voxd.runtime.models import ModelArtifact, MODEL_ARTIFACTS, MTP_ASSISTANT
 
 
 class Response:
@@ -67,6 +67,14 @@ def artifacts():
     )
 
 
+@pytest.fixture
+def assistant():
+    return ModelArtifact(
+        "assistant.gguf", 9, hashlib.sha256(b"assistant").hexdigest(),
+        "https://assistant.invalid/resolve/pinned-revision/assistant.gguf",
+    )
+
+
 def store_for(tmp_path, artifacts, responses=(), **kwargs):
     return ModelStore(tmp_path, artifacts=artifacts, session=Session(responses), **kwargs)
 
@@ -100,6 +108,55 @@ def test_existing_files_are_verified_without_network(tmp_path, artifacts):
     store.ensure_models()
     assert store.installed()
     assert not store.session.calls
+
+
+def test_cpu_to_vulkan_only_downloads_assistant_from_its_pinned_url(tmp_path, artifacts, assistant):
+    cpu = store_for(tmp_path, artifacts, [Response([b"target"]), Response([b"projector"])])
+    cpu.ensure_models()
+    receipts = {path.name: path.read_bytes() for path in tmp_path.glob("*.verified.json")}
+    vulkan = store_for(tmp_path, artifacts, [Response([b"assistant"])], assistant=assistant)
+    assert cpu.installed() and not vulkan.installed()
+    paths = vulkan.ensure_models()
+    assert paths.assistant.read_bytes() == b"assistant"
+    assert vulkan.installed() and cpu.installed()
+    assert vulkan.total_bytes == cpu.total_bytes + assistant.size
+    assert [url for url, _ in vulkan.session.calls] == [assistant.url]
+    assert receipts == {name: (tmp_path / name).read_bytes() for name in receipts}
+    paths.assistant.unlink()
+    assert cpu.installed() and not vulkan.installed()
+
+
+def test_assistant_cancellation_keeps_cpu_ready_and_retries_only_assistant(tmp_path, artifacts, assistant):
+    cpu = store_for(tmp_path, artifacts, [Response([b"target"]), Response([b"projector"])])
+    cpu.ensure_models()
+    vulkan = store_for(tmp_path, artifacts, [
+        Response([b"assi", b"stant"]), Response([b"assistant"]),
+    ], assistant=assistant)
+    cancel = threading.Event()
+
+    def progress(event):
+        if event.filename == assistant.filename and event.downloaded_bytes == cpu.total_bytes + 4:
+            cancel.set()
+
+    with pytest.raises(DownloadCancelled):
+        vulkan.ensure_models(cancel=cancel, progress=progress)
+    assert cpu.installed() and not vulkan.installed()
+    assert not list(tmp_path.glob("*.part"))
+    assert not vulkan.model_paths.assistant.exists()
+    vulkan.ensure_models()
+    assert vulkan.installed()
+    assert [url for url, _ in vulkan.session.calls] == [assistant.url, assistant.url]
+
+
+def test_wrong_assistant_digest_does_not_invalidate_cpu_models(tmp_path, artifacts, assistant):
+    cpu = store_for(tmp_path, artifacts, [Response([b"target"]), Response([b"projector"])])
+    cpu.ensure_models()
+    vulkan = store_for(tmp_path, artifacts, [Response([b"incorrect"])], assistant=assistant, attempts=1)
+    with pytest.raises(ModelDownloadError, match="SHA256"):
+        vulkan.ensure_models()
+    assert cpu.installed() and not vulkan.installed()
+    assert not vulkan.model_paths.assistant.exists()
+    assert not list(tmp_path.glob("*.part"))
 
 
 def test_changed_cached_file_invalidates_receipt_and_is_replaced(tmp_path, artifacts):
@@ -203,7 +260,7 @@ class Timer:
 
 
 @pytest.fixture
-def runtime_factory(tmp_path, artifacts):
+def runtime_factory(tmp_path, artifacts, assistant):
     store = store_for(tmp_path / "models", artifacts, [Response([b"target"]), Response([b"projector"])])
     store.ensure_models()
     native = tmp_path / "llama"
@@ -213,6 +270,14 @@ def runtime_factory(tmp_path, artifacts):
 
     def factory(**kwargs):
         processes, calls, timers = [], [], []
+        selected_store = kwargs.pop("model_store", None)
+        if selected_store is None:
+            selected_store = store
+            if kwargs.get("accelerator") == "vulkan":
+                selected_store = store_for(
+                    store.model_dir, artifacts, [Response([b"assistant"])], assistant=assistant,
+                )
+                selected_store.ensure_models()
 
         def popen(*args, **kwargs):
             process = Process()
@@ -227,7 +292,7 @@ def runtime_factory(tmp_path, artifacts):
 
         session = Session()
         runtime = ManagedRuntime(
-            store.model_dir, runtime_dir=native, model_store=store, port=34917,
+            store.model_dir, runtime_dir=native, model_store=selected_store, port=34917,
             session=session, popen_factory=popen, timer_factory=timer,
             host_validator=lambda: None, **kwargs,
         )
@@ -250,6 +315,7 @@ def test_acquire_does_not_wait_for_readiness_and_uses_controlled_cpu_args(runtim
     assert argv[argv.index("--host") + 1] == "127.0.0.1"
     assert argv[argv.index("--device") + 1] == "none"
     assert argv[argv.index("-ngl") + 1] == "0"
+    assert "--no-mmproj-offload" in argv
     assert argv[argv.index("-c") + 1] == "8192"
     assert argv[argv.index("--cache-ram") + 1] == "0"
     assert "--mtp-head" not in argv and "--spec-type" not in argv
@@ -342,11 +408,21 @@ def test_health_loading_timeout_does_not_mark_ready(runtime_factory):
     assert not session.probes
 
 
-def test_vulkan_explicit_and_close_only_kills_owned_child(runtime_factory):
+def test_vulkan_explicit_and_close_only_kills_owned_child(runtime_factory, monkeypatch):
+    monkeypatch.setenv("MTMD_BACKEND_DEVICE", "unrelated-gpu")
+    monkeypatch.setenv("LLAMA_MTP_SKIP_STREAK_THRESHOLD", "7")
     runtime, processes, calls, timers, session = runtime_factory(accelerator="vulkan")
     lease = runtime.acquire()
     argv = calls[0][0][0]
     assert argv[argv.index("--device") + 1] == "Vulkan0"
+    assert "--no-mmproj-offload" not in argv
+    assert argv[argv.index("--mtp-head") + 1] == str(runtime.model_store.model_paths.assistant)
+    assert argv[argv.index("--spec-type") + 1] == "mtp"
+    assert argv[argv.index("--draft-block-size") + 1] == "3"
+    assert argv[argv.index("--device-draft") + 1] == "Vulkan0"
+    assert argv[argv.index("-ngld") + 1] == "99"
+    assert calls[0][1]["env"]["LLAMA_MTP_SKIP_STREAK_THRESHOLD"] == "0"
+    assert calls[0][1]["env"]["MTMD_BACKEND_DEVICE"] == "Vulkan0"
     processes[0].stubborn = True
     runtime.close()
     assert processes[0].terminated == 1
@@ -364,6 +440,35 @@ def test_missing_models_fail_before_process_start(runtime_factory):
     with pytest.raises(RuntimeStartupError, match="download/verify"):
         runtime.acquire()
     assert not processes
+
+
+@pytest.mark.parametrize("change", ["missing", "corrupt"])
+def test_vulkan_requires_unchanged_verified_assistant_before_start(runtime_factory, change):
+    runtime, processes, calls, timers, session = runtime_factory(accelerator="vulkan")
+    assistant_path = runtime.model_store.model_paths.assistant
+    if change == "missing":
+        assistant_path.unlink()
+    else:
+        assistant_path.write_bytes(b"incorrect")
+    with pytest.raises(RuntimeStartupError, match="download/verify"):
+        runtime.acquire()
+    assert not processes
+
+
+def test_vulkan_cannot_start_with_a_cpu_only_model_store(runtime_factory):
+    cpu, *_ = runtime_factory()
+    vulkan, processes, *_ = runtime_factory(accelerator="vulkan", model_store=cpu.model_store)
+    with pytest.raises(RuntimeStartupError, match="acceleration model is missing"):
+        vulkan.acquire()
+    assert not processes
+
+
+@pytest.mark.parametrize("accelerator", ["cpu", "vulkan"])
+def test_default_model_store_matches_runtime_profile(tmp_path, accelerator):
+    runtime = ManagedRuntime(tmp_path, accelerator=accelerator, port=34917)
+    expected = MODEL_ARTIFACTS + ((MTP_ASSISTANT,) if accelerator == "vulkan" else ())
+    assert runtime.model_store.artifacts == expected
+    runtime.close()
 
 
 @pytest.mark.parametrize("architecture", ["x86_64", "amd64", "AMD64"])

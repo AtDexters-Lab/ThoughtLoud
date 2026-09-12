@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
 
 from voxd.platforms.linux.audio import probe_input
 from voxd.paths import DATA_DIR
-from voxd.runtime.models import ModelStore, MODEL_ARTIFACTS
+from voxd.runtime.models import ModelStore, MTP_ASSISTANT
 
 
 def validate_endpoint(url: str, model: str) -> str:
@@ -81,7 +81,6 @@ class SettingsWindow(QWidget):
         super().__init__()
         self.cfg = cfg
         self.shortcuts = shortcuts
-        self._model_store = ModelStore(DATA_DIR / "models")
         self._download_cancel = Event()
         self.download_active = False
         self.quit_after_download = False
@@ -114,7 +113,7 @@ class SettingsWindow(QWidget):
         self.runtime_status = QLabel("Accelerator changes apply after restarting the app once its local runtime has started.")
         self.runtime_status.setWordWrap(True)
         layout.addWidget(self.runtime_status)
-        self.download = QPushButton(f"Download local models ({sum(a.size for a in MODEL_ARTIFACTS) / 1e9:.1f} GB)")
+        self.download = QPushButton()
         self.download.clicked.connect(self._download_models)
         layout.addWidget(self.download)
         self.cancel_download_button = QPushButton("Cancel download")
@@ -124,7 +123,7 @@ class SettingsWindow(QWidget):
         self.progress = QProgressBar()
         self.progress.setRange(0, 100)
         layout.addWidget(self.progress)
-        self.download_status = QLabel("Local models installed and verified." if self._model_store.installed() else "Local models are not installed. Download verifies both files before they can be used.")
+        self.download_status = QLabel()
         self.download_status.setWordWrap(True)
         layout.addWidget(self.download_status)
         form = QFormLayout()
@@ -190,21 +189,48 @@ class SettingsWindow(QWidget):
         self.result.connect(self._result)
         self.download_progress.connect(self._progress)
         self.managed.toggled.connect(self._runtime_mode_changed)
+        self.device.currentIndexChanged.connect(self._model_profile_changed)
+        self._model_profile_changed()
         self._runtime_mode_changed(self.managed.isChecked())
 
     def _runtime_mode_changed(self, enabled):
-        self.device.setEnabled(enabled)
+        self.device.setEnabled(enabled and not self.download_active)
         self.external_endpoint_group.setVisible(not enabled)
         self.endpoint.setEnabled(not enabled)
         self.model.setEnabled(not enabled)
         self.check_endpoint.setEnabled(not enabled)
 
+    def _model_profile_changed(self):
+        if self.download_active:
+            # Controls are disabled during acquisition. Also reject a
+            # programmatic profile change until the worker has finished.
+            self.device.blockSignals(True)
+            self.device.setCurrentIndex(self.device.findData(self._model_device))
+            self.device.blockSignals(False)
+            return
+        self._model_device = self.device.currentData()
+        self._model_store = ModelStore(
+            DATA_DIR / "models",
+            assistant=MTP_ASSISTANT if self._model_device == "vulkan" else None,
+        )
+        self.download.setText(f"Download local models ({self._model_store.total_bytes / 1e9:.1f} GB)")
+        self.progress.setValue(0)
+        profile = "Vulkan" if self._model_device == "vulkan" else "CPU"
+        self.download_status.setText(
+            f"Local models installed and verified for {profile}."
+            if self._model_store.installed() else
+            f"Local models are not installed for {profile}. Download verifies all required files before they can be used."
+        )
+
     def _download_models(self):
         if self.download_active:
             return
         self.download_active = True
+        store = self._model_store
         self._download_cancel.clear()
         self.download.setEnabled(False)
+        self.managed.setEnabled(False)
+        self.device.setEnabled(False)
         self.cancel_download_button.setEnabled(True)
         self.download_status.setText("Checking local models…")
         def acquire():
@@ -217,7 +243,7 @@ class SettingsWindow(QWidget):
                         self.download_progress.emit(value)
                     last_progress = now
             try:
-                self._model_store.ensure_models(cancel=self._download_cancel, progress=progress)
+                store.ensure_models(cancel=self._download_cancel, progress=progress)
                 message = "Local models installed and verified. Save settings to use them; the first recording loads the model."
             except Exception as exc:
                 message = str(exc)
@@ -289,6 +315,8 @@ class SettingsWindow(QWidget):
         elif kind == "download":
             self.download_active = False
             self.download.setEnabled(True)
+            self.managed.setEnabled(True)
+            self.device.setEnabled(self.managed.isChecked())
             self.cancel_download_button.setEnabled(False)
             self.download_status.setText(message)
             if self.quit_after_download:

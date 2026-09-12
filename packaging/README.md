@@ -60,7 +60,8 @@ desktop or inference readiness.
 The bundle script requires both native runtime and typing-helper outputs. The
 application can still select an existing endpoint after installation. Its local
 model profile is Gemma E4B
-Q8 plus the F16 audio projector (about 9.2 GB), CPU or Vulkan, with MTP disabled.
+Q8 plus the F16 audio projector (about 9.2 GB). CPU uses those two files without
+MTP; Vulkan adds the pinned Q8 assistant (about 100 MB) and enables MTP.
 
 ## Produce native packages
 

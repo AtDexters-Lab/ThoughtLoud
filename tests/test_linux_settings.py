@@ -101,7 +101,8 @@ def test_download_ui_cancellation_and_completion_are_real_worker_states(monkeypa
     workers = []
     monkeypatch.setattr(settings, "Thread", lambda **kwargs: SimpleNamespace(start=lambda: workers.append(kwargs["target"])))
     class Store:
-        def __init__(self, *_): pass
+        total_bytes = 2
+        def __init__(self, *_, **kwargs): pass
         def installed(self): return False
         def ensure_models(self, *, cancel, progress):
             assert cancel.is_set()
@@ -117,6 +118,83 @@ def test_download_ui_cancellation_and_completion_are_real_worker_states(monkeypa
     assert not window.download_active
     assert "cancelled" in window.download_status.text()
     assert window.download.isEnabled()
+    window.shutdown()
+    window.close()
+
+
+@pytest.mark.parametrize("initial_device", ["cpu", "vulkan"])
+def test_model_requirements_and_status_follow_accelerator(monkeypatch, initial_device):
+    global _QAPP
+    from PyQt6.QtWidgets import QApplication
+    from voxd.core.config import AppConfig
+    from voxd.platforms.linux.shortcuts import PortalShortcuts
+    from voxd.runtime.models import MODEL_ARTIFACTS, MTP_ASSISTANT
+    from voxd.tray import settings
+    _QAPP = QApplication.instance() or QApplication([])
+    class Store:
+        def __init__(self, _, *, assistant=None):
+            self.assistant = assistant
+            self.total_bytes = sum(a.size for a in MODEL_ARTIFACTS) + (assistant.size if assistant else 0)
+        def installed(self):
+            # A completed CPU installation still needs the Vulkan assistant.
+            return self.assistant is None
+    monkeypatch.setattr(settings, "ModelStore", Store)
+    cfg = AppConfig()
+    cfg.set("managed_runtime_enabled", True)
+    cfg.set("runtime_device", initial_device)
+    window = settings.SettingsWindow(cfg, PortalShortcuts())
+    assert window._model_store.assistant == (MTP_ASSISTANT if initial_device == "vulkan" else None)
+    window.device.setCurrentIndex(1)
+    assert window._model_store.assistant == MTP_ASSISTANT
+    assert "9.3 GB" in window.download.text()
+    assert "not installed for Vulkan" in window.download_status.text()
+    window.device.setCurrentIndex(0)
+    assert window._model_store.assistant is None
+    assert "9.2 GB" in window.download.text()
+    assert "installed and verified for CPU" in window.download_status.text()
+    window.shutdown()
+    window.close()
+
+
+def test_download_keeps_selected_profile_until_worker_finishes(monkeypatch):
+    global _QAPP
+    from PyQt6.QtWidgets import QApplication
+    from voxd.core.config import AppConfig
+    from voxd.platforms.linux.shortcuts import PortalShortcuts
+    from voxd.runtime.models import MTP_ASSISTANT, DownloadCancelled
+    from voxd.tray import settings
+    _QAPP = QApplication.instance() or QApplication([])
+    workers, downloads = [], []
+    monkeypatch.setattr(settings, "Thread", lambda **kwargs: SimpleNamespace(start=lambda: workers.append(kwargs["target"])))
+    class Store:
+        total_bytes = 100
+        def __init__(self, _, *, assistant=None):
+            self.assistant = assistant
+        def installed(self): return False
+        def ensure_models(self, *, cancel, progress):
+            downloads.append(self.assistant)
+            if cancel.is_set():
+                raise DownloadCancelled("Model setup cancelled.")
+    monkeypatch.setattr(settings, "ModelStore", Store)
+    cfg = AppConfig()
+    cfg.set("managed_runtime_enabled", True)
+    cfg.set("runtime_device", "vulkan")
+    window = settings.SettingsWindow(cfg, PortalShortcuts())
+    window._download_models()
+    assert not window.device.isEnabled() and not window.managed.isEnabled()
+    window.device.setCurrentIndex(0)
+    assert window.device.currentData() == "vulkan"
+    window.cancel_download()
+    assert window.download_active and not window.device.isEnabled()
+    workers.pop(0)()
+    assert downloads == [MTP_ASSISTANT]
+    assert not window.download_active
+    assert window.device.isEnabled() and window.managed.isEnabled()
+    window.device.setCurrentIndex(0)
+    window._download_models()
+    workers.pop(0)()
+    assert downloads == [MTP_ASSISTANT, None]
+    assert not window.download_active and window.device.isEnabled()
     window.shutdown()
     window.close()
 

@@ -32,7 +32,12 @@ Provide equivalent download access to the sources alongside the binaries. Do
 not replace the attachment with a promise to provide it later or a collection
 of upstream homepages. Keep the matching source attachments available for each
 binary release. Source archives are not model weights; the independently
-downloaded Gemma model has its own Apache-2.0 license and pinned manifest.
+downloaded Gemma target, audio projector and MTP assistant have their own
+Apache-2.0 license and pinned manifest. The assistant uses AtomicChat's
+`69e1c34ad06437c136b935f6bf53ff80540c2361` revision; its SHA-256 is
+`eb576734fe210b551d091761fe83ab701c8e01ff708015a51172a4c0b04459e3`.
+See [third-party attribution](../THIRD_PARTY_NOTICES.md). Later assistant exports
+use a different runtime format and are not interchangeable with this pin.
 
 ## Producing and checking the attachment
 

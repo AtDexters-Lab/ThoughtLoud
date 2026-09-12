@@ -30,6 +30,7 @@ class ModelArtifact:
     filename: str
     size: int
     sha256: str
+    url: str | None = None
 
 
 MODEL_ARTIFACTS = (
@@ -41,6 +42,16 @@ MODEL_ARTIFACTS = (
         "mmproj-F16.gguf", 990372672,
         "ddf46c21d7078e95338cfc22306b19b276a29a5ad089023449dd54d4b6170a51",
     ),
+)
+
+# The initial assistant format matches our pinned native runtime. Later upstream
+# revisions use a different layout; never resolve this download from "main".
+MTP_ASSISTANT = ModelArtifact(
+    "gemma-4-E4B-it-assistant.Q8_0.gguf", 100259232,
+    "eb576734fe210b551d091761fe83ab701c8e01ff708015a51172a4c0b04459e3",
+    "https://huggingface.co/AtomicChat/gemma-4-E4B-it-assistant-GGUF/resolve/"
+    "69e1c34ad06437c136b935f6bf53ff80540c2361/"
+    "gemma-4-E4B-it-assistant.Q8_0.gguf",
 )
 
 
@@ -65,6 +76,7 @@ class DownloadProgress:
 class ModelPaths:
     model: Path
     projector: Path
+    assistant: Path | None = None
 
 
 def _check_cancel(cancel: threading.Event) -> None:
@@ -73,7 +85,7 @@ def _check_cancel(cancel: threading.Event) -> None:
 
 
 class ModelStore:
-    """Install two verified files into the app's own model directory.
+    """Install verified target/projector files and an optional MTP assistant.
 
     Verification receipts avoid hashing nine GB at every shortcut press. A
     receipt is accepted only for the exact pinned digest and unchanged file
@@ -82,15 +94,19 @@ class ModelStore:
 
     def __init__(
         self, model_dir, *, session=None, artifacts=MODEL_ARTIFACTS,
+        assistant: ModelArtifact | None = None,
         base_url=MODEL_BASE_URL, attempts: int = 3,
     ):
         self.model_dir = Path(model_dir)
-        self.artifacts = tuple(artifacts)
-        if len(self.artifacts) != 2 or any(
+        artifacts = tuple(artifacts)
+        if len(artifacts) != 2:
+            raise ValueError("Expected target and projector artifacts")
+        self.artifacts = artifacts + ((assistant,) if assistant is not None else ())
+        if len({a.filename for a in self.artifacts}) != len(self.artifacts) or any(
             Path(a.filename).name != a.filename or a.size <= 0
             for a in self.artifacts
         ):
-            raise ValueError("Expected target and projector artifacts with plain filenames")
+            raise ValueError("Expected distinct artifacts with plain filenames and positive sizes")
         if attempts < 1:
             raise ValueError("attempts must be positive")
         self.total_bytes = sum(a.size for a in self.artifacts)
@@ -214,7 +230,8 @@ class ModelStore:
             try:
                 self._notify(progress, artifact, verified, "downloading", attempt)
                 with self.session.get(
-                    self.base_url + artifact.filename, stream=True, timeout=(10, 30),
+                    artifact.url or self.base_url + artifact.filename,
+                    stream=True, timeout=(10, 30),
                 ) as response:
                     response.raise_for_status()
                     if response.status_code != 200:

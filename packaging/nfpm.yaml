@@ -6,7 +6,7 @@ section: utils
 priority: optional
 license: "MIT AND GPL-3.0-only AND LGPL-3.0-only AND AGPL-3.0-or-later"
 maintainer: "AtDexters-Lab"
-homepage: "https://github.com/AtDexters-Lab/voxd"
+homepage: "https://github.com/AtDexters-Lab/ThoughtLoud"
 description: "ThoughtLoud - long, natural local dictation on Linux"
 vendor: "ThoughtLoud"
 replaces:

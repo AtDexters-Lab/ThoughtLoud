@@ -1,13 +1,17 @@
 # Managed Linux runtime
 
 New managed installations use the same Gemma E4B Q8 target and F16 audio projector
-as the existing iGPU setup, with MTP disabled. The historical MTP assistant is
-not required or downloaded. Existing external endpoints and the optional
+as the existing iGPU setup. CPU uses those two files without MTP. Vulkan adds
+the pinned Q8 assistant and enables MTP with three draft tokens; target, projector
+and assistant use Vulkan0. Existing external endpoints and the optional
 `runtime/igpu` installation remain independently managed.
 
 The application downloads the model files from a pinned public revision and
 verifies their sizes and SHA-256 hashes. Model files total approximately 9.2 GB
-(8.6 GiB). They are under Apache-2.0; the model license must accompany the release.
+for CPU or 9.3 GB for Vulkan. Switching to Vulkan reuses verified CPU files and
+downloads only the 100 MB assistant. The manifest pins AtomicChat revision
+`69e1c34ad06437c136b935f6bf53ff80540c2361`; newer assistant exports use a different
+format. They are under Apache-2.0; the model license must accompany the release.
 
 ## Building the bundled server
 

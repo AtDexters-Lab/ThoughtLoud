@@ -52,11 +52,15 @@ Validation:
 - The rebooted tray owns one registered ThoughtLoud indicator. Exactly one
   packaged typing daemon is running; the keyboard monitor opens successfully and
   word pacing remains enabled. No keyboard events were emitted by this check.
+- After the repair, the user confirmed that a fresh physical dictation worked
+  normally, including text insertion speed. This is user-reported acceptance in
+  the current boot, separate from the automated replay above.
 
 Evidence is retained locally in `build/validation/reboot-20260913/`; private audio,
 transcripts and Docker snapshots are not published. These checks prove the repair
-works after activation in the current boot. **A further actual host reboot and
-fresh physical dictation are still required to close reboot acceptance.**
+works after activation in the current boot, including a fresh user dictation.
+**A further actual host reboot followed by dictation is still required to close
+reboot acceptance.**
 
 ## Preference echo fix: 1.4.1
 

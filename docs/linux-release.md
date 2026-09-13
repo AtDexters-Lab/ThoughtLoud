@@ -9,6 +9,55 @@ This page records release validation and support boundaries. Earlier evidence
 below applies to its identified artifacts; retained candidates are not substitutes
 for testing the final published package.
 
+## Workstation reboot repair: 2026-09-13
+
+The actual workstation reboot failed model autostart. The packaged tray and
+single packaged typing daemon started successfully, but Docker could not start
+the external iGPU container because its saved PCI path no longer existed.
+The same Radeon 780M moved from PCI `c6:00.0` to `c8:00.0`; its render number also
+changed. The earlier PCI-path repair covered render renumbering only and was
+insufficient for this machine.
+
+The external iGPU recipe now uses a udev alias based on hardware identity
+(`1002:1900`). A one-shot startup service waits for Docker and that alias device
+before validating and starting the container. Inside the container, the entrypoint
+adds the render symlink corresponding to the actual device minor. This second
+step is necessary: the live driver rejected physical minor 129 exposed as
+`renderD128`, while the canonical `renderD129` symlink enumerated the 780M.
+The single-780M support limit and startup/stop commands are documented in
+[the iGPU guide](../runtime/igpu/README.md).
+
+The repair was installed on this workstation. The original stopped container is
+retained as `voxd-gemma-igpu-before-hardware-id-20260913` with automatic restart
+disabled. The replacement preserves its image, model assets, inference flags,
+MTP configuration and read-only mounts. Changes are limited to the GPU mapping
+and entrypoint; Docker also normalizes the unset OOM-disable flag to false.
+The published and installed application remains **1.4.1** with unchanged binary
+SHA-256 `f5d74d169c43a785f574778c1daf9813e21a20689c975e7d4e3a8fb508e4de12`.
+This is a repair to the external runtime recipe and deployment, not a rebuilt
+application package; the 1.4.1 tag and release attachments are unchanged.
+
+Validation:
+
+- **376 tests passed**, including both PCI/render renumbering, missing/wrong
+  aliases, ambiguous GPUs, stale Docker mappings, canonical render symlink
+  handling, argument preservation and create-only rollback behavior.
+- The installed udev alias identifies the current 780M; its systemd device is
+  active and the startup service is enabled and completed successfully.
+- The same failed 17-second recording completed in two segments, producing 222
+  characters with no preference echo and positive MTP drafts in both responses.
+  This cold replay took 18.16 seconds including model startup; it is not a new
+  warm-latency benchmark. Recovery text remains private and was not typed into
+  the desktop automatically.
+- The rebooted tray owns one registered ThoughtLoud indicator. Exactly one
+  packaged typing daemon is running; the keyboard monitor opens successfully and
+  word pacing remains enabled. No keyboard events were emitted by this check.
+
+Evidence is retained locally in `build/validation/reboot-20260913/`; private audio,
+transcripts and Docker snapshots are not published. These checks prove the repair
+works after activation in the current boot. **A further actual host reboot and
+fresh physical dictation are still required to close reboot acceptance.**
+
 ## Preference echo fix: 1.4.1
 
 Physical microphone testing after the 1.4.0 workstation deployment exposed a

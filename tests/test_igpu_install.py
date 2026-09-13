@@ -158,6 +158,8 @@ def _installer_fixture(tmp_path):
     stable_render_path = _add_render_device(
         device_root, sysfs_root, "renderD129", "0000:c6:00.0"
     )
+    runtime_device = device_root / "thoughtloud-igpu"
+    runtime_device.symlink_to("renderD129")
     data_home = tmp_path / "data"
     config_home = tmp_path / "config"
     voxd_config = config_home / "voxd/config.yaml"
@@ -203,6 +205,7 @@ def _installer_fixture(tmp_path):
         "device_root": device_root,
         "sysfs_root": sysfs_root,
         "stable_render_path": stable_render_path,
+        "runtime_device": runtime_device,
     }
 
 
@@ -230,23 +233,31 @@ def test_fresh_install_validates_audio_and_configures_voxd(tmp_path):
         fixture["runtime_dir"] / "gemma-4-E4B-it-assistant.Q8_0.gguf"
     ).read_bytes() == fixture["mtp_head"].read_bytes()
     assert (fixture["runtime_dir"] / "voxd-mtp-build-manifest.json").is_file()
+    entrypoint = fixture["runtime_dir"] / "container-entrypoint.sh"
+    source_entrypoint = Path(__file__).parents[1] / "runtime/igpu/container-entrypoint.sh"
+    assert entrypoint.read_bytes() == source_entrypoint.read_bytes()
+    assert os.access(entrypoint, os.X_OK)
     runtime_config = (
         fixture["runtime_config_dir"] / "llama-swap.yaml"
     ).read_text(encoding="utf-8")
     assert "--mtp-head /opt/voxd/llama/gemma-4-E4B-it-assistant.Q8_0.gguf" in runtime_config
     assert "--spec-type mtp" in runtime_config
     assert "--draft-block-size 3" in runtime_config
-    runtime_device = fixture["runtime_config_dir"] / "igpu-render"
+    runtime_device = fixture["runtime_device"]
     assert runtime_device.is_symlink()
-    assert runtime_device.readlink() == fixture["stable_render_path"]
+    assert runtime_device.resolve() == fixture["device_root"] / "renderD129"
+    assert not (fixture["runtime_config_dir"] / "igpu-render").exists()
     docker_calls = fixture["docker_log"].read_text(encoding="utf-8")
     assert "create --name voxd-gemma-igpu" in docker_calls
-    assert f"--device {runtime_device}:/dev/dri/renderD128" in docker_calls
+    assert f"--device {runtime_device}:/dev/dri/thoughtloud-igpu" in docker_calls
     assert f"--device {fixture['device_root']}/renderD129:" not in docker_calls
     assert docker_calls.count("--device ") == 1
+    assert "--entrypoint /opt/voxd/llama/container-entrypoint.sh" in docker_calls
+    assert "gemma-mtp-serve /opt/voxd/llama/llama-swap -config /config.yaml" in docker_calls
     assert "LLAMA_MTP_SKIP_STREAK_THRESHOLD=0" in docker_calls
     assert "start candidate-container-id" in docker_calls
     assert "rename" not in docker_calls
+    assert "sudo systemctl enable --now thoughtloud-igpu@voxd-gemma-igpu.service" in result.stdout
     curl_calls = fixture["curl_log"].read_text(encoding="utf-8")
     assert "/v1/chat/completions" in curl_calls
     assert "input_audio" in curl_calls
@@ -256,47 +267,64 @@ def test_fresh_install_validates_audio_and_configures_voxd(tmp_path):
     ].read_text(encoding="utf-8")
 
 
-@pytest.mark.parametrize("render_node", ["renderD128", "renderD131"])
-def test_pci_mapping_survives_different_render_numbers(tmp_path, render_node):
-    fixture = _installer_fixture(tmp_path)
+def _renumber_igpu(fixture, render_node, pci_address):
+    """Simulate a reboot's new PCI/render paths and udev alias replacement."""
     device_root = fixture["device_root"]
     (device_root / "renderD129").rename(device_root / render_node)
     drm_root = fixture["sysfs_root"] / "class/drm"
     (drm_root / "renderD129").rename(drm_root / render_node)
+    pci_device_link = drm_root / render_node / "device"
+    old_pci_device = pci_device_link.resolve()
+    new_pci_device = old_pci_device.with_name(pci_address)
+    old_pci_device.rename(new_pci_device)
+    pci_device_link.unlink()
+    pci_device_link.symlink_to(new_pci_device, target_is_directory=True)
     fixture["stable_render_path"].unlink()
-    fixture["stable_render_path"].symlink_to(f"../{render_node}")
+    (device_root / "by-path" / f"pci-{pci_address}-render").symlink_to(f"../{render_node}")
+    fixture["runtime_device"].unlink()
+    fixture["runtime_device"].symlink_to(render_node)
+
+
+@pytest.mark.parametrize(
+    "render_node,pci_address",
+    [("renderD128", "0000:c8:00.0"), ("renderD131", "0000:c7:00.0")],
+)
+def test_hardware_alias_install_accepts_new_pci_and_render_numbers(
+    tmp_path, render_node, pci_address
+):
+    fixture = _installer_fixture(tmp_path)
+    _renumber_igpu(fixture, render_node, pci_address)
 
     result = _run(fixture)
 
     assert result.returncode == 0, result.stderr
     docker_calls = fixture["docker_log"].read_text(encoding="utf-8")
-    runtime_device = fixture["runtime_config_dir"] / "igpu-render"
-    assert f"--device {runtime_device}:/dev/dri/renderD128" in docker_calls
-    assert runtime_device.readlink() == fixture["stable_render_path"]
-    assert runtime_device.resolve() == device_root / render_node
-    assert f"--device {device_root}/{render_node}:" not in docker_calls
+    runtime_device = fixture["runtime_device"]
+    assert f"--device {runtime_device}:/dev/dri/thoughtloud-igpu" in docker_calls
+    assert runtime_device.resolve() == fixture["device_root"] / render_node
+    assert f"--device {fixture['device_root']}/{render_node}:" not in docker_calls
+    assert pci_address not in docker_calls
+    assert not fixture["stable_render_path"].exists()
 
 
-def test_installed_device_alias_follows_pci_device_after_renumbering(tmp_path):
+def test_installed_mapping_follows_hardware_alias_after_pci_and_render_renumbering(tmp_path):
     fixture = _installer_fixture(tmp_path)
     result = _run(fixture)
     assert result.returncode == 0, result.stderr
-    runtime_device = fixture["runtime_config_dir"] / "igpu-render"
-    alias_inode = runtime_device.lstat().st_ino
+    docker_calls = fixture["docker_log"].read_text(encoding="utf-8")
+    runtime_device = fixture["runtime_device"]
+    assert f"--device {runtime_device}:/dev/dri/thoughtloud-igpu" in docker_calls
+    assert runtime_device.resolve() == fixture["device_root"] / "renderD129"
+
+    _renumber_igpu(fixture, "renderD128", "0000:c8:00.0")
     device_root = fixture["device_root"]
-    (device_root / "renderD129").rename(device_root / "renderD128")
-    drm_root = fixture["sysfs_root"] / "class/drm"
-    (drm_root / "renderD129").rename(drm_root / "renderD128")
-    fixture["stable_render_path"].unlink()
-    fixture["stable_render_path"].symlink_to("../renderD128")
     _add_render_device(
         device_root, fixture["sysfs_root"], "renderD129", "0000:03:00.0", "0x744c"
     )
 
-    assert runtime_device.lstat().st_ino == alias_inode
-    assert runtime_device.readlink() == fixture["stable_render_path"]
     assert runtime_device.resolve() == device_root / "renderD128"
-    assert f"--device {runtime_device}:/dev/dri/renderD128" in fixture["docker_log"].read_text()
+    assert not fixture["stable_render_path"].exists()
+    assert fixture["docker_log"].read_text(encoding="utf-8") == docker_calls
 
 
 def test_discrete_gpu_is_not_selected(tmp_path):
@@ -309,19 +337,49 @@ def test_discrete_gpu_is_not_selected(tmp_path):
 
     assert result.returncode == 0, result.stderr
     docker_calls = fixture["docker_log"].read_text(encoding="utf-8")
-    runtime_device = fixture["runtime_config_dir"] / "igpu-render"
-    assert f"--device {runtime_device}:/dev/dri/renderD128" in docker_calls
-    assert runtime_device.readlink() == fixture["stable_render_path"]
+    runtime_device = fixture["runtime_device"]
+    assert f"--device {runtime_device}:/dev/dri/thoughtloud-igpu" in docker_calls
+    assert runtime_device.resolve() == fixture["device_root"] / "renderD129"
     assert str(discrete_path) not in docker_calls
 
 
-@pytest.mark.parametrize("failure", ["missing", "dangling", "mismatched"])
-def test_invalid_stable_device_path_is_refused_before_mutation(tmp_path, failure):
+def test_explicit_selection_of_only_matching_gpu_is_accepted(tmp_path):
+    fixture = _installer_fixture(tmp_path)
+    fixture["env"]["RENDER_NODE"] = "renderD129"
+
+    result = _run(fixture)
+
+    assert result.returncode == 0, result.stderr
+    assert f"--device {fixture['runtime_device']}:/dev/dri/thoughtloud-igpu" in fixture[
+        "docker_log"
+    ].read_text(encoding="utf-8")
+
+
+def test_no_matching_gpu_is_refused_before_mutation(tmp_path):
     fixture = _installer_fixture(tmp_path)
     original_config = fixture["voxd_config"].read_bytes()
-    fixture["stable_render_path"].unlink()
-    if failure != "missing":
-        fixture["stable_render_path"].symlink_to("../renderD128")
+    device_id = fixture["sysfs_root"] / "class/drm/renderD129/device/device"
+    device_id.write_text("0x744c\n", encoding="ascii")
+
+    result = _run(fixture)
+
+    assert result.returncode == 2
+    assert "found 0" in result.stderr
+    assert fixture["voxd_config"].read_bytes() == original_config
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
+    assert not fixture["docker_log"].exists()
+
+
+@pytest.mark.parametrize("failure", ["missing", "dangling", "mismatched", "regular_file"])
+def test_invalid_hardware_alias_is_refused_before_mutation(tmp_path, failure):
+    fixture = _installer_fixture(tmp_path)
+    original_config = fixture["voxd_config"].read_bytes()
+    fixture["runtime_device"].unlink()
+    if failure in {"dangling", "mismatched"}:
+        fixture["runtime_device"].symlink_to("renderD128")
+    elif failure == "regular_file":
+        fixture["runtime_device"].touch()
     if failure == "mismatched":
         _add_render_device(
             fixture["device_root"], fixture["sysfs_root"], "renderD128", "0000:03:00.0", "0x744c"
@@ -330,7 +388,8 @@ def test_invalid_stable_device_path_is_refused_before_mutation(tmp_path, failure
     result = _run(fixture)
 
     assert result.returncode == 2
-    assert "missing or mismatched stable iGPU device path" in result.stderr
+    assert "missing or mismatched hardware-ID iGPU alias" in result.stderr
+    assert "prepare-device.sh" in result.stderr
     assert fixture["voxd_config"].read_bytes() == original_config
     assert not fixture["runtime_dir"].exists()
     assert not fixture["runtime_config_dir"].exists()
@@ -353,25 +412,24 @@ def test_wrong_explicit_gpu_is_refused_before_mutation(tmp_path):
     assert not fixture["docker_log"].exists()
 
 
-def test_multiple_matching_gpus_require_explicit_selection(tmp_path):
+@pytest.mark.parametrize("render_node", [None, "renderD129", "renderD130"])
+def test_multiple_matching_gpus_are_refused_even_with_explicit_selection(tmp_path, render_node):
     fixture = _installer_fixture(tmp_path)
-    second_path = _add_render_device(
+    original_config = fixture["voxd_config"].read_bytes()
+    _add_render_device(
         fixture["device_root"], fixture["sysfs_root"], "renderD130", "0000:04:00.0"
     )
+    if render_node is not None:
+        fixture["env"]["RENDER_NODE"] = render_node
 
     result = _run(fixture)
 
     assert result.returncode == 2
     assert "found 2" in result.stderr
+    assert fixture["voxd_config"].read_bytes() == original_config
+    assert not fixture["runtime_dir"].exists()
+    assert not fixture["runtime_config_dir"].exists()
     assert not fixture["docker_log"].exists()
-    fixture["env"]["RENDER_NODE"] = "renderD130"
-
-    result = _run(fixture)
-
-    assert result.returncode == 0, result.stderr
-    runtime_device = fixture["runtime_config_dir"] / "igpu-render"
-    assert runtime_device.readlink() == second_path
-    assert f"--device {runtime_device}:/dev/dri/renderD128" in fixture["docker_log"].read_text()
 
 
 def test_existing_container_is_refused_without_mutation(tmp_path):
@@ -519,6 +577,8 @@ def test_failure_never_removes_shared_parent_directories(tmp_path):
 def test_audio_failure_removes_owned_container_and_files(tmp_path):
     fixture = _installer_fixture(tmp_path)
     original_config = fixture["voxd_config"].read_bytes()
+    alias_target = fixture["runtime_device"].readlink()
+    alias_inode = fixture["runtime_device"].lstat().st_ino
     fixture["env"]["FAKE_AUDIO_FAIL"] = "1"
 
     result = _run(fixture)
@@ -529,6 +589,8 @@ def test_audio_failure_removes_owned_container_and_files(tmp_path):
     assert fixture["voxd_config"].read_bytes() == original_config
     assert not fixture["runtime_dir"].exists()
     assert not fixture["runtime_config_dir"].exists()
+    assert fixture["runtime_device"].readlink() == alias_target
+    assert fixture["runtime_device"].lstat().st_ino == alias_inode
 
 
 def test_inactive_mtp_removes_owned_container_and_files(tmp_path):

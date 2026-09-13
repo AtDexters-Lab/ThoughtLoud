@@ -1,0 +1,13 @@
+[Unit]
+Description=Start ThoughtLoud iGPU container %i after its GPU is ready
+Requires=docker.service dev-dri-thoughtloud\x2digpu.device
+After=docker.service dev-dri-thoughtloud\x2digpu.device
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/thoughtloud-igpu-start %i
+RemainAfterExit=yes
+TimeoutStartSec=60
+
+[Install]
+WantedBy=multi-user.target

@@ -17,12 +17,12 @@ runtime_dir="${runtime_parent}/llama-vulkan"
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/voxd"
 runtime_config_dir="${config_dir}/igpu-runtime"
 runtime_config="${runtime_config_dir}/llama-swap.yaml"
-runtime_device="${runtime_config_dir}/igpu-render"
 voxd_config="${config_dir}/config.yaml"
 container_name="${CONTAINER_NAME:-voxd-gemma-igpu}"
 host_port="${HOST_PORT:-9394}"
 render_node="${RENDER_NODE:-}"
 device_root="${DEVICE_ROOT:-/dev/dri}"
+runtime_device="${device_root}/thoughtloud-igpu"
 sysfs_root="${SYSFS_ROOT:-/sys}"
 hf_volume="${HF_VOLUME:-lemonade-docker_hf-cache}"
 runtime_image="${RUNTIME_IMAGE:-gemma-mtp-serve}"
@@ -55,26 +55,26 @@ build_manifest="${build_bin_dir}/${build_manifest_name}"
   --patch "${script_dir}/atomic-mtp-audio.patch" \
   --manifest "${build_manifest}" \
   --mtp-head "${mtp_head_source}"
-# DRM render numbers can change across boots. Identify the validated Radeon
-# 780M through sysfs, then keep its PCI by-path name in Docker's device mapping.
+# Both DRM render numbers and PCI addresses can change across boots. Identify
+# the validated Radeon 780M through sysfs and require its hardware-ID udev alias.
 is_validated_igpu() {
   local device="${sysfs_root}/class/drm/$1/device"
   [[ -r "${device}/vendor" && -r "${device}/device" ]] && \
     [[ "$(< "${device}/vendor")" == 0x1002 && \
        "$(< "${device}/device")" == 0x1900 ]]
 }
-if [[ -z "${render_node}" ]]; then
-  candidates=()
-  for candidate in "${sysfs_root}/class/drm"/renderD*; do
-    node=${candidate##*/}
-    if is_validated_igpu "${node}"; then
-      candidates+=("${node}")
-    fi
-  done
-  if [[ ${#candidates[@]} -ne 1 ]]; then
-    echo "expected one Radeon 780M (1002:1900) render device; found ${#candidates[@]}. Set RENDER_NODE only to select among matching devices." >&2
-    exit 2
+candidates=()
+for candidate in "${sysfs_root}/class/drm"/renderD*; do
+  node=${candidate##*/}
+  if is_validated_igpu "${node}"; then
+    candidates+=("${node}")
   fi
+done
+if [[ ${#candidates[@]} -ne 1 ]]; then
+  echo "expected one Radeon 780M (1002:1900) render device; found ${#candidates[@]}. The hardware-ID alias requires an unambiguous device even when RENDER_NODE is set." >&2
+  exit 2
+fi
+if [[ -z "${render_node}" ]]; then
   render_node=${candidates[0]}
 fi
 if [[ ! "${render_node}" =~ ^renderD[0-9]+$ ]] || ! is_validated_igpu "${render_node}"; then
@@ -85,16 +85,9 @@ fi
   echo "missing iGPU render node: ${device_root}/${render_node}" >&2
   exit 2
 }
-pci_device=$(realpath "${sysfs_root}/class/drm/${render_node}/device")
-pci_address=${pci_device##*/}
-if [[ ! "${pci_address}" =~ ^[[:xdigit:]]{4}:[[:xdigit:]]{2}:[[:xdigit:]]{2}\.[0-7]$ ]]; then
-  echo "cannot identify the iGPU PCI address from ${pci_device}" >&2
-  exit 2
-fi
-stable_render_path="${device_root}/by-path/pci-${pci_address}-render"
-if [[ ! -L "${stable_render_path}" || ! -e "${stable_render_path}" ]] || \
-  [[ "$(realpath "${stable_render_path}")" != "$(realpath "${device_root}/${render_node}")" ]]; then
-  echo "missing or mismatched stable iGPU device path: ${stable_render_path}; restore the PCI by-path symlink before installing" >&2
+if [[ ! -L "${runtime_device}" || ! -e "${runtime_device}" ]] || \
+  [[ "$(realpath "${runtime_device}")" != "$(realpath "${device_root}/${render_node}")" ]]; then
+  echo "missing or mismatched hardware-ID iGPU alias: ${runtime_device}; run sudo ${script_dir}/prepare-device.sh before installing" >&2
   exit 2
 fi
 docker volume inspect "${hf_volume}" >/dev/null
@@ -189,18 +182,14 @@ runtime_config_dir_created=true
   --manifest "${build_manifest}" \
   --mtp-head "${mtp_head_source}"
 install -m 0755 "${llama_swap_binary}" "${runtime_dir}/llama-swap"
+install -m 0755 "${script_dir}/container-entrypoint.sh" "${runtime_dir}/container-entrypoint.sh"
 install -m 0600 "${script_dir}/llama-swap.yaml" "${runtime_config}"
-# Docker's CLI uses colons as --device separators, including the colons in PCI
-# by-path filenames. Keep a colon-free alias in our exclusively owned directory;
-# Docker stores the alias and resolves the PCI symlink again at each start.
-ln -s -- "${stable_render_path}" "${runtime_device}"
-
 # docker create returns the exact resource owned by this invocation. Rollback
 # removes by ID, never by a shared or guessed name.
 container_id=$(docker create \
   --name "${container_name}" \
   --restart unless-stopped \
-  --device "${runtime_device}:/dev/dri/renderD128" \
+  --device "${runtime_device}:/dev/dri/thoughtloud-igpu" \
   -v "${hf_volume}:/hf:ro" \
   -v "${runtime_dir}:/opt/voxd/llama:ro" \
   -v "${runtime_config}:/config.yaml:ro" \
@@ -210,8 +199,9 @@ container_id=$(docker create \
   -e VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/radeon_icd.json \
   -e LLAMA_MTP_SKIP_STREAK_THRESHOLD=0 \
   -p "127.0.0.1:${host_port}:8080" \
-  --entrypoint /opt/voxd/llama/llama-swap \
+  --entrypoint /opt/voxd/llama/container-entrypoint.sh \
   "${runtime_image}" \
+  /opt/voxd/llama/llama-swap \
   -config /config.yaml -listen 0.0.0.0:8080)
 docker start "${container_id}" >/dev/null
 
@@ -340,6 +330,7 @@ fi
 
 echo "Q8 iGPU endpoint ready at http://127.0.0.1:${host_port}"
 echo "VOXD configured to use gemma-e4b at that endpoint"
+printf 'Enable startup after the iGPU is ready: sudo systemctl enable --now %q\n' "thoughtloud-igpu@${container_name}.service"
 if [[ "${tray_restarted}" == true ]]; then
   echo "VOXD tray restarted"
 else

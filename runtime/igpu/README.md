@@ -75,6 +75,14 @@ shared-library hash and symlink target. The installer refuses an absent, mismatc
 or locally substituted manifest, copies only that declared runtime set, and verifies
 the staged files again before creating the container.
 
+First install the hardware-identity device rule and startup service template.
+This requires Linux systemd/udev and administrator authentication; it creates no
+container and enables no service:
+
+```bash
+sudo bash runtime/igpu/prepare-device.sh
+```
+
 Then install the runtime with the matching E4B assistant GGUF and launch its
 restartable container:
 
@@ -98,16 +106,49 @@ under the user's VOXD data and config directories:
 - `~/.config/voxd/igpu-runtime/`
 - Docker container `voxd-gemma-igpu`
 
-The installer identifies the Radeon 780M by its PCI vendor/device IDs
-(`1002:1900`) and requires its matching `/dev/dri/by-path/pci-...-render` symlink.
-It stores that stable path through an `igpu-render` symlink in the owned runtime
-configuration directory, and maps only that device to `/dev/dri/renderD128`
-inside the container. The alias avoids Docker CLI's colon-separated device
-syntax; it continues to resolve the same PCI device when host `renderD` numbers
-change after a reboot. Missing or mismatched PCI links stop installation before
-any resources are created. If more than one matching GPU exists, `RENDER_NODE`
-selects among them; it cannot select a different GPU model. Existing containers
-retain their original device mapping until explicitly replaced.
+The installer requires exactly one Radeon 780M (`1002:1900`) and validates its
+udev alias `/dev/dri/thoughtloud-igpu`. Both PCI addresses and `renderD` numbers
+can change across boots; neither is persisted as the device identity. Docker
+retains the hardware-ID alias and maps only that render device to the same
+alias inside the container. The entrypoint reads its current device minor number
+and adds the matching `renderD` symlink before launching llama-swap. Mesa/libdrm
+requires the render filename to agree with the kernel device number; mapping
+every host GPU to a fixed `renderD128` can prevent Vulkan initialization. Missing, dangling, mismatched or
+ambiguous device selection stops installation before any runtime resources are
+created. `RENDER_NODE` cannot override the single-matching-GPU requirement.
+Multiple identical 780M GPUs are outside this profile's supported scope.
+
+After successful installation, enable the startup instance printed by the
+installer (use the actual `CONTAINER_NAME` for a custom name):
+
+```bash
+sudo systemctl enable --now thoughtloud-igpu@voxd-gemma-igpu.service
+```
+
+The one-shot service waits for both Docker and the hardware-ID device, verifies
+its identity and the container mapping, then starts the existing container.
+Docker's `unless-stopped` policy continues handling subsequent container exits.
+This explicit boot start means `docker stop` alone is not a persistent autostart
+opt-out. To keep the runtime stopped across boots, disable the startup instance
+and stop the container:
+
+```bash
+sudo systemctl disable --now thoughtloud-igpu@voxd-gemma-igpu.service
+docker stop voxd-gemma-igpu
+```
+
+Preparation refuses conflicting existing rule/service/helper files. Existing
+containers retain their original device mapping until explicitly migrated;
+installing the rule alone does not repair an old PCI-address mapping. Preserve a
+stopped backup and stage `container-entrypoint.sh` as an executable in the existing
+runtime directory. Recreate the container with the same image, mounts, environment
+and model configuration, mapping `/dev/dri/thoughtloud-igpu` to that same path
+inside the container. Set `/opt/voxd/llama/container-entrypoint.sh` as its entrypoint
+and pass the original entrypoint followed by its original command arguments as
+the new command. For this profile that is `/opt/voxd/llama/llama-swap -config
+/config.yaml -listen 0.0.0.0:8080`. The wrapper is required for Vulkan device
+discovery; changing the device alias alone is insufficient. Validate real audio
+before enabling startup. Do not run the fresh installer over existing assets.
 
 The installer sends a short WAV through the same `input_audio` request shape as
 VOXD and requires the response to report non-zero MTP drafts. It then sends the

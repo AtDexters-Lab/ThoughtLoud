@@ -1,0 +1,2 @@
+# PCI bus addresses and renderD numbers can both change across boots.
+SUBSYSTEM=="drm", KERNEL=="renderD*", ATTRS{vendor}=="0x1002", ATTRS{device}=="0x1900", SYMLINK+="dri/thoughtloud-igpu", TAG+="systemd", ENV{SYSTEMD_ALIAS}+="/dev/dri/thoughtloud-igpu"

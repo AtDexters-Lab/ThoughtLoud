@@ -68,13 +68,21 @@ An anonymous public DEB download and checksum list were also verified. DEB
 SHA-256: `5712f4727cb10c420a10be172c35865f0a02cfeacf94b99dba5248b87dd6b868`.
 The initial download stalled; a bounded retry completed successfully.
 
-Workstation installation is pending an unlocked desktop for native package
-authentication. Its existing 1.4.0 tray remains running and directly reports
-Ready. The first activation preflight stopped before changing the installation
-or tray because the locked GNOME session had temporarily removed its tray
-watcher. Local `build/validation/prompt-echo-20260912/checkpoint.json` and
-`install-host.py` retain the verified artifact and guarded activation steps.
-Physical microphone retesting and actual workstation reboot remain open.
+The workstation installed that public DEB on **2026-09-13**, after the desktop
+was unlocked and native package authentication completed. The running 1.4.1
+executable matches the release hash above. One tray registers with a Ready
+tooltip and nontransparent 22/64-pixel icons; the typing service is active and
+enabled. Configuration, the saved shortcut, microphone selection/mute/volume,
+autostart, launcher and existing iGPU container were preserved.
+
+The earlier activation preflight stopped before changing the installation or
+tray because the locked GNOME session had temporarily removed its tray watcher.
+The successful handoff waited for package installation to finish before launching
+the replacement tray. Local evidence is in
+`build/validation/prompt-echo-20260912/host-verification.json` and
+`host-install-20260913.log`; guarded activation steps are in `install-host.py`.
+Physical microphone retesting and actual workstation reboot remain open; tray
+registration alone does not establish their completion.
 
 ## Final release profile: 2026-09-12
 

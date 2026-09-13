@@ -81,8 +81,43 @@ The successful handoff waited for package installation to finish before launchin
 the replacement tray. Local evidence is in
 `build/validation/prompt-echo-20260912/host-verification.json` and
 `host-install-20260913.log`; guarded activation steps are in `install-host.py`.
-Physical microphone retesting and actual workstation reboot remain open; tray
-registration alone does not establish their completion.
+Physical microphone testing then produced a 0.9-second `no_speech` note and two
+spoken notes (4.6 and 7.55 seconds), all through live protocol 8, with no preference
+echo. Actual workstation reboot verification remains open.
+
+### Typing handoff audit: 2026-09-13
+
+The user reported character-by-character appearance after publication. Comparing
+pre-publication commit `03d4cce` with the released application confirms the same
+word-pacing logic: zero configured character delay, 1 ms key hold and 10 ms pause
+between word arguments. Both the previous and packaged helpers support that
+path. Three paired runs into an isolated UNIX event receiver measured about
+1.13 ms between character presses and 11.18 ms between words for both binaries.
+This establishes client event pacing, not editor rendering latency. Individual
+key events, rather than atomic word insertion, were used before publication too.
+
+The audit did find an incomplete workstation handoff. The old typing daemon was
+still running after its service file had been removed, alongside the packaged
+daemon. Two identically named virtual keyboards prevented key-state monitoring,
+so typing used compatibility cleanup after each bounded character chunk. That
+did not disable word pacing, but it lost monitored recovery and reintroduced
+cleanup pauses. Earlier workstation checks verified service activity and tray
+registration without verifying that the key monitor could actually open.
+
+The verified orphan was stopped, the packaged daemon restarted from installed
+bytes, and the idle 1.4.1 tray relaunched on the packaged socket. A single legacy
+socket export in the user's shell configuration was updated with a private
+backup; the desktop login environment had no such override. One readable virtual
+keyboard remains, and the actual typer's monitor opens and reaches a released
+quiet state. Application/package bytes and word-pacing settings were unchanged.
+Evidence is under `build/validation/typing-audit-20260913/`. Actual editor cadence
+after the repair still requires user observation.
+
+The same audit found recording-time warmup, live VAD-aligned decoding/full-WAV
+recovery, previous-text context without assistant prefill, and the existing
+external iGPU/MTP path retained. The requested microphone mute preflight is a new
+step before capture/warmup and can add startup delay; it does not govern typing
+cadence after transcription.
 
 ## Final release profile: 2026-09-12
 
